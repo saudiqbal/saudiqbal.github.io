@@ -95,12 +95,12 @@ iface eth0 inet6 auto
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Local IP: ::<span>71c6:b34f:8e2a:54f5</span>/::ffff:ffff:ffff:ffff</p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Port: 443</p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Protocol: Select TCP or UDP or both that your service requires.</p>
-<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/asus-ipv6-firewall.jpg" alt="Asus IPv6 Firewall" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/asus-ipv6-firewall.jpg" alt="Asus IPv6 Firewall" class="fluidimg" /></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM"><span style="text-decoration: underline;">OpenWRT example</span></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Network -> Firewall -> Traffic Rules -> Add</p>
-<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/OpenWRT-firewall-example.jpg" alt="OpenWRT IPv6 Firewall" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/OpenWRT-firewall-example.jpg" alt="OpenWRT IPv6 Firewall" class="fluidimg" /></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Now go to Advanced Settings tab and select 'Restrict to address family' -> 'IPv6 only'</p>
-<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/OpenWRT-firewall-IPv6.jpg" alt="IPv6 Advanced tab" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/OpenWRT-firewall-IPv6.jpg" alt="IPv6 Advanced tab" class="fluidimg" /></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Save the firewall and you are done.</p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM"><strong>Keeping the server private</strong></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">If you are planning on keeping your server safe from hackers and private you can use IPv6 privacy extensions. IPv4 addresses are always under constant attack and scanning since the address space is so small, it takes a couple of hours to scan the whole IPv4 address space and exposing your home network on the Internet is not a good idea. IPv6 privacy extensions keeps generating temporary IPv6 address at a certain interval, like every 24 hours your server will use a different IPv6 address to communicate on the Internet. This way your outbound IPv6 address will be different from your inbound IPv6 address. To do this edit the file /etc/sysctl.conf and add these commands after <span>net.ipv6.conf.all.forwarding=1</span></p>
