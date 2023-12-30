@@ -70,7 +70,7 @@ netsh interface ipv6 set privacy state=disabled store=persistent</code></pre>
 <p data-pm-slice="1 1 []">Now generate a new random IPv6 address suffix like this one <span><strong>::71c6:b34f:8e2a:54f5</strong> or your own easy to remember like <strong>::2</strong> or <strong>::1000</strong> and find your router IPv6 gateway address. In this example I will use ::71c6:b34f:8e2a:54f5 as my desired IPv6 address. </span>Now edit the /etc/network/interfaces file and replace the code with this one replacing the token and gateway of your router.</p>
 <maincode>
 <figure>
-<figcaption>password-protect.php</figcaption>
+<figcaption>/etc/network/interfaces</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false"># interfaces(5) file used by ifup(8) and ifdown(8)
 # Include files from /etc/network/interfaces.d:
@@ -88,7 +88,7 @@ iface eth0 inet6 auto
 <p>For Netplan use this as an example</p>
 <maincode>
 <figure>
-<figcaption>password-protect.php</figcaption>
+<figcaption>Netplan</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">network:
   ethernets:
@@ -128,7 +128,7 @@ iface eth0 inet6 auto
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">If you are planning on keeping your server safe from hackers and private you can use IPv6 privacy extensions. IPv4 addresses are always under constant attack and scanning since the address space is so small, it takes a couple of hours to scan the whole IPv4 address space and exposing your home network on the Internet is not a good idea. IPv6 privacy extensions keeps generating temporary IPv6 address at a certain interval, like every 24 hours your server will use a different IPv6 address to communicate on the Internet. This way your outbound IPv6 address will be different from your inbound IPv6 address. To do this edit the file /etc/sysctl.conf and add these commands after <span>net.ipv6.conf.all.forwarding=1</span></p>
 <maincode>
 <figure>
-<figcaption>password-protect.php</figcaption>
+<figcaption>/etc/sysctl.conf</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">net.ipv6.conf.eth0.accept_ra=2
 net.ipv6.conf.eth0.use_tempaddr=2
