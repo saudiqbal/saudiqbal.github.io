@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>IPv6 home server with dynamic prefix for VPN, Web Server, RDP and Firewall setup guide</title>
+<meta name="keywords" content="ipv6, home, server, with, dynamic, prefix, for, vpn, web, server, rdp, and, firewall, setup, guide">
+<meta name="description" content="IPv6 home server with dynamic prefix for VPN, Web Server, RDP and Firewall setup guide">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/dashboard-header.css">
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f0f0f0;
+}
+.titletextshadow {
+margin: 5px 15px;
+color: #000;
+text-shadow: 0 0 3px #000;
+letter-spacing: 4px;
+font-size: 2em;
+font-weight: bold;
+}
+.footer{
+text-align: center;
+}
+article {
+margin: 5px 15px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+</ul>
+</div>
+<div class="titletextshadow">IPv6</div>
+<article>
+<h4>IPv6 home server with dynamic prefix for VPN, Web Server, RDP and Firewall setup guide</h4>
+<p>IPv6 is the new successor to legacy IPv4 which overcomes the shortages of IPv4 addresses since it only contains <span>4,294,967,296 IP addresses where as the smallest IPv6 block which is a /64 has 18,446,744,073,709,551,616 IPv6 addresses. The world is running out of IPv4 addresses and more and more ISPs are moving towards CGNAT (Carrier Grade Network Address Translation) which means instead of a public IPv4 address a private IPv4 address is assigned to users where services hosted on home does not work. If</span> you are planning on setting up a server or remote access to your home or office using IPv6 then this guide is for you.</p>
+<p>Preparing your device.</p>
+<p><strong>Windows</strong></p>
+<p>Windows uses IPv6 privacy extension where it uses a temporary IPv6 address which changes every couple of hours. To force Windows to use a static address create a new file as disable_temp_ipv6.bat and paste these lines</p>
+<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>netsh interface ipv6 set global randomizeidentifiers=disabled store=active
+netsh interface ipv6 set global randomizeidentifiers=disabled store=persistent
+netsh interface ipv6 set privacy state=disabled store=active
+netsh interface ipv6 set privacy state=disabled store=persistent</code></pre>
+<p>save the file and right click on it and run it as admin then reboot the computer.</p>
+<p><strong>Linux</strong></p>
+<p>This config is for networking <code>/etc/network/interfaces</code> </p>
+<fieldset style="background-color: #7a7a7a;"><legend style="background-color: #949494; padding: 5px;">Raspberry Pi older than Bookworm only</legend>
+<p>These two commands are only for Raspberry Pi since it uses dhcpcd and we need networking to get it to work. If you are using Debian Bookworm OS and newer you can skip these two commands.</p>
+<p data-pm-slice="1 1 []"><code style="border: 1px solid #626567; background-color: #949494;">sudo systemctl disable dhcpcd</code></p>
+<p data-pm-slice="1 1 []"><code style="border: 1px solid #626567; background-color: #949494;">sudo systemctl enable networking</code></p>
+<p data-pm-slice="1 1 []">After executing the above commands do not reboot your Raspberry yet or it will not boot.</p>
+</fieldset>
+<p data-pm-slice="1 1 []">Now generate a new random IPv6 address suffix like this one <span><strong>::71c6:b34f:8e2a:54f5</strong> or your own easy to remember like <strong>::2</strong> or <strong>::1000</strong> and find your router IPv6 gateway address. In this example I will use ::71c6:b34f:8e2a:54f5 as my desired IPv6 address. </span>Now edit the /etc/network/interfaces file and replace the code with this one replacing the token and gateway of your router.</p>
+<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code># interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+iface eth0 inet6 auto
+	accept_ra 2
+	up ip token set ::71c6:b34f:8e2a:54f5 dev eth0</code></pre>
+<p>For Netplan use this as an example</p>
+<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>network:
+  ethernets:
+    eth0:
+      match:
+        macaddress: ab:cd:12:34:56:78
+      addresses:
+      - 192.168.1.10/24
+      ipv6-address-token: "::71c6:b34f:8e2a:54f5"
+      gateway4: 192.168.1.1
+      gateway6: fd32:f949:d949:b66c::1
+      accept-ra: true
+      ipv6-privacy: true
+      dhcp4: true
+      dhcp6: true
+      nameservers:
+        addresses: [8.8.8.8, 2001:4860:4860::8888]</code></pre>
+<p>Save the file and reboot your server or Raspberry Pi.</p>
+<p><strong>Router configuration</strong></p>
+<p>Next step is to setup your router firewall where we will use the suffix <span>71c6:b34f:8e2a:54f5 to match the last 4 octects to a full IPv6 address. The prefix can be dynamic and can change whenever it wants and your server will continue to work fine. Now go to your router firewall, Asus and OpenWRT config is similar and use these values as an example.</span></p>
+<p><span style="text-decoration: underline;">Asus router example</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Service name: Your preferred name</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Remote IP: Leave it empty</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Local IP: ::<span>71c6:b34f:8e2a:54f5</span>/::ffff:ffff:ffff:ffff</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Port: 443</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Protocol: Select TCP or UDP or both that your service requires.</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/asus-ipv6-firewall.jpg" alt="Asus IPv6 Firewall" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span style="text-decoration: underline;">OpenWRT example</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Network -> Firewall -> Traffic Rules -> Add</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/OpenWRT-firewall-example.jpg" alt="OpenWRT IPv6 Firewall" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Now go to Advanced Settings tab and select 'Restrict to address family' -> 'IPv6 only'</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><img src="/images/blog/OpenWRT-firewall-IPv6.jpg" alt="IPv6 Advanced tab" class="fluidimg" /></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Save the firewall and you are done.</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><strong>Keeping the server private</strong></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">If you are planning on keeping your server safe from hackers and private you can use IPv6 privacy extensions. IPv4 addresses are always under constant attack and scanning since the address space is so small, it takes a couple of hours to scan the whole IPv4 address space and exposing your home network on the Internet is not a good idea. IPv6 privacy extensions keeps generating temporary IPv6 address at a certain interval, like every 24 hours your server will use a different IPv6 address to communicate on the Internet. This way your outbound IPv6 address will be different from your inbound IPv6 address. To do this edit the file /etc/sysctl.conf and add these commands after <span>net.ipv6.conf.all.forwarding=1</span></p>
+<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>net.ipv6.conf.eth0.accept_ra=2
+net.ipv6.conf.eth0.use_tempaddr=2
+net.ipv6.conf.eth0.temp_prefered_lft = 86400
+net.ipv6.conf.eth0.temp_valid_lft = 90000</code></pre>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><strong>Dynamic DNS script</strong></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">If you need a bash or shell script to update your DNS server then go here for an example script ❯ <a href="/blog/dynamic-dns-bash-shell-script-for-ipv6-prefix-using-token-or-dhcpv6-for-linux.php">LINK</a></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM">Hopefully now you should get a working home IPv6 server or a VPN connection with inbound IPv6 address.</p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
+</article>
+
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+https://github.com/saudiqbal
+</div>
+</div>
+</body>
+</html>
