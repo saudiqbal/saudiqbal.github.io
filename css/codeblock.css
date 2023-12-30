@@ -1,0 +1,138 @@
+maincode {
+	display: block;
+	width: 98%;
+	min-width: 18em;
+	margin: 2em auto;
+}
+figure {
+	display: block;
+	margin: 1em 0;
+	width: 100%;
+	color: #9e9e9e;
+	border: 1px solid #111;
+	border-radius: 3px;
+	background: rgb(22, 22, 22);
+}
+figure figcaption {
+	display: block;
+	font-family: sans-serif;
+	padding: 5px 10px 4px 10px;
+	border-bottom: 1px solid #111;
+	border-radius: 3px 3px 0 0;
+	font-weight: bold;
+	background: #111;
+	color: #9e9e9e;
+}
+figure codeblockfooter {
+	display: block;
+	font-family: sans-serif;
+	padding: 5px 10px 4px 10px;
+	border-bottom: 1px solid #111;
+	border-radius: 3px 3px 0 0;
+	font-weight: bold;
+	background: #111;
+	color: #9e9e9e;
+}
+.numbers {
+	cursor: context-menu;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	box-shadow: inset 0 0 4px 0 rgba(0, 0, 0, 0.5);
+}
+pre, pre * {
+	font: normal normal normal 1em/1.4 monaco, courier, monospace;
+}
+pre {
+	font-size: 0.8em;
+}
+pre, pre code, pre samp {
+	display: block;
+	margin: 0;
+	cursor: text;
+}
+pre code, pre samp {
+	/* enforce white-space for IE7 */
+	white-space: pre;
+	/* enforce word-wrap for mobile safari */
+	word-wrap: normal;
+	padding: 10px;
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+	overflow-x: auto;
+	box-shadow: inset 0 1px 0 1px rgba(0, 0, 0, 0.5);
+}
+/* additional focus rules to provide a visual cue */
+pre [contenteditable]:focus {
+	border-radius: 0 0 3px 0;
+	background: #fff;
+	outline: none;
+	background: rgb(22, 22, 22);
+	box-shadow: inset 0 1px 4px 1px rgba(0, 0, 0, 0.5);
+}
+pre.line-numbers {
+	position: relative;
+}
+pre.line-numbers code,
+pre.line-numbers samp {
+	margin-left: 3em;
+	border-left: 1px solid #000;
+}
+pre.line-numbers > div {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	border-radius: 0 0 0 3px;
+	overflow: hidden;
+	counter-reset: line;
+}
+pre.line-numbers > div > span {
+	display: block;
+	width: 2.5em;
+	padding: 0 0.5em 0 0;
+	text-align: right;
+	color: #777;
+	overflow: hidden;
+	counter-increment: line;
+}
+pre.line-numbers > div > span::before {
+	content: counter(line);
+}
+pre.line-numbers > div > span:first-child {
+	margin-top: 10px;
+}
+pre.line-numbers > div > span:nth-child(odd) {
+	background: #111;
+}
+@media print {
+	pre code {
+		overflow-x: visible;
+		white-space: pre-wrap;
+	}
+	pre.line-numbers div {
+		display: none;
+	}
+	pre.line-numbers > code,
+	pre.line-numbers > samp {
+		margin-left: 0;
+	}
+}
+/* double-up the syntax elements for cross-browser RTF-keystroke support */
+pre b, pre strong {
+	font-weight: normal;
+	color: #039;
+}
+pre u, pre u b, pre u strong {
+	text-decoration: none;
+	color: #083;
+}
+pre i, pre em, pre i *, pre em *, pre i * *, pre em * * {
+	letter-spacing: -0.1em;
+	text-decoration: none;
+	font-style: normal;
+	color: #c55;
+}
