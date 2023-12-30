@@ -47,10 +47,16 @@ margin: 5px 15px;
 <p>Preparing your device.</p>
 <p><strong>Windows</strong></p>
 <p>Windows uses IPv6 privacy extension where it uses a temporary IPv6 address which changes every couple of hours. To force Windows to use a static address create a new file as disable_temp_ipv6.bat and paste these lines</p>
-<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>netsh interface ipv6 set global randomizeidentifiers=disabled store=active
+<maincode>
+<figure>
+<figcaption>Windows</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">netsh interface ipv6 set global randomizeidentifiers=disabled store=active
 netsh interface ipv6 set global randomizeidentifiers=disabled store=persistent
 netsh interface ipv6 set privacy state=disabled store=active
 netsh interface ipv6 set privacy state=disabled store=persistent</code></pre>
+</figure>
+</maincode>
 <p>save the file and right click on it and run it as admin then reboot the computer.</p>
 <p><strong>Linux</strong></p>
 <p>This config is for networking <code>/etc/network/interfaces</code> </p>
@@ -61,7 +67,11 @@ netsh interface ipv6 set privacy state=disabled store=persistent</code></pre>
 <p data-pm-slice="1 1 []">After executing the above commands do not reboot your Raspberry yet or it will not boot.</p>
 </fieldset>
 <p data-pm-slice="1 1 []">Now generate a new random IPv6 address suffix like this one <span><strong>::71c6:b34f:8e2a:54f5</strong> or your own easy to remember like <strong>::2</strong> or <strong>::1000</strong> and find your router IPv6 gateway address. In this example I will use ::71c6:b34f:8e2a:54f5 as my desired IPv6 address. </span>Now edit the /etc/network/interfaces file and replace the code with this one replacing the token and gateway of your router.</p>
-<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code># interfaces(5) file used by ifup(8) and ifdown(8)
+<maincode>
+<figure>
+<figcaption>password-protect.php</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false"># interfaces(5) file used by ifup(8) and ifdown(8)
 # Include files from /etc/network/interfaces.d:
 source /etc/network/interfaces.d/*
 
@@ -72,8 +82,14 @@ iface eth0 inet dhcp
 iface eth0 inet6 auto
 	accept_ra 2
 	up ip token set ::71c6:b34f:8e2a:54f5 dev eth0</code></pre>
+</figure>
+</maincode>
 <p>For Netplan use this as an example</p>
-<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>network:
+<maincode>
+<figure>
+<figcaption>password-protect.php</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">network:
   ethernets:
     eth0:
       match:
@@ -89,6 +105,8 @@ iface eth0 inet6 auto
       dhcp6: true
       nameservers:
         addresses: [8.8.8.8, 2001:4860:4860::8888]</code></pre>
+</figure>
+</maincode>
 <p>Save the file and reboot your server or Raspberry Pi.</p>
 <p><strong>Router configuration</strong></p>
 <p>Next step is to setup your router firewall where we will use the suffix <span>71c6:b34f:8e2a:54f5 to match the last 4 octects to a full IPv6 address. The prefix can be dynamic and can change whenever it wants and your server will continue to work fine. Now go to your router firewall, Asus and OpenWRT config is similar and use these values as an example.</span></p>
@@ -107,10 +125,16 @@ iface eth0 inet6 auto
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Save the firewall and you are done.</p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM"><strong>Keeping the server private</strong></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">If you are planning on keeping your server safe from hackers and private you can use IPv6 privacy extensions. IPv4 addresses are always under constant attack and scanning since the address space is so small, it takes a couple of hours to scan the whole IPv4 address space and exposing your home network on the Internet is not a good idea. IPv6 privacy extensions keeps generating temporary IPv6 address at a certain interval, like every 24 hours your server will use a different IPv6 address to communicate on the Internet. This way your outbound IPv6 address will be different from your inbound IPv6 address. To do this edit the file /etc/sysctl.conf and add these commands after <span>net.ipv6.conf.all.forwarding=1</span></p>
-<pre class="language-c" style="border: 1px solid #626567; background-color: #7a7a7a; overflow-y: scroll;"><code>net.ipv6.conf.eth0.accept_ra=2
+<maincode>
+<figure>
+<figcaption>password-protect.php</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">net.ipv6.conf.eth0.accept_ra=2
 net.ipv6.conf.eth0.use_tempaddr=2
 net.ipv6.conf.eth0.temp_prefered_lft = 86400
 net.ipv6.conf.eth0.temp_valid_lft = 90000</code></pre>
+</figure>
+</maincode>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM"><strong>Dynamic DNS script</strong></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">If you need a bash or shell script to update your DNS server then go here for an example script ❯ <a href="/blog/dynamic-dns-bash-shell-script-for-ipv6-prefix-using-token-or-dhcpv6-for-linux.php">LINK</a></p>
 <p class="_1qeIAgB0cPwnLhDF9XSiJM">Hopefully now you should get a working home IPv6 server or a VPN connection with inbound IPv6 address.</p>
@@ -122,5 +146,70 @@ net.ipv6.conf.eth0.temp_valid_lft = 90000</code></pre>
 <a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
 </div>
 </div>
+<script>
+(function() {
+	for (var tags = ['div', 'figure', 'figcaption'], i = 0; i < tags.length; i++) {
+		document.createElement(tags[i]);
+	}
+})();
+(function() {
+	//filter IE8 and earlier which don't support the generated content
+	if (typeof(window.getComputedStyle) == 'undefined') {
+		return;
+	}
+	//get the collection of PRE elements
+	var pre = document.getElementsByTagName('pre');
+	//now iterate through the collection
+	for (var len = pre.length, i = 0; i < len; i++) {
+		//get the CODE or SAMP element inside it,
+		//or just in case there isn't one, continue to the next PRE
+		var code = pre[i].getElementsByTagName('code').item(0);
+		if (!code) {
+			code = pre[i].getElementsByTagName('samp').item(0);
+			if (!code) {
+				continue;
+			}
+		}
+		//create a containing DIV column (but don't append it yet)
+		//including aria-hidden so that ATs don't read the numbers
+		var column = document.createElement('div');
+		column.setAttribute('aria-hidden', 'true');
+		column.setAttribute('class', 'numbers');
+		//split the code by line-breaks to count the number of lines
+		//then for each line, add an empty span inside the column
+		for (var n = 0; n < code.innerHTML.split(/[\n\r]/g).length; n++) {
+			column.appendChild(document.createElement('span'));
+		}
+		//now append the populated column before the code element
+		pre[i].insertBefore(column, code);
+		//finally add an identifying class to the PRE to trigger the extra CSS
+		pre[i].className = 'line-numbers';
+	}
+})();
+const copyButtonLabel = "Copy Code";
+// use a class selector if available
+let blocks = document.querySelectorAll("figure");
+blocks.forEach((block) => {
+	// only add button if browser supports Clipboard API
+	if (navigator.clipboard) {
+		let button = document.createElement("button");
+		button.innerText = copyButtonLabel;
+		block.appendChild(button);
+		button.addEventListener("click", async () => {
+			await copyCode(block, button);
+		});
+	}
+});
+async function copyCode(block, button) {
+	let code = block.querySelector("code");
+	let text = code.innerText;
+	await navigator.clipboard.writeText(text);
+	// visual feedback that task is completed
+	button.innerText = "Code Copied";
+	setTimeout(() => {
+		button.innerText = copyButtonLabel;
+	}, 1000);
+}
+</script>
 </body>
 </html>
