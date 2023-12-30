@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux</title>
+<meta name="keywords" content="dynamic, dns, bash, shell, script, for, ipv6, prefix, using, token, or, dhcpv6, for, linux">
+<meta name="description" content="Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/dashboard-header.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f0f0f0;
+}
+.titletextshadow {
+margin: 10px 15px;
+color: #000;
+text-shadow: 0 0 3px #000;
+letter-spacing: 4px;
+font-size: 2em;
+font-weight: bold;
+}
+.footer{
+text-align: center;
+}
+.fluidimg {
+max-width: 100%;
+height: auto;
+}
+article {
+margin: 5px 15px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+</ul>
+</div>
+<h1 class="titletextshadow">IPv6 home server with dynamic prefix for VPN, Web Server, RDP and Firewall setup guide</h1>
+<article>
+<h4>Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux</h4>
+<p>A bash script to update your preferred Dynamic DNS service with dynamic IPv6 prefix. There are two versions of this script, one with IPv6 token and one with DHCPv6. If you use your router to set a fixed suffix then you can use the DHCPv6 version or if you use IPv6 token to set a suffix then use the token version.</p>
+<p>First step is to create a text file which will contain the IPv6 address to compare with the new one. Run these commands to automatically create the file with a 0 in it.</p>
+<maincode>
+<figure>
+<figcaption>Bash command</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">echo "0" > $HOME/ddns-ipv6-address.txt
+chmod 777 $HOME/ddns-ipv6-address.txt</code></pre>
+</figure>
+</maincode>
+<p>If you choose to manually create the file then first create a blank file storedipaddress.txt and save it in /root/ddns-ipv6-address.txt, now open the file and type 0 and save and close the file. For some reason the storedipaddress.txt should not be empty for comparison this is why I had to type zero and save the file. Give the permissions 0777 to storedipaddress.txt so the script can write to it.</p>
+<p><strong>If you use token to set your IPv6 suffix:</strong></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Second step:</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Now create a new file ddns-updater-hourly and save it in /etc/cron.hourly/ddns-updater-hourly (file name should not have any extension) and chmod 0755 for permission.</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Example suffix used in this script 71c6:b34f:8e2a:54f5</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Change the section "# Your DDNS update command goes here" with the command you are given by your DDNS provider such as Cloudflare.</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>/etc/cron.hourly/ddns-updater-hourly file content</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/cron.hourly/ddns-updater-hourly</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+SUFFIX="::71c6:b34f:8e2a:54f5"
+ADDRSTORE=$HOME/ddns-ipv6-address.txt
+STOREDIPV6=$(cat $ADDRSTORE)
+
+__rfc5952_expand () {
+    read addr mask < <(IFS=/; echo $1)
+    quads=$(grep -oE "[a-fA-F0-9]{1,4}" <<< ${addr/\/*} | wc -l)
+    grep -qs ":$" <<< $addr && { addr="${addr}0000"; (( quads++ )); }
+    grep -qs "^:" <<< $addr && { addr="0000${addr}"; (( quads++ )); }
+    [ $quads -lt 8 ] && addr=${addr/::/:$(for (( i=1; i<=$(( 8 - quads )) ; i++ )); do printf "0000:"; done)}
+    addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}"; delim=":"; done)
+    [ ! -z $mask ] && echo $addr/$mask || echo $addr
+}
+
+SUFFIX="$(__rfc5952_expand $SUFFIX)"
+SUFFIX=${SUFFIX: -19}
+ALLIPV6=$(/sbin/ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep '^2')
+for i in $ALLIPV6; do
+EXPANDED="$(__rfc5952_expand $i)"
+EXPANDEDSUFFIX=${EXPANDED: -19}
+if [ $EXPANDEDSUFFIX == $SUFFIX ]; then
+
+if [ $EXPANDED != $STOREDIPV6 ]; then
+# Your DDNS update command(s) go here
+# Use the variable $EXPANDED to substitute the IPv6 address in your script.
+echo $EXPANDED > $ADDRSTORE
+logger "DDNS new IP address detected $EXPANDED"
+fi
+
+fi
+done
+exit 0</code></pre>
+</figure>
+</maincode>
+<p><strong>If you use DHCPv6 to set your IPv6 suffix:</strong></p>
+<p>If you use your router to set a static suffix using DHCPv6 then use this script since there is no need to use a token.</p>
+<p>First step:</p>
+<p>It is the same as above to create a text file to store the IPv6 address. Follow the command above or manually create a text file in the correct location.</p>
+<p>Second step:</p>
+<p><span>/etc/cron.hourly/ddns-updater-hourly file content</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/cron.hourly/ddns-updater-hourly</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+SUFFIX="::71c6:b34f:8e2a:54f5"
+ADDRSTORE=$HOME/ddns-ipv6-address.txt
+STOREDIPV6=$(cat $ADDRSTORE)
+
+__rfc5952_expand () {
+    read addr mask < <(IFS=/; echo $1)
+    quads=$(grep -oE "[a-fA-F0-9]{1,4}" <<< ${addr/\/*} | wc -l)
+    grep -qs ":$" <<< $addr && { addr="${addr}0000"; (( quads++ )); }
+    grep -qs "^:" <<< $addr && { addr="0000${addr}"; (( quads++ )); }
+    [ $quads -lt 8 ] && addr=${addr/::/:$(for (( i=1; i<=$(( 8 - quads )) ; i++ )); do printf "0000:"; done)}
+    addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}"; delim=":"; done)
+    [ ! -z $mask ] && echo $addr/$mask || echo $addr
+}
+
+SUFFIX="$(__rfc5952_expand $SUFFIX)"
+SUFFIX=${SUFFIX: -19}
+ALLIPV6=$(/sbin/ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep '^2')
+for i in $ALLIPV6; do
+EXPANDED="$(__rfc5952_expand $i)"
+EXPANDEDSUFFIX=${EXPANDED: -19}
+if [ $EXPANDEDSUFFIX == $SUFFIX ]; then
+
+if [ $EXPANDED != $STOREDIPV6 ]; then
+# Your DDNS update command(s) go here
+# Use the variable $EXPANDED to substitute the IPv6 address in your script.
+echo $EXPANDED > $ADDRSTORE
+logger "DDNS new IP address detected $EXPANDED"
+fi
+
+fi
+done
+exit 0</code></pre>
+</figure>
+</maincode>
+<p>Now edit the variables with your own values and save the file and it should run every hour to update the DDNS server.  You can also save the file somewhere else and create your own cron job to your desired schedule.</p>
+<p><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
+<p>Related: <a href="/IPv6/ipv6-home-server-with-dynamic-prefix-for-vpn-web-server-rdp-and-firewall-setup-guide.php">Server setup for dynamic IPv6 prefix</a></p>
+
+<script>
+(function() {
+	for (var tags = ['div', 'figure', 'figcaption'], i = 0; i < tags.length; i++) {
+		document.createElement(tags[i]);
+	}
+})();
+(function() {
+	//filter IE8 and earlier which don't support the generated content
+	if (typeof(window.getComputedStyle) == 'undefined') {
+		return;
+	}
+	//get the collection of PRE elements
+	var pre = document.getElementsByTagName('pre');
+	//now iterate through the collection
+	for (var len = pre.length, i = 0; i < len; i++) {
+		//get the CODE or SAMP element inside it,
+		//or just in case there isn't one, continue to the next PRE
+		var code = pre[i].getElementsByTagName('code').item(0);
+		if (!code) {
+			code = pre[i].getElementsByTagName('samp').item(0);
+			if (!code) {
+				continue;
+			}
+		}
+		//create a containing DIV column (but don't append it yet)
+		//including aria-hidden so that ATs don't read the numbers
+		var column = document.createElement('div');
+		column.setAttribute('aria-hidden', 'true');
+		column.setAttribute('class', 'numbers');
+		//split the code by line-breaks to count the number of lines
+		//then for each line, add an empty span inside the column
+		for (var n = 0; n < code.innerHTML.split(/[\n\r]/g).length; n++) {
+			column.appendChild(document.createElement('span'));
+		}
+		//now append the populated column before the code element
+		pre[i].insertBefore(column, code);
+		//finally add an identifying class to the PRE to trigger the extra CSS
+		pre[i].className = 'line-numbers';
+	}
+})();
+const copyButtonLabel = "Copy Code";
+// use a class selector if available
+let blocks = document.querySelectorAll("figure");
+blocks.forEach((block) => {
+	// only add button if browser supports Clipboard API
+	if (navigator.clipboard) {
+		let button = document.createElement("button");
+		button.innerText = copyButtonLabel;
+		block.appendChild(button);
+		button.addEventListener("click", async () => {
+			await copyCode(block, button);
+		});
+	}
+});
+async function copyCode(block, button) {
+	let code = block.querySelector("code");
+	let text = code.innerText;
+	await navigator.clipboard.writeText(text);
+	// visual feedback that task is completed
+	button.innerText = "Code Copied";
+	setTimeout(() => {
+		button.innerText = copyButtonLabel;
+	}, 1000);
+}
+</script>
+</article>
+</body>
+</html>
