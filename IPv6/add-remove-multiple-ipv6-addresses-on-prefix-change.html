@@ -92,7 +92,7 @@ addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}";
 [ ! -z $mask ] && echo $addr/$mask || echo $addr
 }
 
-IPv6Current=$(/sbin/ip -6 addr | grep inet6 | grep -vE 'host|temporary' | grep -F 'scope global dynamic' | sed -e 's/^.*inet6 \([^ ]*\)\/.*$/\1/;t;d' | grep '^2')
+IPv6Current=$(/sbin/ip -6 addr | grep inet6 | grep -vE 'host|temporary' | grep -F 'scope global dynamic' | sed -e 's/^.*inet6 \([^ ]*\)\/.*$/\1/;t;d' | grep '^2' | head -n1)
 IPv6Current="$(__rfc5952_expand $IPv6Current)"
 
 IPv6Current=${IPv6Current:0:19}
