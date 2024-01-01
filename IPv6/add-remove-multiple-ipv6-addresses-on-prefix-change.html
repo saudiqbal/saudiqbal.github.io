@@ -60,7 +60,7 @@ chmod 777 $HOME/IPv6Prefix.txt</code></pre>
 <figure>
 <figcaption>ipv6-addresses.txt</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">5e37:080b:66b7:68bb
+<code contenteditable="false" tabindex="0" spellcheck="false">printf %s '5e37:080b:66b7:68bb
 52bf:52fe:a1df:60e3
 3b32:a9d4:a9f3:074f
 9ec7:f4da:b166:0a5f
@@ -69,7 +69,7 @@ chmod 777 $HOME/IPv6Prefix.txt</code></pre>
 cf34:cb8b:b1be:12a4
 3600:af53:10ad:f647
 9527:dcc4:4926:51ba
-76a2:410f:704b:8d9c</code></pre>
+76a2:410f:704b:8d9c' >> $HOME/ipv6-addresses.txt</code></pre>
 </figure>
 </maincode>
 <p>Now create a bash file to do all the processing. You need to create a schedule to periodically check the IPv6 prefix for change. Change the interface name (ens18) to the name of your interface.</p>
