@@ -66,13 +66,11 @@ __rfc5952_expand () {
 
 SUFFIX="$(__rfc5952_expand $SUFFIX)"
 SUFFIX=${SUFFIX: -19}
-#echo "Suffix: " $SUFFIX
 
 OutboundIPv6=$(ip route get 2000:: | awk '{print $11}')
 #OutboundIPv6=$(ip route get 2000:: | grep -Po -- 'src \K\S*')
 OutboundIPv6="$(__rfc5952_expand $OutboundIPv6)"
 OutboundIPv6=${OutboundIPv6: -19}
-#echo "Outbound: " $OutboundIPv6
 
 if [ $OutboundIPv6 == $SUFFIX ]; then
 systemctl restart networking
