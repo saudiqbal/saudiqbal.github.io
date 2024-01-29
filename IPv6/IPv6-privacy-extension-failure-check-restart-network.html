@@ -45,6 +45,25 @@ margin: 5px 15px;
 <h1 class="titletextshadow">IPv6 privacy extension failure check and restart network</h1>
 <article>
 <p>This script checks that the IPv6 privacy extension are working properly and if there is a problem with getting a new IPv6 address this script restarts the network. I saw once in a while that the IPv6 privacy extension failed to get a new IPv6 address from the router and stopped working. Use this script in a schedule to check for working IPv6 privacy extension.</p>
+<p>Bash script using IPv6 grep</p>
+<maincode>
+<figure>
+<figcaption>IPv6-privacy-check</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+IPv6privacycheck=$(/sbin/ip -6 addr | grep inet6 | grep -v "::1" | grep -v "inet6 fe80" | grep -v "inet6 fd" | grep "scope global temporary dynamic")
+
+if [ -z "$IPv6privacycheck" ]
+then
+systemctl restart networking
+sleep 60
+logger " IPv6 privacy extension failed, restarting network"
+fi
+
+exit 0</code></pre>
+</figure>
+</maincode>
 <p>Bash script using IPv6 route command</p>
 <maincode>
 <figure>
@@ -81,28 +100,8 @@ fi
 exit 0</code></pre>
 </figure>
 </maincode>
-<p>Bash script using IPv6 grep</p>
-<maincode>
-<figure>
-<figcaption>IPv6-privacy-check</figcaption>
-<pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
-
-IPv6privacycheck=$(/sbin/ip -6 addr | grep inet6 | grep -v "::1" | grep -v "inet6 fe80" | grep -v "inet6 fd" | grep "scope global temporary dynamic")
-
-if [ -z "$IPv6privacycheck" ]
-then
-systemctl restart networking
-sleep 60
-logger " IPv6 privacy extension failed, restarting network"
-fi
-
-exit 0</code></pre>
-</figure>
-</maincode>
 <p><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
 </article>
-
 <div class="footer">
 <div style="margin: 0 auto; padding:25px;">
 <a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
