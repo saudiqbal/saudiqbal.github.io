@@ -117,6 +117,7 @@ iface vmbr0 inet6 dhcp
 	post-up ip6tables -t nat -A PREROUTING -p tcp -d fd00::10 --dport 443 -j REDIRECT --to-ports 8006</code></pre>
 </figure>
 </maincode>
+<p>Finally don't forget to add net.ipv6.conf.vmbr0.accept_ra=2 to your /etc/sysctl.conf file and reboot ProxMox.</p>
 </article>
 
 <div class="footer">
