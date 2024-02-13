@@ -79,6 +79,7 @@ iface lo inet loopback
 iface eno1 inet manual
 
 auto vmbr0
+allow-hotplug vmbr0
 iface vmbr0 inet dhcp
 	gateway 192.168.1.1
 	bridge-ports eno1
