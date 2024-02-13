@@ -22,11 +22,11 @@ article {
 margin: 5px 15px;
 }
 .customcode {
-background: hsl(220, 80%, 90%);
+background: #5c9dff;
 }
 .custompre {
 white-space: pre-wrap;
-background: hsl(30,80%,90%);
+background: #c3ac94;
 }
 .header {
 font-family: 'Open Sans', sans-serif;
