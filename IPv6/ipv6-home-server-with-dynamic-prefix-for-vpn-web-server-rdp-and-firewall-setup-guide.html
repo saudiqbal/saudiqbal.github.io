@@ -20,21 +20,7 @@
 <h1 class="titletextshadow">IPv6 home server with dynamic prefix for VPN, Web Server, RDP and Firewall setup guide</h1>
 <article>
 <p>IPv6 is the new successor to legacy IPv4 which overcomes the shortages of IPv4 addresses since it only contains <span>4,294,967,296 IP addresses where as the smallest IPv6 block which is a /64 has 18,446,744,073,709,551,616 IPv6 addresses. The world is running out of IPv4 addresses and more and more ISPs are moving towards CGNAT (Carrier Grade Network Address Translation) which means instead of a public IPv4 address a private IPv4 address is assigned to users where services hosted on home does not work. If</span> you are planning on setting up a server or remote access to your home or office using IPv6 then this guide is for you.</p>
-<p>Preparing your device.</p>
-<p><strong>Windows</strong></p>
-<p>Windows uses IPv6 privacy extension where it uses a temporary IPv6 address which changes every couple of hours. To force Windows to use a static address create a new file as disable_temp_ipv6.bat and paste these lines</p>
-<maincode>
-<figure>
-<figcaption>disable_temp_ipv6.bat</figcaption>
-<pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">netsh interface ipv6 set global randomizeidentifiers=disabled store=active
-netsh interface ipv6 set global randomizeidentifiers=disabled store=persistent
-netsh interface ipv6 set privacy state=disabled store=active
-netsh interface ipv6 set privacy state=disabled store=persistent</code></pre>
-</figure>
-</maincode>
-<p>save the file and right click on it and run it as admin then reboot the computer.</p>
-<p><strong>Linux</strong></p>
+<p>Preparing your Linux device or server.</p>
 <p>This config is for networking <code>/etc/network/interfaces</code> </p>
 <fieldset style="background-color: #7a7a7a;"><legend style="background-color: #949494; padding: 5px;">Raspberry Pi older than Bookworm only</legend>
 <p>These two commands are only for Raspberry Pi since it uses dhcpcd and we need networking to get it to work. If you are using Debian Bookworm OS and newer you can skip these two commands.</p>
