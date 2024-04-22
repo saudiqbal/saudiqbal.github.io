@@ -2,6 +2,7 @@ body {
 margin: 0;
 font-family: Arial, sans-serif;
 background-color: #f0f0f0;
+line-height: 2;
 }
 .titletextshadow {
 margin: 15px 15px 5px 15px;
