@@ -24,7 +24,7 @@
 <p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode">apt install bind9</span></p>
-<p>Now generate a key to update your DNS server <span class="customcode">tsig-keygen -a hmac-sha256 example</span>, I chose example for my primary domain example.com and www.example.com. You can generate as many keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
+<p>Now generate a TSIG key to update your DNS server <span class="customcode">tsig-keygen -a hmac-sha256 example</span>, I chose <span class="customcode">example</span> for my primary domain example.com and www.example.com. You can generate as many TSIG keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
 <p>Now we start configuring BIND9 server. This example includes for different servers using the DNS server for generating LetsEncrypt certificates</p>
 <maincode>
 <figure>
