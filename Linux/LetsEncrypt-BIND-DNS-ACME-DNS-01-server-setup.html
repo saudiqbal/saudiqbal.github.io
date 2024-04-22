@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>LetsEncrypt BIND DNS and ACME DNS-01 server setup</title>
+<meta name="keywords" content="IPv6, privacy extension, failure, check, restart, network">
+<meta name="description" content="IPv6 privacy extension failure check restart network">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+</ul>
+</div>
+<h1 class="titletextshadow">LetsEncrypt BIND DNS and ACME DNS-01 server setup guide</h1>
+<article>
+<p>Are you looking to setup your own DNS server for LetsEncrypt's ACME DNS-01 verification challenges then this guide is for you. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
+<p>Domain registrar DNS records setup</p>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>Server Setup</p>
+<p>Install BIND9 DNS server <span class="customcode">apt install bind9</span></p>
+<p>Now generate a key to update your DNS server <span class="customcode">tsig-keygen -a hmac-sha256 example</span>, I chose example for my primary domain example.com and www.example.com. You can generate as many keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
+<p>Now we start configuring BIND9 server. This example includes for different servers using the DNS server for generating LetsEncrypt certificates</p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.local</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+key "example" {
+        algorithm hmac-sha256;
+        secret "RPGIkPj/1glG2PRAAn/c/7u8DXYnzQgcPAESIGsLHYk=";
+};
+
+key "server1" {
+        algorithm hmac-sha256;
+        secret "NaTlsbfUE6LxjoNRelPbeZQqnCZTdlL9+4csRn345p4=";
+};
+
+key "server2" {
+        algorithm hmac-sha256;
+        secret "mEg52zRHJn4e6DA2yh7Uyg3eOGC+UDQrvWR4PreEOao=";
+};
+
+key "server3" {
+        algorithm hmac-sha256;
+        secret "iUWY3cHo58mkIQ3xmtgcmnaMUGQ9/7IQ9ZRdtdXdmWY=";
+};
+
+zone "example.com" {
+        type master;
+        file "/var/lib/bind/example.com.zone";
+        allow-query { any; };
+        check-names warn;
+        update-policy {
+                grant example name _acme-challenge.example.com. txt;
+                grant example name _acme-challenge.www.example.com. txt;
+                grant server1 name _acme-challenge.server1.example.com. txt;
+                grant server2 name _acme-challenge.server2.example.com. txt;
+                grant server3 name _acme-challenge.server3.example.com. txt;
+        };
+        notify no;
+};
+</code></pre>
+</figure>
+</maincode>
+<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 125.125.125.125; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { 2002:5d63:a55b:42df:5d01:2359:a67e:737d; };</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.options</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">options {
+	directory "/var/cache/bind";
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable
+	// nameservers, you probably want to use them as forwarders.
+	// Uncomment the following block, and insert the addresses replacing
+	// the all-0's placeholder.
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+	dnssec-validation auto;
+	allow-transfer {none;};
+	allow-recursion {none;};
+	allow-query-cache {none;};
+	recursion no;
+
+	listen-on { none; };
+	listen-on-v6 { 2002:5d63:a55b:42df:5d01:2359:a67e:737d; };
+};
+</code></pre>
+</figure>
+</maincode>
+<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values from your domain registrar.</p>
+<maincode>
+<figure>
+<figcaption>/var/lib/bind/example.com.zone</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
+$TTL 300	; 5 minutes
+example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
+				30         ; serial
+				10800      ; refresh (3 hours)
+				3600       ; retry (1 hour)
+				604800     ; expire (1 week)
+				86400      ; minimum (1 day)
+				)
+			NS	michelle.ns.cloudflare.com.
+
+</code></pre>
+</figure>
+</maincode>
+<p>Now restart BIND server with your new settings <span class="customcode">systemctl restart bind9</span></p>
+<p>Client server setup</p>
+<p>Install <span class="customcode">apt install dnsutils</span></p>
+<p>Now create a new file for each server you created above and paste the exact contant in the file, for example your primary client, create a new file in /root/acme.example.key</p>
+<maincode>
+<figure>
+<figcaption>/root/acme.example.key</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">key "example" {
+        algorithm hmac-sha256;
+        secret "RPGIkPj/1glG2PRAAn/c/7u8DXYnzQgcPAESIGsLHYk=";
+};</code></pre>
+</figure>
+</maincode>
+<p>For each new server paste the content of key file you created above, server1, server2, server3 and so on.</p>
+<p>Now open the terminal in your client server and run (export) these commands.</p>
+<maincode>
+<figure>
+<figcaption>/root/acme.example.key</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">export NSUPDATE_KEY=/root/acme.example.key
+export NSUPDATE_ZONE='example.com'
+export NSUPDATE_SERVER='dns.example.com'</code></pre>
+</figure>
+</maincode>
+<p>Now finally request the certificate using acme.sh</p>
+<maincode>
+<figure>
+<figcaption>acme.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">acme.sh --issue --dns dns_nsupdate -d 'example.com' -d 'www.example.com' --preferred-chain "ISRG Root X2" --keylength ec-256 --server letsencrypt</code></pre>
+</figure>
+</maincode>
+
+
+<p><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>
