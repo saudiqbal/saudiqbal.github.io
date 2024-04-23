@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Self hosted Dynamic DNS server using PHP and BIND</title>
+<meta name="keywords" content="IPv6, Self, hosted, Dynamic, DNS, server, PHP, BIND">
+<meta name="description" content="Self hosted Dynamic DNS server using PHP and BIND">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Self hosted Dynamic DNS server using PHP and BIND</h1>
+<article>
+<p>Are you looking to setup your own Dynamic DNS server then this guide is for you. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
+<p style="font-weight: bold;">Domain registrar DNS records setup</p>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 125.125.125.125</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>Now for each hostname create a NS record in your domain registrar, for example.<br>
+<span class="customcode">NS homevpn.dns.example.com dns.example.com</span><br>
+<span class="customcode">NS plexserver.dns.example.com dns.example.com</span><br>
+<span class="customcode">NS fileserver.dns.example.com dns.example.com</span><br>
+<span class="customcode">NS gameserver.dns.example.com dns.example.com</span><br>
+</p>
+<p style="font-weight: bold;">Server Setup</p>
+<p>Install BIND9 DNS server <span class="customcode">apt install bind9</span></p>
+<p>Now we start configuring BIND9 server.</p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.local</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "dns.example.com" IN {
+    type master;
+    file "/var/lib/bind/dns.example.com.zone";
+    allow-update { 127.0.0.1; };
+    notify no;
+};
+</code></pre>
+</figure>
+</maincode>
+<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 125.125.125.125; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { 2002:5d63:a55b:42df:5d01:2359:a67e:737d; };</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.options</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">options {
+	directory "/var/cache/bind";
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable
+	// nameservers, you probably want to use them as forwarders.
+	// Uncomment the following block, and insert the addresses replacing
+	// the all-0's placeholder.
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+	dnssec-validation auto;
+	allow-transfer {none;};
+	allow-recursion {none;};
+	allow-query-cache {none;};
+	recursion no;
+
+	listen-on { 127.0.0.1; };
+	listen-on-v6 { ::1; };
+};
+</code></pre>
+</figure>
+</maincode>
+<p>Now create a new zone file listed above (/var/lib/bind/dns.example.com.zone), replace the values from your domain registrar.</p>
+<maincode>
+<figure>
+<figcaption>/var/lib/bind/dns.example.com.zone</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
+$TTL 300	; 5 minutes
+dns.example.com IN SOA michelle.ns.cloudflare.com. email.example.com. (
+				1          ; serial
+				10800      ; refresh (3 hours)
+				3600       ; retry (1 hour)
+				604800     ; expire (1 week)
+				86400      ; minimum (1 day)
+				)
+			NS	michelle.ns.cloudflare.com.
+
+</code></pre>
+</figure>
+</maincode>
+<p>Now restart BIND server with your new settings <span class="customcode">systemctl restart bind9</span></p>
+<p style="font-weight: bold;">PHP setup</p>
+<p>Now we will use PHP script to update our dynamic DNS server. Create a new PHP file dns.php on your server with the content below.</p>
+<maincode>
+<figure>
+<figcaption>https://example.com/dns.php</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false"><?php
+header('Content-Type: text/plain');
+
+$hostname = $_GET["hostname"] ?? null;
+$ipV4Address = $_GET["myip"] ?? null;
+$ipV6Address = $_GET["myipv6"] ?? null;
+$dnsKey = $_GET["password"] ?? null;
+$action = $_GET["action"] ?? null;
+
+if (isset($dnsKey) && preg_match('/[^a-zA-Z0-9]/', $dnsKey))
+{echo "badauth";exit;}
+
+if (isset($hostname) && preg_match('/[^a-z0-9\.\-\_]/', $hostname))
+{echo "notfqdn";exit;}
+
+if (isset($ipV4Address) && preg_match('/[^0-9\.]/', $ipV4Address))
+{echo "badsys";exit;}
+
+if (isset($ipV6Address) && preg_match('/[^a-f0-9\:]/', $ipV6Address))
+{echo "badsys";exit;}
+
+$login = false;
+$user_info=[
+'homevpn.dns.example.com'=>'rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x',
+'plexserver.dns.example.com'=>'vxV4uh77QhKlUZV7woenHogCGTZbENBf',
+'fileserver.dns.example.com'=>'kYwi06FqLXDI77IJpZtM9N8VqiALymPR',
+'gameserver.dns.example.com'=>'53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM'
+];
+foreach ($user_info as $key => $value) {
+$login = ($key == $hostname && $value == $dnsKey) ? true : false;
+if($login) break;
+}
+if(!$login) {
+echo "badauth";
+exit;
+}
+
+if ($hostname == null) {
+header("HTTP/1.1 400 Bad Request");
+echo "notfqdn";
+exit;
+}
+
+if ($action == "delete") {
+$descriptorspec = array(
+	0 => array('pipe', 'r'),
+	1 => array('pipe', 'w')
+);
+$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], "server 127.0.0.1\n");
+fwrite($pipes[0], "zone dns.saudiqbal.com\n");
+fwrite($pipes[0], "update delete $hostname.\n");
+fwrite($pipes[0], "send\n");
+fclose($pipes[0]);
+echo stream_get_contents($pipes[1]);
+proc_close($process);
+echo "good";
+exit;
+}
+
+if (!$ipV4Address and !$ipV6Address) {
+$ip = $_SERVER['REMOTE_ADDR'];
+if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+// Use client IP address if no IPv4 given
+$ipV4Address = $ip;
+} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+// Use client IP address if no IPv6 given
+$ipV6Address = $ip;
+}
+}
+
+// Check whether the given IPv4 address is valid
+if ($ipV4Address and !filter_var($ipV4Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+header("HTTP/1.1 400 Bad Request");
+echo "badsys";
+exit;
+}
+
+// Check whether the given IPv6 address is valid
+if ($ipV6Address and !filter_var($ipV6Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+header("HTTP/1.1 400 Bad Request");
+echo "badsys";
+exit;
+}
+
+
+if ($ipV4Address) {
+ipv4_update();
+}
+if ($ipV6Address) {
+ipv6_update();
+}
+
+function ipv4_update()
+{
+global $hostname, $ipV4Address;
+$descriptorspec = array(
+	0 => array('pipe', 'r'),
+	1 => array('pipe', 'w')
+);
+$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], "server 127.0.0.1\n");
+fwrite($pipes[0], "update delete $hostname. A\n");
+fwrite($pipes[0], "update add $hostname. 300 A $ipV4Address\n\n");
+fclose($pipes[0]);
+echo stream_get_contents($pipes[1]);
+proc_close($process);
+}
+
+function ipv6_update()
+{
+global $hostname, $ipV6Address;
+$descriptorspec = array(
+	0 => array('pipe', 'r'),
+	1 => array('pipe', 'w')
+);
+$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], "server 127.0.0.1\n");
+fwrite($pipes[0], "update delete $hostname. AAAA\n");
+fwrite($pipes[0], "update add $hostname. 300 AAAA $ipV6Address\n\n");
+fclose($pipes[0]);
+echo stream_get_contents($pipes[1]);
+proc_close($process);
+}
+
+echo "good";
+?></code></pre>
+</figure>
+</maincode>
+<p>Examples to update the DNS server<br>
+Updating using the default IP used by the client<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com</span><br>
+Updating by manually specifying IPv6 address<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2</span><br>
+Updating by manually specifying IPv4 address<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myip=10.10.10.0</span><br>
+Updating my manually specifying both IPv6 and IPv4 address<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0</span><br>
+Deleting the hostname<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&action=delete&hostname=homevpn.dns.example.com</span><br>
+</p>
+
+<p><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>
