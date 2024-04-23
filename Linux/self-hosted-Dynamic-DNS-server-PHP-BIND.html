@@ -116,68 +116,66 @@ dns.example.com IN SOA michelle.ns.cloudflare.com. email.example.com. (
 <figure>
 <figcaption>https://example.com/dns.php</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false"><?php
-header('Content-Type: text/plain');
+<code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
+header(&#39;Content-Type: text/plain&#39;);
 
-$hostname = $_GET["hostname"] ?? null;
-$ipV4Address = $_GET["myip"] ?? null;
-$ipV6Address = $_GET["myipv6"] ?? null;
-$dnsKey = $_GET["password"] ?? null;
-$action = $_GET["action"] ?? null;
+$hostname = $_GET[&quot;hostname&quot;] ?? null;
+$ipV4Address = $_GET[&quot;myip&quot;] ?? null;
+$ipV6Address = $_GET[&quot;myipv6&quot;] ?? null;
+$dnsKey = $_GET[&quot;password&quot;] ?? null;
+$action = $_GET[&quot;action&quot;] ?? null;
 
-if (isset($dnsKey) && preg_match('/[^a-zA-Z0-9]/', $dnsKey))
-{echo "badauth";exit;}
+if (isset($dnsKey) &amp;&amp; preg_match(&#39;/[^a-zA-Z0-9]/&#39;, $dnsKey))
+{echo &quot;badauth&quot;;exit;}
 
-if (isset($hostname) && preg_match('/[^a-z0-9\.\-\_]/', $hostname))
-{echo "notfqdn";exit;}
+if (isset($hostname) &amp;&amp; preg_match(&#39;/[^a-z0-9\.\-\_]/&#39;, $hostname))
+{echo &quot;notfqdn&quot;;exit;}
 
-if (isset($ipV4Address) && preg_match('/[^0-9\.]/', $ipV4Address))
-{echo "badsys";exit;}
+if (isset($ipV4Address) &amp;&amp; preg_match(&#39;/[^0-9\.]/&#39;, $ipV4Address))
+{echo &quot;badsys&quot;;exit;}
 
-if (isset($ipV6Address) && preg_match('/[^a-f0-9\:]/', $ipV6Address))
-{echo "badsys";exit;}
+if (isset($ipV6Address) &amp;&amp; preg_match(&#39;/[^a-f0-9\:]/&#39;, $ipV6Address))
+{echo &quot;badsys&quot;;exit;}
 
 $login = false;
 $user_info=[
-'homevpn.dns.example.com'=>'rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x',
-'plexserver.dns.example.com'=>'vxV4uh77QhKlUZV7woenHogCGTZbENBf',
-'fileserver.dns.example.com'=>'kYwi06FqLXDI77IJpZtM9N8VqiALymPR',
-'gameserver.dns.example.com'=>'53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM'
+&#39;vpn.dns.saudiqbal.com&#39;=&gt;&#39;sfBshgQTfOQRaSHX8YEbl8qUKCsPlnoK&#39;,
+&#39;homeserver.dns.saudiqbal.com&#39;=&gt;&#39;P2XGDjuwOjNdgbbBQkc3zldyqxtoNJPx&#39;
 ];
-foreach ($user_info as $key => $value) {
-$login = ($key == $hostname && $value == $dnsKey) ? true : false;
+foreach ($user_info as $key =&gt; $value) {
+$login = ($key == $hostname &amp;&amp; $value == $dnsKey) ? true : false;
 if($login) break;
 }
 if(!$login) {
-echo "badauth";
+echo &quot;badauth&quot;;
 exit;
 }
 
 if ($hostname == null) {
-header("HTTP/1.1 400 Bad Request");
-echo "notfqdn";
+header(&quot;HTTP/1.1 400 Bad Request&quot;);
+echo &quot;notfqdn&quot;;
 exit;
 }
 
-if ($action == "delete") {
+if ($action == &quot;delete&quot;) {
 $descriptorspec = array(
-	0 => array('pipe', 'r'),
-	1 => array('pipe', 'w')
+	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
+	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
 );
-$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], "server 127.0.0.1\n");
-fwrite($pipes[0], "zone dns.saudiqbal.com\n");
-fwrite($pipes[0], "update delete $hostname.\n");
-fwrite($pipes[0], "send\n");
+$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
+fwrite($pipes[0], &quot;zone dns.saudiqbal.com\n&quot;);
+fwrite($pipes[0], &quot;update delete $hostname.\n&quot;);
+fwrite($pipes[0], &quot;send\n&quot;);
 fclose($pipes[0]);
 echo stream_get_contents($pipes[1]);
 proc_close($process);
-echo "good";
+echo &quot;good&quot;;
 exit;
 }
 
 if (!$ipV4Address and !$ipV6Address) {
-$ip = $_SERVER['REMOTE_ADDR'];
+$ip = $_SERVER[&#39;REMOTE_ADDR&#39;];
 if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 // Use client IP address if no IPv4 given
 $ipV4Address = $ip;
@@ -189,15 +187,15 @@ $ipV6Address = $ip;
 
 // Check whether the given IPv4 address is valid
 if ($ipV4Address and !filter_var($ipV4Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-header("HTTP/1.1 400 Bad Request");
-echo "badsys";
+header(&quot;HTTP/1.1 400 Bad Request&quot;);
+echo &quot;badsys&quot;;
 exit;
 }
 
 // Check whether the given IPv6 address is valid
 if ($ipV6Address and !filter_var($ipV6Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-header("HTTP/1.1 400 Bad Request");
-echo "badsys";
+header(&quot;HTTP/1.1 400 Bad Request&quot;);
+echo &quot;badsys&quot;;
 exit;
 }
 
@@ -213,13 +211,13 @@ function ipv4_update()
 {
 global $hostname, $ipV4Address;
 $descriptorspec = array(
-	0 => array('pipe', 'r'),
-	1 => array('pipe', 'w')
+	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
+	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
 );
-$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], "server 127.0.0.1\n");
-fwrite($pipes[0], "update delete $hostname. A\n");
-fwrite($pipes[0], "update add $hostname. 300 A $ipV4Address\n\n");
+$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
+fwrite($pipes[0], &quot;update delete $hostname. A\n&quot;);
+fwrite($pipes[0], &quot;update add $hostname. 300 A $ipV4Address\n\n&quot;);
 fclose($pipes[0]);
 echo stream_get_contents($pipes[1]);
 proc_close($process);
@@ -229,20 +227,20 @@ function ipv6_update()
 {
 global $hostname, $ipV6Address;
 $descriptorspec = array(
-	0 => array('pipe', 'r'),
-	1 => array('pipe', 'w')
+	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
+	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
 );
-$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], "server 127.0.0.1\n");
-fwrite($pipes[0], "update delete $hostname. AAAA\n");
-fwrite($pipes[0], "update add $hostname. 300 AAAA $ipV6Address\n\n");
+$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
+fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
+fwrite($pipes[0], &quot;update delete $hostname. AAAA\n&quot;);
+fwrite($pipes[0], &quot;update add $hostname. 300 AAAA $ipV6Address\n\n&quot;);
 fclose($pipes[0]);
 echo stream_get_contents($pipes[1]);
 proc_close($process);
 }
 
-echo "good";
-?></code></pre>
+echo &quot;good&quot;;
+?&gt;</code></pre>
 </figure>
 </maincode>
 <p>Examples to update the DNS server<br>
