@@ -165,7 +165,7 @@ $descriptorspec = array(
 );
 $process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
 fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
-fwrite($pipes[0], &quot;zone dns.example.com\n&quot;);
+//fwrite($pipes[0], &quot;zone dns.example.com\n&quot;);
 fwrite($pipes[0], &quot;update delete $hostname.\n&quot;);
 fwrite($pipes[0], &quot;send\n&quot;);
 fclose($pipes[0]);
