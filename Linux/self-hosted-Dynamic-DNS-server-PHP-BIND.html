@@ -139,8 +139,10 @@ if (isset($ipV6Address) &amp;&amp; preg_match(&#39;/[^a-f0-9\:]/&#39;, $ipV6Addr
 
 $login = false;
 $user_info=[
-&#39;vpn.dns.saudiqbal.com&#39;=&gt;&#39;sfBshgQTfOQRaSHX8YEbl8qUKCsPlnoK&#39;,
-&#39;homeserver.dns.saudiqbal.com&#39;=&gt;&#39;P2XGDjuwOjNdgbbBQkc3zldyqxtoNJPx&#39;
+&#39;homevpn.dns.example.com&#39;=&gt;&#39;rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&#39;,
+&#39;plexserver.dns.example.com&#39;=&gt;&#39;vxV4uh77QhKlUZV7woenHogCGTZbENBf&#39;,
+&#39;fileserver.dns.example.com&#39;=&gt;&#39;kYwi06FqLXDI77IJpZtM9N8VqiALymPR&#39;,
+&#39;gameserver.dns.example.com&#39;=&gt;&#39;53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM&#39;
 ];
 foreach ($user_info as $key =&gt; $value) {
 $login = ($key == $hostname &amp;&amp; $value == $dnsKey) ? true : false;
