@@ -29,6 +29,7 @@ border: 1px solid #BCBEC0;
 background: #F1F3F5;
 padding: 2px 4px;
 border-radius: 3px;
+font-family: 'Courier New', monospace;
 }
 .custompre {
 white-space: pre-wrap;
