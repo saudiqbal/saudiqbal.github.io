@@ -128,11 +128,11 @@ zone "example.com" {
 <code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
 $TTL 300	; 5 minutes
 example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
-				30         ; serial
-				10800      ; refresh (3 hours)
-				3600       ; retry (1 hour)
-				604800     ; expire (1 week)
-				86400      ; minimum (1 day)
+				1          ; serial
+				300        ; refresh (5 minutes)
+				300        ; retry (5 minutes)
+				300        ; expire (5 minutes)
+				300        ; minimum (5 minutes)
 				)
 			NS	michelle.ns.cloudflare.com.
 </code></pre>
