@@ -30,7 +30,7 @@
 <span class="customcode">NS gameserver.dns.example.com dns.example.com</span><br>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
-<p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">COPY</button></span></p>
+<p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
 <p>Now we start configuring BIND9 server.</p>
 <maincode>
 <figure>
@@ -108,7 +108,7 @@ dns.example.com IN SOA michelle.ns.cloudflare.com. email.example.com. (
 </code></pre>
 </figure>
 </maincode>
-<p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">COPY</button></span></p>
+<p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
 <p style="font-weight: bold;">PHP setup</p>
 <p>Now we will use PHP script to update our dynamic DNS server. Create a new PHP file dns.php on your server with the content below.</p>
 <maincode>
