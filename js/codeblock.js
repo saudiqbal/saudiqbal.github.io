@@ -61,3 +61,29 @@ async function copyCode(block, button) {
 		button.innerText = copyButtonLabel;
 	}, 1000);
 }
+
+function copyToClipboard(target) {
+var element = document.getElementById(target);
+var text = element.innerHTML;
+CopyToClipboard(text);
+}
+
+function CopyToClipboard (text) {
+if (window.clipboardData && window.clipboardData.setData) {
+return clipboardData.setData("Text", text);
+} else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+var textarea = document.createElement("textarea");
+textarea.textContent = text;
+textarea.style.position = "fixed";
+document.body.appendChild(textarea);
+textarea.select();
+try {
+return document.execCommand("copy");
+} catch (ex) {
+console.warn("Copy to clipboard failed.", ex);
+return false;
+} finally {
+document.body.removeChild(textarea);
+}
+}
+}
