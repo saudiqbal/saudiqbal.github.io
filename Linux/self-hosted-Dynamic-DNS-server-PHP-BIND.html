@@ -22,12 +22,9 @@
 <article>
 <p>Are you looking to setup your own Dynamic DNS server then this guide is for you. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
 <p style="font-weight: bold;">Domain registrar DNS records setup</p>
-<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 125.125.125.125</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
-<p>Now for each hostname create a NS record in your domain registrar, for example.<br>
-<span class="customcode">NS homevpn.dns.example.com dns.example.com</span><br>
-<span class="customcode">NS plexserver.dns.example.com dns.example.com</span><br>
-<span class="customcode">NS fileserver.dns.example.com dns.example.com</span><br>
-<span class="customcode">NS gameserver.dns.example.com dns.example.com</span><br>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">ns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">ns.example.com A 125.125.125.125</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>Now create a NS record in your domain registrar, for example.<br>
+<span class="customcode">NS record dns.example.com pointing to ns.example.com</span>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
@@ -97,18 +94,19 @@ zone "dns.example.com" IN {
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
 $TTL 300	; 5 minutes
-dns.example.com IN SOA michelle.ns.cloudflare.com. email.example.com. (
+dns.example.com IN SOA ns.example.com. email.example.com. (
 				1          ; serial
-				10800      ; refresh (3 hours)
+				3600       ; refresh (1 hour)
 				3600       ; retry (1 hour)
-				86400      ; expire (1 day)
-				86400      ; minimum (1 day)
+				3600       ; expire (1 hour)
+				3600       ; minimum (1 hour)
 				)
-			NS	michelle.ns.cloudflare.com.
+			NS	ns.example.com.
 </code></pre>
 </figure>
 </maincode>
-<p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
+<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone dns.example.com. /var/lib/bind/dns.example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
+<p>If you get no error after checking the zone file restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
 <p style="font-weight: bold;">PHP setup</p>
 <p>Now we will use PHP script to update our dynamic DNS server. Create a new PHP file dns.php on your server with the content below.</p>
 <maincode>

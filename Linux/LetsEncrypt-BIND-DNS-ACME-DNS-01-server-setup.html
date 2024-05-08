@@ -129,10 +129,10 @@ zone "example.com" {
 $TTL 300	; 5 minutes
 example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
 				1          ; serial
-				10800      ; refresh (3 hours)
+				3600       ; refresh (1 hour)
 				3600       ; retry (1 hour)
-				86400      ; expire (1 day)
-				86400      ; minimum (1 day)
+				3600       ; expire (1 hour)
+				3600       ; minimum (1 hour)
 				)
 			NS	michelle.ns.cloudflare.com.
 </code></pre>
