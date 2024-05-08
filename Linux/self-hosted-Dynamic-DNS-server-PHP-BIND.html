@@ -116,6 +116,9 @@ dns.example.com IN SOA ns.example.com. email.example.com. (
 <code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
 header(&#39;Content-Type: text/plain&#39;);
 
+// DNS Time to live in seconds
+$dnsttl = &#39;300&#39;;
+
 $hostname = $_GET[&quot;hostname&quot;] ?? null;
 $ipV4Address = $_GET[&quot;myip&quot;] ?? null;
 $ipV6Address = $_GET[&quot;myipv6&quot;] ?? null;
@@ -208,7 +211,7 @@ ipv6_update();
 
 function ipv4_update()
 {
-global $hostname, $ipV4Address;
+global $hostname, $ipV4Address, $dnsttl;
 $descriptorspec = array(
 	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
 	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
@@ -216,7 +219,7 @@ $descriptorspec = array(
 $process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
 fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
 fwrite($pipes[0], &quot;update delete $hostname. A\n&quot;);
-fwrite($pipes[0], &quot;update add $hostname. 300 A $ipV4Address\n\n&quot;);
+fwrite($pipes[0], &quot;update add $hostname. $dnsttl A $ipV4Address\n\n&quot;);
 fclose($pipes[0]);
 echo stream_get_contents($pipes[1]);
 proc_close($process);
@@ -224,7 +227,7 @@ proc_close($process);
 
 function ipv6_update()
 {
-global $hostname, $ipV6Address;
+global $hostname, $ipV6Address, $dnsttl;
 $descriptorspec = array(
 	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
 	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
@@ -232,7 +235,7 @@ $descriptorspec = array(
 $process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
 fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
 fwrite($pipes[0], &quot;update delete $hostname. AAAA\n&quot;);
-fwrite($pipes[0], &quot;update add $hostname. 300 AAAA $ipV6Address\n\n&quot;);
+fwrite($pipes[0], &quot;update add $hostname. $dnsttl AAAA $ipV6Address\n\n&quot;);
 fclose($pipes[0]);
 echo stream_get_contents($pipes[1]);
 proc_close($process);
