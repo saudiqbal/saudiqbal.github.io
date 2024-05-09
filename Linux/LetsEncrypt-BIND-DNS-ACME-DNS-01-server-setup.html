@@ -120,13 +120,13 @@ zone "example.com" {
 </code></pre>
 </figure>
 </maincode>
-<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values from your domain registrar.</p>
+<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values from your domain registrar, mine are from cloudflare</p>
 <maincode>
 <figure>
 <figcaption>/var/lib/bind/example.com.zone</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
-$TTL 300	; 5 minutes
+$TTL 60		; 1 minute
 example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
 				1          ; serial
 				3600       ; refresh (1 hour)
