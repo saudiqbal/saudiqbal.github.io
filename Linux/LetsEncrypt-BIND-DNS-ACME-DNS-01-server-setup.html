@@ -32,7 +32,7 @@
 </p>
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
-<p>Now generate a TSIG key to update your DNS server <span class="customcode"><span id="tsigkeygen">tsig-keygen -a hmac-sha256 example</span> <button onclick="copyToClipboard('tsigkeygen')">Copy Code</button></span>, I chose the key name <span class="customcode">example</span> as my primary key to get certificates for both my naked domain example.com and www.example.com. You can generate as many TSIG keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
+<p>Now generate a TSIG key to update your DNS server <span class="customcode"><span id="tsigkeygen">tsig-keygen -a hmac-sha256 mainserver</span> <button onclick="copyToClipboard('tsigkeygen')">Copy Code</button></span>, I chose the key name <span class="customcode">mainserver</span> as my primary key to get certificates for both my naked domain example.com and www.example.com. You can generate as many TSIG keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
 <p>Now we start configuring BIND9 server. This example includes four different servers (primary, server1, server2, server3) using the DNS server for generating LetsEncrypt certificates</p>
 <maincode>
 <figure>
@@ -46,7 +46,7 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-key "example" {
+key "mainserver" {
         algorithm hmac-sha256;
         secret "RPGIkPj/1glG2PRAAn/c/7u8DXYnzQgcPAESIGsLHYk=";
 };
@@ -141,12 +141,12 @@ example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
 <p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
 <p style="font-weight: bold;">Client server setup</p>
 <p>Install <span class="customcode"><span id="installdnsutils">apt install dnsutils</span> <button onclick="copyToClipboard('installdnsutils')">Copy Code</button></span></p>
-<p>Now create a new file for each server you created above and paste the exact contant in the file, for example your primary client, create a new file in /root/acme.example.key</p>
+<p>Now create a new file for each server you created above and paste the exact contant in the file, for example your primary client, create a new file in /root/tsig-acme.key</p>
 <maincode>
 <figure>
-<figcaption>/root/acme.example.key</figcaption>
+<figcaption>/root/tsig-acme.key</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">key "example" {
+<code contenteditable="false" tabindex="0" spellcheck="false">key "mainserver" {
         algorithm hmac-sha256;
         secret "RPGIkPj/1glG2PRAAn/c/7u8DXYnzQgcPAESIGsLHYk=";
 };</code></pre>
@@ -158,7 +158,7 @@ example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
 <figure>
 <figcaption>Run these commands in client terminal</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">export NSUPDATE_KEY=/root/acme.example.key
+<code contenteditable="false" tabindex="0" spellcheck="false">export NSUPDATE_KEY=/root/tsig-acme.key
 export NSUPDATE_ZONE='example.com'
 export NSUPDATE_SERVER='dns.example.com'</code></pre>
 </figure>
