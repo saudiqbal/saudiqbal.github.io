@@ -26,9 +26,10 @@
 <p>Now for each hostname create a NS record in your domain registrar, for example.<br>
 <span class="customcode">NS _acme-challenge.example.com dns.example.com</span><br>
 <span class="customcode">NS _acme-challenge.www.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.server1.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.server2.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.server3.example.com dns.example.com</span>
+<span class="customcode">NS _acme-challenge.homeserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.fileserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.gameserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.plexserver.example.com dns.example.com</span>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
