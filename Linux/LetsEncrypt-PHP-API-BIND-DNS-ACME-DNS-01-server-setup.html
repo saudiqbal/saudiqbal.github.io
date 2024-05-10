@@ -209,6 +209,7 @@ echo 'good';
 ?&gt;</code></pre>
 </figure>
 </maincode>
+<p style="font-weight: bold;">Client Server Setup</p>
 <p>Now install acme.sh <span class="customcode"><span id="installacme">curl https://get.acme.sh | sh -s email=my@example.com</span> <button onclick="copyToClipboard('installacme')">Copy Code</button></span></p>
 <p>We now need to create a new acme DNS plugin to interact with our PHP API. After installing acme.sh create a new file in acme plugin directory named dns_phpbind.sh</p>
 <maincode>
@@ -310,7 +311,6 @@ dns_phpbind_rm() {
 </figure>
 </maincode>
 <p>Change the value to your own server DNS_Server="https://example.com/acme.php". If you are setting up a freshly installed server which never had a DNS server before and needs a LetsEncrypt certificate itself then you might have to change https to http and once everything starts working you can switch back to https for secure PHP API. You can also manually add a TXT record by calling the API in the web browser address bar.</p>
-<p style="font-weight: bold;">Client Server Setup</p>
 <maincode>
 <figure>
 <figcaption>Run these commands in client terminal</figcaption>
