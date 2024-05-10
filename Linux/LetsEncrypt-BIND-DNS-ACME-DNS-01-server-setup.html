@@ -22,7 +22,7 @@
 <article>
 <p>Are you looking to setup your own DNS server for LetsEncrypt's ACME DNS-01 verification challenges then this guide is for you. LetsEncrypt wild card certificates can also be requested using the same DNS records. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
 <p style="font-weight: bold;">Domain registrar DNS records setup</p>
-<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2002:5d63:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 125.125.125.125</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
 <p>Now for each hostname create a NS record in your domain registrar, for example.<br>
 <span class="customcode">NS _acme-challenge.example.com dns.example.com</span><br>
 <span class="customcode">NS _acme-challenge.www.example.com dns.example.com</span><br>
@@ -83,7 +83,7 @@ zone "example.com" {
 </code></pre>
 </figure>
 </maincode>
-<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 127.0.0.1; 125.125.125.125; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { ::1; 2002:5d63:a55b:42df:5d01:2359:a67e:737d; };</span></p>
+<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 127.0.0.1; 203.0.113.9; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };</span></p>
 <maincode>
 <figure>
 <figcaption>/etc/bind/named.conf.options</figcaption>
@@ -115,7 +115,7 @@ zone "example.com" {
 	recursion no;
 
 	listen-on { 127.0.0.1; };
-	listen-on-v6 { ::1; 2002:5d63:a55b:42df:5d01:2359:a67e:737d; };
+	listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };
 };
 </code></pre>
 </figure>
