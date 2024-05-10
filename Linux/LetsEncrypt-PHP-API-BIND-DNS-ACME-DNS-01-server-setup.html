@@ -327,10 +327,22 @@ export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"</code></pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">acme.sh --issue --dns dns_phpbind -d '_acme-challenge.example.com' -d '_acme-challenge.www.example.com' --preferred-chain "ISRG Root X2" --keylength ec-256 --server letsencrypt</code></pre>
 </figure>
 </maincode>
-<p>Manually adding the TXT record</p>
-<p><span class="customcode"><span id="manualinstalltxt">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify</span> <button onclick="copyToClipboard('manualinstalltxt')">Copy Code</button></span></p>
-<p>Manually deleting the TXT record</p>
-<p><span class="customcode"><span id="manualdeletetxt">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify&action=delete</span> <button onclick="copyToClipboard('manualdeletetxt')">Copy Code</button></span></p>
+<p>Manually adding and removing the TXT records</p>
+<maincode>
+<figure>
+<figcaption>Adding TXT record</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify</code></pre>
+</figure>
+</maincode>
+
+<maincode>
+<figure>
+<figcaption>Removing TXT record</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify&action=delete</code></pre>
+</figure>
+</maincode>
 
 <p><span>Let me know if you have any comments or if there is any bug or error in this guide.</span></p>
 </article>
