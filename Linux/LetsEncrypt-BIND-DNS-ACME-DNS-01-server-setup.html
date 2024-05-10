@@ -33,7 +33,7 @@
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
 <p>Now generate a TSIG key to update your DNS server <span class="customcode"><span id="tsigkeygen">tsig-keygen -a hmac-sha256 mainserver</span> <button onclick="copyToClipboard('tsigkeygen')">Copy Code</button></span>, I chose the key name <span class="customcode">mainserver</span> as my primary key to get certificates for both my naked domain example.com and www.example.com. You can generate as many TSIG keys as you want for each of your servers, this is good because just in case one of your servers gets compromized then all you have to do is replace the key in your DNS server.</p>
-<p>Now we start configuring BIND9 server. This example includes four different servers (primary, server1, server2, server3) using the DNS server for generating LetsEncrypt certificates</p>
+<p>Now we start configuring the BIND9 server. This example includes four different servers (primary, server1, server2, server3) using the DNS server for generating LetsEncrypt certificates</p>
 <maincode>
 <figure>
 <figcaption>/etc/bind/named.conf.local</figcaption>
