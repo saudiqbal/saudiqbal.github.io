@@ -219,8 +219,8 @@ echo 'good';
 <code contenteditable="false" tabindex="0" spellcheck="false">#!/usr/bin/bash
 
 #Here is a sample custom api script.
-#This file name is "dns_bookmyname.sh"
-#So, here must be a method   dns_bookmyname_add()
+#This file name is "dns_phpbind.sh"
+#So, here must be a method   dns_phpbind_add()
 #Which will be called by acme.sh to add the txt record to your api system.
 #returns 0 means success, otherwise error.
 #
@@ -231,22 +231,12 @@ echo 'good';
 
 # Please Read this guide first: https://github.com/acmesh-official/acme.sh/wiki/DNS-API-Dev-Guide
 
-# BookMyName urls:
-# https://PHPBIND_HOSTNAME:PHPBIND_PASSWORD@www.bookmyname.com/dyndns/?hostname=_acme-challenge.domain.tld&type=txt&ttl=300&do=add&value="XXXXXXXX"'
-# https://PHPBIND_HOSTNAME:PHPBIND_PASSWORD@www.bookmyname.com/dyndns/?hostname=_acme-challenge.domain.tld&type=txt&ttl=300&do=remove&value="XXXXXXXX"'
-
-# Output:
-#good: update done, cid 123456, domain id 456789, type txt, ip XXXXXXXX
-#good: remove done 1, cid 123456, domain id 456789, ttl 300, type txt, ip XXXXXXXX
-
-# Be careful, BMN DNS servers can be slow to pick up changes; using dnssleep is thus advised.
-
 # Usage:
-# export PHPBIND_HOSTNAME="ABCDE-FREE"
-# export PHPBIND_PASSWORD="MyPassword"
-# /usr/local/ssl/acme.sh/acme.sh --dns dns_bookmyname --dnssleep 600 --issue -d domain.tld
+# export PHPBIND_HOSTNAME="_acme-challenge.example.com"
+# export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+# /usr/local/ssl/acme.sh/acme.sh --dns dns_phpbind --issue -d domain.tld
 
-#Usage: dns_bookmyname_add   _acme-challenge.www.domain.com   "XKrxpRBosdIKFzxW_CT3KLZNf6q0HG9i01zxXp5CPBs"
+#Usage: dns_phpbind_add   _acme-challenge.www.domain.com   "XKrxpRBosdIKFzxW_CT3KLZNf6q0HG9i01zxXp5CPBs"
 
 DNS_Server="https://example.com/acme.php"
 
