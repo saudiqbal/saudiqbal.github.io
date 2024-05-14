@@ -127,14 +127,14 @@ zone "example.com" {
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
 $TTL 60		; 1 minute
-example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
+example.com		IN SOA	dns.example.com. email.example.com. (
 				1          ; serial
 				3600       ; refresh (1 hour)
 				3600       ; retry (1 hour)
 				3600       ; expire (1 hour)
 				3600       ; minimum (1 hour)
 				)
-			NS	michelle.ns.cloudflare.com.
+			NS	dns.example.com.
 </code></pre>
 </figure>
 </maincode>
