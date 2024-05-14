@@ -120,7 +120,8 @@ zone "example.com" {
 </code></pre>
 </figure>
 </maincode>
-<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values from your domain registrar, mine are from cloudflare</p>
+<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values accordingly.</p>
+<p>Last line in this file must be a blank line.</p>
 <maincode>
 <figure>
 <figcaption>/var/lib/bind/example.com.zone</figcaption>
@@ -141,6 +142,7 @@ dns.example.com.             IN      A          203.0.113.9
 </code></pre>
 </figure>
 </maincode>
+<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone example.com. /var/lib/bind/example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
 <p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
 <p style="font-weight: bold;">Client server setup</p>
 <p>Install <span class="customcode"><span id="installdnsutils">apt install dnsutils</span> <button onclick="copyToClipboard('installdnsutils')">Copy Code</button></span></p>

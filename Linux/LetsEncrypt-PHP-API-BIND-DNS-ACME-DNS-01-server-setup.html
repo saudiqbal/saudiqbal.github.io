@@ -93,7 +93,8 @@ zone "example.com" IN {
 </code></pre>
 </figure>
 </maincode>
-<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values from your domain registrar, mine are from cloudflare</p>
+<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values accordingly.</p>
+<p>Last line in this file must be a blank line.</p>
 <maincode>
 <figure>
 <figcaption>/var/lib/bind/example.com.zone</figcaption>
@@ -111,6 +112,7 @@ example.com		IN SOA	michelle.ns.cloudflare.com. email.example.com. (
 </code></pre>
 </figure>
 </maincode>
+<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone example.com. /var/lib/bind/example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
 <p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
 <p style="font-weight: bold;">PHP Setup</p>
 <p>Now create a new file acme.php with the content below where your BIND9 server and PHP is installed. Passwords for example.com and www.example.com needs to be the same.</p>
