@@ -22,9 +22,9 @@
 <article>
 <p>Are you looking to setup your own Dynamic DNS server then this guide is for you. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
 <p style="font-weight: bold;">Domain registrar DNS records setup</p>
-<p>First add a new DNS record for your dns server, for example <span class="customcode">dns-ns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns-ns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
 <p>Now create a NS record in your domain registrar, for example.<br>
-<span class="customcode">NS record dns.example.com pointing to dns-ns.example.com</span>
+<span class="customcode">NS record dns.example.com pointing to dns.example.com</span>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
 <p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
@@ -95,14 +95,17 @@ zone "dns.example.com" IN {
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
 $TTL 300	; 5 minutes
-dns.example.com IN SOA dns-ns.example.com. email.example.com. (
+dns.example.com IN SOA dns.example.com. email.example.com. (
 				1          ; serial
 				3600       ; refresh (1 hour)
 				3600       ; retry (1 hour)
 				3600       ; expire (1 hour)
 				3600       ; minimum (1 hour)
 				)
-			NS	dns-ns.example.com.
+			NS	dns.example.com.
+; IP records for name servers
+dns.example.com.             IN      AAAA       2001:0db8:a55b:42df:5d01:2359:a67e:737d
+dns.example.com.             IN      A          203.0.113.9
 </code></pre>
 </figure>
 </maincode>
