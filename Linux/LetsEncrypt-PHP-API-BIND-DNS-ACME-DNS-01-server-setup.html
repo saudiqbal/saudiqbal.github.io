@@ -83,9 +83,12 @@ zone "example.com" IN {
 	//========================================================================
 	dnssec-validation auto;
 	allow-transfer {none;};
+	allow-notify {none;};
 	allow-recursion {none;};
 	allow-query-cache {none;};
 	recursion no;
+	minimal-any yes;
+	minimal-responses yes;
 
 	listen-on { 127.0.0.1; };
 	listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };
