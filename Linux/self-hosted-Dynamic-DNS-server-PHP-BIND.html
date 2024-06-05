@@ -121,134 +121,137 @@ dns.example.com.             IN      A          203.0.113.9
 <figcaption>https://example.com/dns.php</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
-header(&#39;Content-Type: text/plain&#39;);
+header(&apos;Content-Type: text/plain&apos;)&semi;
 
 // DNS Time to live in seconds
-$dnsttl = &#39;300&#39;;
+$dnsttl = &apos;300&apos;&semi;
 
-$hostname = $_GET[&quot;hostname&quot;] ?? null;
-$ipV4Address = $_GET[&quot;myip&quot;] ?? null;
-$ipV6Address = $_GET[&quot;myipv6&quot;] ?? null;
-$dnsKey = $_GET[&quot;password&quot;] ?? null;
-$action = $_GET[&quot;action&quot;] ?? null;
+$hostname = $&lowbar;GET&lsqb;&quot;hostname&quot;&rsqb; ?? null&semi;
+$ipV4Address = $&lowbar;GET&lsqb;&quot;myip&quot;&rsqb; ?? null&semi;
+$ipV6Address = $&lowbar;GET&lsqb;&quot;myipv6&quot;&rsqb; ?? null&semi;
+$dnsKey = $&lowbar;GET&lsqb;&quot;password&quot;&rsqb; ?? null&semi;
+$action = $&lowbar;GET&lsqb;&quot;action&quot;&rsqb; ?? null&semi;
 
-if (isset($dnsKey) &amp;&amp; preg_match(&#39;/[^a-zA-Z0-9]/&#39;, $dnsKey))
-{echo &quot;badauth&quot;;exit;}
+if (isset($dnsKey) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9&rsqb;/&apos;&comma; $dnsKey))
+&lcub;echo &quot;badauth&quot;&semi;exit&semi;&rcub;
 
-if (isset($hostname) &amp;&amp; preg_match(&#39;/[^a-z0-9\.\-\_]/&#39;, $hostname))
-{echo &quot;notfqdn&quot;;exit;}
+if (isset($hostname) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $hostname))
+&lcub;echo &quot;notfqdn&quot;&semi;exit&semi;&rcub;
 
-if (isset($ipV4Address) &amp;&amp; preg_match(&#39;/[^0-9\.]/&#39;, $ipV4Address))
-{echo &quot;badsys&quot;;exit;}
+if (isset($ipV4Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;0-9\.&rsqb;/&apos;&comma; $ipV4Address))
+&lcub;echo &quot;badsys&quot;&semi;exit&semi;&rcub;
 
-if (isset($ipV6Address) &amp;&amp; preg_match(&#39;/[^a-f0-9\:]/&#39;, $ipV6Address))
-{echo &quot;badsys&quot;;exit;}
+if (isset($ipV6Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-f0-9\:&rsqb;/&apos;&comma; $ipV6Address))
+&lcub;echo &quot;badsys&quot;&semi;exit&semi;&rcub;
 
-$login = false;
-$user_info=[
-&#39;homevpn.dns.example.com&#39;=&gt;&#39;rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&#39;,
-&#39;plexserver.dns.example.com&#39;=&gt;&#39;vxV4uh77QhKlUZV7woenHogCGTZbENBf&#39;,
-&#39;fileserver.dns.example.com&#39;=&gt;&#39;kYwi06FqLXDI77IJpZtM9N8VqiALymPR&#39;,
-&#39;gameserver.dns.example.com&#39;=&gt;&#39;53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM&#39;
-];
-foreach ($user_info as $key =&gt; $value) {
-$login = ($key == $hostname &amp;&amp; $value == $dnsKey) ? true : false;
-if($login) break;
-}
-if(!$login) {
-echo &quot;badauth&quot;;
-exit;
-}
+// Credintials format: hostname (homevpn.dns.example.com)&comma; password (rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x)&comma; name of zone file to update (dns.example.com)
+$login = false&semi;
+$user&lowbar;info=&lsqb;
+&apos;homevpn.dns.example.com&apos;=&gt;&lsqb;&apos;rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&apos;&comma;&apos;dns.example.com&apos;&rsqb;&comma;
+&apos;plexserver.dns.example.com&apos;=&gt;&lsqb;&apos;vxV4uh77QhKlUZV7woenHogCGTZbENBf&apos;&comma;&apos;dns.example.com&apos;&rsqb;&comma;
+&apos;fileserver.dns.example.com&apos;=&gt;&lsqb;&apos;kYwi06FqLXDI77IJpZtM9N8VqiALymPR&apos;&comma;&apos;dns.example.com&apos;&rsqb;&comma;
+&apos;gameserver.dns.example.com&apos;=&gt;&lsqb;&apos;53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM&apos;&comma;&apos;dns.example.com&apos;&rsqb;
+&rsqb;&semi;
+foreach ($user&lowbar;info as $key =&gt; $value) &lcub;
+$login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : false&semi;
+if($login) break&semi;
+&rcub;
+if(!$login) &lcub;
+echo &quot;badauth&quot;&semi;
+exit&semi;
+&rcub;
 
-if ($hostname == null) {
-header(&quot;HTTP/1.1 400 Bad Request&quot;);
-echo &quot;notfqdn&quot;;
-exit;
-}
+if ($hostname == null) &lcub;
+header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
+echo &quot;notfqdn&quot;&semi;
+exit&semi;
+&rcub;
 
-if ($action == &quot;delete&quot;) {
+if ($action == &quot;delete&quot;) &lcub;
 $descriptorspec = array(
-	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
-	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
-);
-$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
-//fwrite($pipes[0], &quot;zone dns.example.com\n&quot;);
-fwrite($pipes[0], &quot;update delete $hostname.\n&quot;);
-fwrite($pipes[0], &quot;send\n&quot;);
-fclose($pipes[0]);
-echo stream_get_contents($pipes[1]);
-proc_close($process);
-echo &quot;good&quot;;
-exit;
-}
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server 127.0.0.1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname.\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;send\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+echo &quot;good&quot;&semi;
+exit&semi;
+&rcub;
 
-if (!$ipV4Address and !$ipV6Address) {
-$ip = $_SERVER[&#39;REMOTE_ADDR&#39;];
-if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+if (!$ipV4Address and !$ipV6Address) &lcub;
+$ip = $&lowbar;SERVER&lsqb;&apos;REMOTE&lowbar;ADDR&apos;&rsqb;&semi;
+if (filter&lowbar;var($ip&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV4)) &lcub;
 // Use client IP address if no IPv4 given
-$ipV4Address = $ip;
-} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+$ipV4Address = $ip&semi;
+&rcub; elseif (filter&lowbar;var($ip&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV6)) &lcub;
 // Use client IP address if no IPv6 given
-$ipV6Address = $ip;
-}
-}
+$ipV6Address = $ip&semi;
+&rcub;
+&rcub;
 
 // Check whether the given IPv4 address is valid
-if ($ipV4Address and !filter_var($ipV4Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-header(&quot;HTTP/1.1 400 Bad Request&quot;);
-echo &quot;badsys&quot;;
-exit;
-}
+if ($ipV4Address and !filter&lowbar;var($ipV4Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV4)) &lcub;
+header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
+echo &quot;badsys&quot;&semi;
+exit&semi;
+&rcub;
 
 // Check whether the given IPv6 address is valid
-if ($ipV6Address and !filter_var($ipV6Address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-header(&quot;HTTP/1.1 400 Bad Request&quot;);
-echo &quot;badsys&quot;;
-exit;
-}
+if ($ipV6Address and !filter&lowbar;var($ipV6Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV6)) &lcub;
+header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
+echo &quot;badsys&quot;&semi;
+exit&semi;
+&rcub;
 
 
-if ($ipV4Address) {
-ipv4_update();
-}
-if ($ipV6Address) {
-ipv6_update();
-}
+if ($ipV4Address) &lcub;
+ipv4&lowbar;update()&semi;
+&rcub;
+if ($ipV6Address) &lcub;
+ipv6&lowbar;update()&semi;
+&rcub;
 
-function ipv4_update()
-{
-global $hostname, $ipV4Address, $dnsttl;
+function ipv4&lowbar;update()
+&lcub;
+global $hostname&comma; $ipV4Address&comma; $dnsttl&comma; $value&semi;
 $descriptorspec = array(
-	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
-	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
-);
-$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
-fwrite($pipes[0], &quot;update delete $hostname. A\n&quot;);
-fwrite($pipes[0], &quot;update add $hostname. $dnsttl A $ipV4Address\n\n&quot;);
-fclose($pipes[0]);
-echo stream_get_contents($pipes[1]);
-proc_close($process);
-}
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server 127.0.0.1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. A\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update add $hostname. $dnsttl A $ipV4Address\n\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+&rcub;
 
-function ipv6_update()
-{
-global $hostname, $ipV6Address, $dnsttl;
+function ipv6&lowbar;update()
+&lcub;
+global $hostname&comma; $ipV6Address&comma; $dnsttl&comma; $value&semi;
 $descriptorspec = array(
-	0 =&gt; array(&#39;pipe&#39;, &#39;r&#39;),
-	1 =&gt; array(&#39;pipe&#39;, &#39;w&#39;)
-);
-$process = proc_open(&#39;nsupdate&#39;, $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], &quot;server 127.0.0.1\n&quot;);
-fwrite($pipes[0], &quot;update delete $hostname. AAAA\n&quot;);
-fwrite($pipes[0], &quot;update add $hostname. $dnsttl AAAA $ipV6Address\n\n&quot;);
-fclose($pipes[0]);
-echo stream_get_contents($pipes[1]);
-proc_close($process);
-}
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server 127.0.0.1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. AAAA\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update add $hostname. $dnsttl AAAA $ipV6Address\n\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+&rcub;
 
-echo &quot;good&quot;;
+echo &quot;good&quot;&semi;
 ?&gt;</code></pre>
 </figure>
 </maincode>

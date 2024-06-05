@@ -127,93 +127,95 @@ dns.example.com.             IN      A          203.0.113.9
 <figcaption>https://example.com/acme.php</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
-header('Content-Type: text/plain');
+header(&apos;Content-Type: text/plain&apos;)&semi;
 
 // DNS Time to live in seconds
-$dnsttl = '0';
+$dnsttl = &apos;0&apos;&semi;
 
-$hostname = $_GET['hostname'] ?? null;
-$txtrecord = $_GET['txt'] ?? null;
-$dnsKey = $_GET['password'] ?? null;
-$action = $_GET['action'] ?? null;
+$hostname = $&lowbar;GET&lsqb;&apos;hostname&apos;&rsqb; ?? null&semi;
+$txtrecord = $&lowbar;GET&lsqb;&apos;txt&apos;&rsqb; ?? null&semi;
+$dnsKey = $&lowbar;GET&lsqb;&apos;password&apos;&rsqb; ?? null&semi;
+$action = $&lowbar;GET&lsqb;&apos;action&apos;&rsqb; ?? null&semi;
 
-if (isset($dnsKey) &amp;&amp; preg_match('/[^a-zA-Z0-9]/', $dnsKey))
-{echo 'badauth';exit;}
+if (isset($dnsKey) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9&rsqb;/&apos;&comma; $dnsKey))
+&lcub;echo &apos;badauth&apos;&semi;exit&semi;&rcub;
 
-if (isset($hostname) &amp;&amp; preg_match('/[^a-z0-9\.\-\_]/', $hostname))
-{echo 'notfqdn';exit;}
+if (isset($hostname) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $hostname))
+&lcub;echo &apos;notfqdn&apos;&semi;exit&semi;&rcub;
 
-if (isset($txtrecord) &amp;&amp; preg_match('/[^a-zA-Z0-9\.\-\_]/', $txtrecord))
-{echo 'badsys';exit;}
+if (isset($txtrecord) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $txtrecord))
+&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
 
-$login = false;
-$user_info=[
-'_acme-challenge.example.com'=&gt;'y6piHUklqGhZn6BhULmYraNhEfZKlSep',
-'_acme-challenge.www.example.com'=&gt;'y6piHUklqGhZn6BhULmYraNhEfZKlSep',
-'_acme-challenge.homeserver.example.com'=&gt;'lSOd73rMh1P9j8kpow24bbBDDWzkekwh',
-'_acme-challenge.fileserver.example.com'=&gt;'KM2gy8nS5W1P0OrbqbtmqvBlvtZfKn0F',
-'_acme-challenge.gameserver.example.com'=&gt;'DVhaFA3QoIDeg02edTEHAwtyzEPByXM1',
-'_acme-challenge.plexserver.example.com'=&gt;'6D1RKde1zlh0vYL47Df1x3UjuoCfyqMJ'
-];
-foreach ($user_info as $key =&gt; $value) {
-$login = ($key == $hostname &amp;&amp; $value == $dnsKey) ? true : false;
-if($login) break;
-}
-if(!$login) {
-echo 'badauth';
-exit;
-}
+// Credintials format: hostname (&lowbar;acme-challenge.example.com)&amp;comma&semi; password (y6piHUklqGhZn6BhULmYraNhEfZKlSep)&amp;comma&semi; name of zone file to update (example.com)
+$login = false&semi;
+$user&lowbar;info=&lsqb;
+&apos;&lowbar;acme-challenge.example.com&apos;=&gt;&lsqb;&apos;y6piHUklqGhZn6BhULmYraNhEfZKlSep&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.www.example.com&apos;=&gt;&lsqb;&apos;y6piHUklqGhZn6BhULmYraNhEfZKlSep&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.homeserver.example.com&apos;=&gt;&lsqb;&apos;lSOd73rMh1P9j8kpow24bbBDDWzkekwh&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.fileserver.example.com&apos;=&gt;&lsqb;&apos;KM2gy8nS5W1P0OrbqbtmqvBlvtZfKn0F&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.gameserver.example.com&apos;=&gt;&lsqb;&apos;DVhaFA3QoIDeg02edTEHAwtyzEPByXM1&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.plexserver.example.com&apos;=&gt;&lsqb;&apos;6D1RKde1zlh0vYL47Df1x3UjuoCfyqMJ&apos;&comma;&apos;example.com&apos;&rsqb;
+&rsqb;&semi;
+foreach ($user&lowbar;info as $key =&gt; $value) &lcub;
+$login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : false&semi;
+if($login) break&semi;
+&rcub;
+if(!$login) &lcub;
+echo &apos;badauth&apos;&semi;
+exit&semi;
+&rcub;
 
-if ($hostname == null) {
-header('HTTP/1.1 400 Bad Request');
-echo 'notfqdn';
-exit;
-}
+if ($hostname == null) &lcub;
+header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+echo &apos;notfqdn&apos;&semi;
+exit&semi;
+&rcub;
 
 if (empty($txtrecord))
-{
-	echo 'emptytxtrecord';
-	exit;
-}
+&lcub;
+	echo &apos;emptytxtrecord&apos;&semi;
+	exit&semi;
+&rcub;
 
-if ($action == 'delete') {
+if ($action == &apos;delete&apos;) &lcub;
 $descriptorspec = array(
-	0 =&gt; array('pipe', 'r'),
-	1 =&gt; array('pipe', 'w')
-);
-$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], "server ::1\n");
-//fwrite($pipes[0], "zone dns.example.com\n");
-fwrite($pipes[0], "update delete $hostname. TXT $txtrecord\n");
-fwrite($pipes[0], "send\n");
-fclose($pipes[0]);
-echo stream_get_contents($pipes[1]);
-proc_close($process);
-echo 'good';
-exit;
-}
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server ::1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. TXT $txtrecord\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;send\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+echo &apos;good&apos;&semi;
+exit&semi;
+&rcub;
 else
-{
-	txt_update();
-}
+&lcub;
+	txt&lowbar;update()&semi;
+&rcub;
 
-function txt_update()
-{
-global $hostname, $txtrecord, $dnsttl;
+function txt&lowbar;update()
+&lcub;
+global $hostname&comma; $txtrecord&comma; $dnsttl&comma; $value&semi;
 $descriptorspec = array(
-	0 =&gt; array('pipe', 'r'),
-	1 =&gt; array('pipe', 'w')
-);
-$process = proc_open('nsupdate', $descriptorspec, $pipes, NULL, NULL);
-fwrite($pipes[0], "server ::1\n");
-fwrite($pipes[0], "update delete $hostname. TXT $txtrecord\n");
-fwrite($pipes[0], "update add $hostname. $dnsttl TXT $txtrecord\n\n");
-fclose($pipes[0]);
-echo stream_get_contents($pipes[1]);
-proc_close($process);
-}
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server ::1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. TXT $txtrecord\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update add $hostname. $dnsttl TXT $txtrecord\n\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+&rcub;
 
-echo 'good';
+echo &apos;good&apos;&semi;
 ?&gt;</code></pre>
 </figure>
 </maincode>
