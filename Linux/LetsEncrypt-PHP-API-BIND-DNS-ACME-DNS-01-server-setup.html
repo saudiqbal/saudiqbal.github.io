@@ -242,13 +242,11 @@ echo &apos;good&apos;&semi;
 # Please Read this guide first: https://github.com/acmesh-official/acme.sh/wiki/DNS-API-Dev-Guide
 
 # Usage:
-# export PHPBIND_HOSTNAME="_acme-challenge.example.com"
 # export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+# export PHPBIND_DNS_SERVER="https://example.com/acme.php"
 # /usr/local/ssl/acme.sh/acme.sh --dns dns_phpbind --issue -d domain.tld
 
-#Usage: dns_phpbind_add   _acme-challenge.www.domain.com   "XKrxpRBosdIKFzxW_CT3KLZNf6q0HG9i01zxXp5CPBs"
-
-DNS_Server="https://example.com/acme.php"
+#Usage: dns_phpbind_add   _acme-challenge.www.example.com   "y6piHUklqGhZn6BhULmYraNhEfZKlSep"
 
 dns_phpbind_add() {
   fulldomain=$1
@@ -257,22 +255,28 @@ dns_phpbind_add() {
   _debug fulldomain "$fulldomain"
   _debug txtvalue "$txtvalue"
 
-  PHPBIND_HOSTNAME="${PHPBIND_HOSTNAME:-$(_readaccountconf_mutable PHPBIND_HOSTNAME)}"
   PHPBIND_PASSWORD="${PHPBIND_PASSWORD:-$(_readaccountconf_mutable PHPBIND_PASSWORD)}"
+  PHPBIND_DNS_SERVER="${PHPBIND_DNS_SERVER:-$(_readaccountconf_mutable PHPBIND_DNS_SERVER)}"
 
-  if [ -z "$PHPBIND_HOSTNAME" ] || [ -z "$PHPBIND_PASSWORD" ]; then
-    PHPBIND_HOSTNAME=""
+  if [ -z "$PHPBIND_PASSWORD" ]; then
     PHPBIND_PASSWORD=""
-    _err "You didn't specify the hostname and password yet."
-    _err "Please specify them and try again."
+    _err "You didn't specify the password yet."
+    _err "Please specify the password and try again."
+    return 1
+  fi
+
+  if [ -z "$PHPBIND_DNS_SERVER" ]; then
+    PHPBIND_DNS_SERVER=""
+    _err "You didn't specify the DNS server yet."
+    _err "Please specify the DNS server and try again."
     return 1
   fi
 
   #save the credentials to the account conf file.
-  _saveaccountconf_mutable PHPBIND_HOSTNAME "$PHPBIND_HOSTNAME"
   _saveaccountconf_mutable PHPBIND_PASSWORD "$PHPBIND_PASSWORD"
+  _saveaccountconf_mutable PHPBIND_DNS_SERVER "$PHPBIND_DNS_SERVER"
 
-  uri="$DNS_Server"
+  uri="$PHPBIND_DNS_SERVER"
   data="?password=${PHPBIND_PASSWORD}&hostname=${fulldomain}&txt=${txtvalue}"
   result="$(_get "${uri}${data}")"
   _debug "Result: $result"
@@ -293,10 +297,10 @@ dns_phpbind_rm() {
   _debug fulldomain "$fulldomain"
   _debug txtvalue "$txtvalue"
 
-  PHPBIND_HOSTNAME="${PHPBIND_HOSTNAME:-$(_readaccountconf_mutable PHPBIND_HOSTNAME)}"
   PHPBIND_PASSWORD="${PHPBIND_PASSWORD:-$(_readaccountconf_mutable PHPBIND_PASSWORD)}"
+  PHPBIND_DNS_SERVER="${PHPBIND_DNS_SERVER:-$(_readaccountconf_mutable PHPBIND_DNS_SERVER)}"
 
-  uri="$DNS_Server"
+  uri="$PHPBIND_DNS_SERVER"
   data="?password=${PHPBIND_PASSWORD}&hostname=${fulldomain}&txt=${txtvalue}&action=delete"
   result="$(_get "${uri}${data}")"
   _debug "Result: $result"
@@ -311,13 +315,13 @@ dns_phpbind_rm() {
 </code></pre>
 </figure>
 </maincode>
-<p>Change the value to your own server <span class="customcode">DNS_Server="https://example.com/acme.php"</span>. If you are setting up a freshly installed server which never had a DNS server before and needs a LetsEncrypt certificate for itself then you might have to change https to http and once everything starts working you can switch back to https for secure PHP API. You can also manually add a TXT record by calling the API in the web browser address bar (See below).</p>
+<p>If you are setting up a freshly installed server which never had a DNS server before and needs a LetsEncrypt certificate for itself then you might have to change https to http and once everything starts working you can switch back to https for secure PHP API. You can also manually add a TXT record by calling the API in the web browser address bar (See below).</p>
 <maincode>
 <figure>
 <figcaption>Run these commands in client terminal</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">export PHPBIND_HOSTNAME="_acme-challenge.example.com"
-export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"</code></pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+export PHPBIND_DNS_SERVER="https://example.com/acme.php"</code></pre>
 </figure>
 </maincode>
 <p>Acme.sh command to use.</p>
