@@ -103,8 +103,9 @@ dns.example.com IN SOA dns.example.com. email.example.com. (
 				3600       ; refresh (1 hour)
 				3600       ; retry (1 hour)
 				3600       ; expire (1 hour)
-				3600       ; minimum (1 hour)
+				0          ; minimum (0 seconds)
 				)
+$TTL 900	; 15 minutes
 		IN	NS	dns.example.com.
 ; IP records for name servers
 dns.example.com.             IN      AAAA       2001:0db8:a55b:42df:5d01:2359:a67e:737d
