@@ -125,26 +125,25 @@ dns.example.com.             IN      A          203.0.113.9
 <code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
 header(&apos;Content-Type: text/plain&apos;)&semi;
 
+$hostname = $&lowbar;GET&lsqb;&apos;hostname&apos;&rsqb; ?? null&semi;
+$ipV4Address = $&lowbar;GET&lsqb;&apos;myip&apos;&rsqb; ?? null&semi;
+$ipV6Address = $&lowbar;GET&lsqb;&apos;myipv6&apos;&rsqb; ?? null&semi;
+$dnsKey = $&lowbar;GET&lsqb;&apos;password&apos;&rsqb; ?? null&semi;
+$action = $&lowbar;GET&lsqb;&apos;action&apos;&rsqb; ?? null&semi;
 // DNS Time to live in seconds
-$dnsttl = &apos;300&apos;&semi;
-
-$hostname = $&lowbar;GET&lsqb;&quot;hostname&quot;&rsqb; ?? null&semi;
-$ipV4Address = $&lowbar;GET&lsqb;&quot;myip&quot;&rsqb; ?? null&semi;
-$ipV6Address = $&lowbar;GET&lsqb;&quot;myipv6&quot;&rsqb; ?? null&semi;
-$dnsKey = $&lowbar;GET&lsqb;&quot;password&quot;&rsqb; ?? null&semi;
-$action = $&lowbar;GET&lsqb;&quot;action&quot;&rsqb; ?? null&semi;
+$dnsttl = $&lowbar;GET&lsqb;&apos;ttl&apos;&rsqb; ?? &apos;300&apos;&semi;
 
 if (isset($dnsKey) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9&rsqb;/&apos;&comma; $dnsKey))
-&lcub;echo &quot;badauth&quot;&semi;exit&semi;&rcub;
+&lcub;echo &apos;badauth&apos;&semi;exit&semi;&rcub;
 
 if (isset($hostname) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $hostname))
-&lcub;echo &quot;notfqdn&quot;&semi;exit&semi;&rcub;
+&lcub;echo &apos;notfqdn&apos;&semi;exit&semi;&rcub;
 
 if (isset($ipV4Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;0-9\.&rsqb;/&apos;&comma; $ipV4Address))
-&lcub;echo &quot;badsys&quot;&semi;exit&semi;&rcub;
+&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
 
 if (isset($ipV6Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-f0-9\:&rsqb;/&apos;&comma; $ipV6Address))
-&lcub;echo &quot;badsys&quot;&semi;exit&semi;&rcub;
+&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
 
 // Credintials format: hostname (homevpn.dns.example.com)&comma; password (rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x)&comma; name of DNS zone to update (dns.example.com)
 $login = false&semi;
@@ -159,17 +158,17 @@ $login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : 
 if($login) break&semi;
 &rcub;
 if(!$login) &lcub;
-echo &quot;badauth&quot;&semi;
+echo &apos;badauth&apos;&semi;
 exit&semi;
 &rcub;
 
 if ($hostname == null) &lcub;
-header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
-echo &quot;notfqdn&quot;&semi;
+header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+echo &apos;notfqdn&apos;&semi;
 exit&semi;
 &rcub;
 
-if ($action == &quot;delete&quot;) &lcub;
+if ($action == &apos;delete&apos;) &lcub;
 $descriptorspec = array(
 	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
 	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
@@ -182,7 +181,7 @@ fwrite($pipes&lsqb;0&rsqb;&comma; &quot;send\n&quot;)&semi;
 fclose($pipes&lsqb;0&rsqb;)&semi;
 echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
 proc&lowbar;close($process)&semi;
-echo &quot;good&quot;&semi;
+echo &apos;good&apos;&semi;
 exit&semi;
 &rcub;
 
@@ -199,15 +198,15 @@ $ipV6Address = $ip&semi;
 
 // Check whether the given IPv4 address is valid
 if ($ipV4Address and !filter&lowbar;var($ipV4Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV4)) &lcub;
-header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
-echo &quot;badsys&quot;&semi;
+header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+echo &apos;badsys&apos;&semi;
 exit&semi;
 &rcub;
 
 // Check whether the given IPv6 address is valid
 if ($ipV6Address and !filter&lowbar;var($ipV6Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV6)) &lcub;
-header(&quot;HTTP/1.1 400 Bad Request&quot;)&semi;
-echo &quot;badsys&quot;&semi;
+header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+echo &apos;badsys&apos;&semi;
 exit&semi;
 &rcub;
 
@@ -253,7 +252,7 @@ echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
 proc&lowbar;close($process)&semi;
 &rcub;
 
-echo &quot;good&quot;&semi;
+echo &apos;good&apos;&semi;
 ?&gt;</code></pre>
 </figure>
 </maincode>
@@ -266,6 +265,8 @@ Updating by manually specifying IPv4 address<br>
 <span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myip=10.10.10.0</span><br>
 Updating my manually specifying both IPv6 and IPv4 address<br>
 <span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0</span><br>
+Setting custom TTL (in seconds)<br>
+<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0&ttl=60</span><br>
 Deleting the hostname<br>
 <span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&action=delete</span><br>
 </p>
