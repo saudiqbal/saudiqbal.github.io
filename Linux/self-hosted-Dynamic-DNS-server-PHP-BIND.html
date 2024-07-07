@@ -134,16 +134,28 @@ $action = $&lowbar;GET&lsqb;&apos;action&apos;&rsqb; ?? null&semi;
 $dnsttl = $&lowbar;GET&lsqb;&apos;ttl&apos;&rsqb; ?? &apos;300&apos;&semi;
 
 if (isset($dnsKey) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9&rsqb;/&apos;&comma; $dnsKey))
-&lcub;echo &apos;badauth&apos;&semi;exit&semi;&rcub;
+&lcub;
+	echo &apos;badauth&apos;&semi;
+	exit&semi;
+&rcub;
 
 if (isset($hostname) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $hostname))
-&lcub;echo &apos;notfqdn&apos;&semi;exit&semi;&rcub;
+&lcub;
+	echo &apos;notfqdn&apos;&semi;
+	exit&semi;
+&rcub;
 
 if (isset($ipV4Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;0-9\.&rsqb;/&apos;&comma; $ipV4Address))
-&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
+&lcub;
+	echo &apos;badsys&apos;&semi;
+	exit&semi;
+&rcub;
 
 if (isset($ipV6Address) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-f0-9\:&rsqb;/&apos;&comma; $ipV6Address))
-&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
+&lcub;
+	echo &apos;badsys&apos;&semi;
+	exit&semi;
+&rcub;
 
 // Credintials format: hostname (homevpn.dns.example.com)&comma; password (rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x)&comma; name of DNS zone to update (dns.example.com)
 $login = false&semi;
@@ -154,18 +166,18 @@ $user&lowbar;info=&lsqb;
 &apos;gameserver.dns.example.com&apos;=&gt;&lsqb;&apos;53o8DkXYCDB54mcL5l5x5C8OVPk8XRXM&apos;&comma;&apos;dns.example.com&apos;&rsqb;
 &rsqb;&semi;
 foreach ($user&lowbar;info as $key =&gt; $value) &lcub;
-$login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : false&semi;
-if($login) break&semi;
+	$login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : false&semi;
+	if($login) break&semi;
 &rcub;
 if(!$login) &lcub;
-echo &apos;badauth&apos;&semi;
-exit&semi;
+	echo &apos;badauth&apos;&semi;
+	exit&semi;
 &rcub;
 
 if ($hostname == null) &lcub;
-header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
-echo &apos;notfqdn&apos;&semi;
-exit&semi;
+	header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+	echo &apos;notfqdn&apos;&semi;
+	exit&semi;
 &rcub;
 
 if ($action == &apos;delete&apos;) &lcub;
@@ -198,24 +210,24 @@ $ipV6Address = $ip&semi;
 
 // Check whether the given IPv4 address is valid
 if ($ipV4Address and !filter&lowbar;var($ipV4Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV4)) &lcub;
-header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
-echo &apos;badsys&apos;&semi;
-exit&semi;
+	header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+	echo &apos;badsys&apos;&semi;
+	exit&semi;
 &rcub;
 
 // Check whether the given IPv6 address is valid
 if ($ipV6Address and !filter&lowbar;var($ipV6Address&comma; FILTER&lowbar;VALIDATE&lowbar;IP&comma; FILTER&lowbar;FLAG&lowbar;IPV6)) &lcub;
-header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
-echo &apos;badsys&apos;&semi;
-exit&semi;
+	header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+	echo &apos;badsys&apos;&semi;
+	exit&semi;
 &rcub;
 
 
 if ($ipV4Address) &lcub;
-ipv4&lowbar;update()&semi;
+	ipv4&lowbar;update()&semi;
 &rcub;
 if ($ipV6Address) &lcub;
-ipv6&lowbar;update()&semi;
+	ipv6&lowbar;update()&semi;
 &rcub;
 
 function ipv4&lowbar;update()
