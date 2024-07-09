@@ -331,7 +331,7 @@ export PHPBIND_DNS_SERVER="https://example.com/acme.php"</code></pre>
 <figure>
 <figcaption>acme.sh</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">acme.sh --issue --dns dns_phpbind -d '_acme-challenge.example.com' -d '_acme-challenge.www.example.com' --preferred-chain "ISRG Root X2" --keylength ec-256 --server letsencrypt</code></pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">acme.sh --issue --dns dns_phpbind -d 'example.com' -d 'www.example.com' --preferred-chain "ISRG Root X2" --keylength ec-256 --server letsencrypt</code></pre>
 </figure>
 </maincode>
 <p>Manually adding and removing the TXT records</p>
