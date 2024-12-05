@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>LetsEncrypt PHP API BIND DNS and ACME DNS-01 server setup</title>
+<meta name="keywords" content="LetsEncrypt, PHP, BIND, DNS, ACME, DNS-01, server, setup">
+<meta name="description" content="LetsEncrypt PHP API BIND DNS and ACME DNS-01 server setup">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">LetsEncrypt PHP API with BIND DNS server for ACME DNS-01 challenge setup guide</h1>
+<article>
+<p>Are you looking to setup your own DNS server for LetsEncrypt's ACME DNS-01 verification challenges with PHP API then this guide is for you. LetsEncrypt wild card certificates can also be requested using the same DNS records. I use Debian Linux so this guide is based on Debian 12 at the time of this writing. This guide assumes that you already have PHP installed on your system.</p>
+<p style="font-weight: bold;">Domain registrar DNS records setup</p>
+<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>Now for each hostname create a NS record in your domain registrar, for example.<br>
+<span class="customcode">NS _acme-challenge.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.www.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.homeserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.fileserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.gameserver.example.com dns.example.com</span><br>
+<span class="customcode">NS _acme-challenge.plexserver.example.com dns.example.com</span>
+</p>
+<p style="font-weight: bold;">Server Setup</p>
+<p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
+<p>Now we start configuring the BIND9 server. This example includes the main domain which covers all the subdomains using the DNS server for generating LetsEncrypt certificates</p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.local</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "example.com" IN {
+    type master;
+    file "/var/lib/bind/example.com.zone";
+    allow-update { ::1; 127.0.0.1; };
+    notify no;
+};
+
+</code></pre>
+</figure>
+</maincode>
+<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 127.0.0.1; 203.0.113.9; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/bind/named.conf.options</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">options {
+	directory "/var/cache/bind";
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable
+	// nameservers, you probably want to use them as forwarders.
+	// Uncomment the following block, and insert the addresses replacing
+	// the all-0's placeholder.
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+	dnssec-validation auto;
+	allow-transfer {none;};
+	allow-notify {none;};
+	allow-recursion {none;};
+	allow-query-cache {none;};
+	recursion no;
+	minimal-any yes;
+	minimal-responses yes;
+
+	listen-on { 127.0.0.1; 203.0.113.9; };
+	listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };
+};
+</code></pre>
+</figure>
+</maincode>
+<p>Now create a new zone file listed above (/var/lib/bind/example.com.zone), replace the values accordingly.</p>
+<p>Last line in this file must be a blank line.</p>
+<maincode>
+<figure>
+<figcaption>/var/lib/bind/example.com.zone</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">$ORIGIN .
+$TTL 0	; 0 minutes
+example.com		IN SOA	dns.example.com. email.example.com. (
+				100        ; serial
+				3600       ; refresh (1 hour)
+				3600       ; retry (1 hour)
+				3600       ; expire (1 hour)
+				0          ; minimum (0 seconds)
+				)
+$TTL 900	; 15 minutes
+		IN	NS	dns.example.com.
+; IP records for name servers
+dns.example.com.             IN      AAAA       2001:0db8:a55b:42df:5d01:2359:a67e:737d
+dns.example.com.             IN      A          203.0.113.9
+</code></pre>
+</figure>
+</maincode>
+<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone example.com. /var/lib/bind/example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
+<p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
+<p style="font-weight: bold;">PHP Setup</p>
+<p>Now create a new file acme.php with the content below where your BIND9 server and PHP is installed. Passwords for example.com and www.example.com needs to be the same.</p>
+<maincode>
+<figure>
+<figcaption>https://example.com/acme.php</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
+header(&apos;Content-Type: text/plain&apos;)&semi;
+
+// DNS Time to live in seconds
+$dnsttl = &apos;0&apos;&semi;
+
+$hostname = $&lowbar;GET&lsqb;&apos;hostname&apos;&rsqb; ?? null&semi;
+$txtrecord = $&lowbar;GET&lsqb;&apos;txt&apos;&rsqb; ?? null&semi;
+$dnsKey = $&lowbar;GET&lsqb;&apos;password&apos;&rsqb; ?? null&semi;
+$action = $&lowbar;GET&lsqb;&apos;action&apos;&rsqb; ?? null&semi;
+
+if (isset($dnsKey) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9&rsqb;/&apos;&comma; $dnsKey))
+&lcub;echo &apos;badauth&apos;&semi;exit&semi;&rcub;
+
+if (isset($hostname) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $hostname))
+&lcub;echo &apos;notfqdn&apos;&semi;exit&semi;&rcub;
+
+if (isset($txtrecord) &amp;&amp; preg&lowbar;match(&apos;/&lsqb;&Hat;a-zA-Z0-9\.\-\&lowbar;&rsqb;/&apos;&comma; $txtrecord))
+&lcub;echo &apos;badsys&apos;&semi;exit&semi;&rcub;
+
+// Credintials format: hostname (&lowbar;acme-challenge.example.com)&comma; password (y6piHUklqGhZn6BhULmYraNhEfZKlSep)&comma; name of DNS zone to update (example.com)
+$login = false&semi;
+$user&lowbar;info=&lsqb;
+&apos;&lowbar;acme-challenge.example.com&apos;=&gt;&lsqb;&apos;y6piHUklqGhZn6BhULmYraNhEfZKlSep&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.www.example.com&apos;=&gt;&lsqb;&apos;y6piHUklqGhZn6BhULmYraNhEfZKlSep&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.homeserver.example.com&apos;=&gt;&lsqb;&apos;lSOd73rMh1P9j8kpow24bbBDDWzkekwh&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.fileserver.example.com&apos;=&gt;&lsqb;&apos;KM2gy8nS5W1P0OrbqbtmqvBlvtZfKn0F&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.gameserver.example.com&apos;=&gt;&lsqb;&apos;DVhaFA3QoIDeg02edTEHAwtyzEPByXM1&apos;&comma;&apos;example.com&apos;&rsqb;&comma;
+&apos;&lowbar;acme-challenge.plexserver.example.com&apos;=&gt;&lsqb;&apos;6D1RKde1zlh0vYL47Df1x3UjuoCfyqMJ&apos;&comma;&apos;example.com&apos;&rsqb;
+&rsqb;&semi;
+foreach ($user&lowbar;info as $key =&gt; $value) &lcub;
+$login = ($key == $hostname &amp;&amp; $value&lsqb;0&rsqb; == $dnsKey) ? true : false&semi;
+if($login) break&semi;
+&rcub;
+if(!$login) &lcub;
+echo &apos;badauth&apos;&semi;
+exit&semi;
+&rcub;
+
+if ($hostname == null) &lcub;
+header(&apos;HTTP/1.1 400 Bad Request&apos;)&semi;
+echo &apos;notfqdn&apos;&semi;
+exit&semi;
+&rcub;
+
+if (empty($txtrecord))
+&lcub;
+	echo &apos;emptytxtrecord&apos;&semi;
+	exit&semi;
+&rcub;
+
+if ($action == &apos;delete&apos;) &lcub;
+$descriptorspec = array(
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server ::1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. TXT $txtrecord\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;send\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+echo &apos;good&apos;&semi;
+exit&semi;
+&rcub;
+else
+&lcub;
+	txt&lowbar;update()&semi;
+&rcub;
+
+function txt&lowbar;update()
+&lcub;
+global $hostname&comma; $txtrecord&comma; $dnsttl&comma; $value&semi;
+$descriptorspec = array(
+	0 =&gt; array(&apos;pipe&apos;&comma; &apos;r&apos;)&comma;
+	1 =&gt; array(&apos;pipe&apos;&comma; &apos;w&apos;)
+)&semi;
+$process = proc&lowbar;open(&apos;nsupdate&apos;&comma; $descriptorspec&comma; $pipes&comma; NULL&comma; NULL)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;server ::1\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;zone $value&lsqb;1&rsqb;\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update delete $hostname. TXT $txtrecord\n&quot;)&semi;
+fwrite($pipes&lsqb;0&rsqb;&comma; &quot;update add $hostname. $dnsttl TXT $txtrecord\n\n&quot;)&semi;
+fclose($pipes&lsqb;0&rsqb;)&semi;
+echo stream&lowbar;get&lowbar;contents($pipes&lsqb;1&rsqb;)&semi;
+proc&lowbar;close($process)&semi;
+&rcub;
+
+echo &apos;good&apos;&semi;
+?&gt;</code></pre>
+</figure>
+</maincode>
+<p style="font-weight: bold;">Client Server Setup</p>
+<p>Now install acme.sh <span class="customcode"><span id="installacme">curl https://get.acme.sh | sh -s email=my@example.com</span> <button onclick="copyToClipboard('installacme')">Copy Code</button></span></p>
+<p>We now need to create a new acme DNS plugin to interact with our PHP API. After installing acme.sh create a new file (dns_phpbind.sh) in the acme plugin directory named /root/.acme.sh/dnsapi/dns_phpbind.sh</p>
+<maincode>
+<figure>
+<figcaption>/root/.acme.sh/dnsapi/dns_phpbind.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/usr/bin/bash
+
+#Here is a sample custom api script.
+#This file name is "dns_phpbind.sh"
+#So, here must be a method   dns_phpbind_add()
+#Which will be called by acme.sh to add the txt record to your api system.
+#returns 0 means success, otherwise error.
+#
+#Author: Neilpang
+#Report Bugs here: https://github.com/acmesh-official/acme.sh
+#
+########  Public functions #####################
+
+# Please Read this guide first: https://github.com/acmesh-official/acme.sh/wiki/DNS-API-Dev-Guide
+
+# Usage:
+# export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+# export PHPBIND_DNS_SERVER="https://example.com/acme.php"
+# /usr/local/ssl/acme.sh/acme.sh --dns dns_phpbind --issue -d domain.tld
+
+#Usage: dns_phpbind_add   _acme-challenge.www.example.com   "y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+
+dns_phpbind_add() {
+  fulldomain=$1
+  txtvalue=$2
+  _info "Using phpbind"
+  _debug fulldomain "$fulldomain"
+  _debug txtvalue "$txtvalue"
+
+  PHPBIND_PASSWORD="${PHPBIND_PASSWORD:-$(_readaccountconf_mutable PHPBIND_PASSWORD)}"
+  PHPBIND_DNS_SERVER="${PHPBIND_DNS_SERVER:-$(_readaccountconf_mutable PHPBIND_DNS_SERVER)}"
+
+  if [ -z "$PHPBIND_PASSWORD" ]; then
+    PHPBIND_PASSWORD=""
+    _err "You didn't specify the password yet."
+    _err "Please specify the password and try again."
+    return 1
+  fi
+
+  if [ -z "$PHPBIND_DNS_SERVER" ]; then
+    PHPBIND_DNS_SERVER=""
+    _err "You didn't specify the DNS server yet."
+    _err "Please specify the DNS server and try again."
+    return 1
+  fi
+
+  #save the credentials to the account conf file.
+  _saveaccountconf_mutable PHPBIND_PASSWORD "$PHPBIND_PASSWORD"
+  _saveaccountconf_mutable PHPBIND_DNS_SERVER "$PHPBIND_DNS_SERVER"
+
+  uri="$PHPBIND_DNS_SERVER"
+  data="?password=${PHPBIND_PASSWORD}&hostname=${fulldomain}&txt=${txtvalue}"
+  result="$(_get "${uri}${data}")"
+  _debug "Result: $result"
+
+  if ! _startswith "$result" 'good'; then
+    _err "Can't add $fulldomain"
+    return 1
+  fi
+
+}
+
+#Usage: fulldomain txtvalue
+#Remove the txt record after validation.
+dns_phpbind_rm() {
+  fulldomain=$1
+  txtvalue=$2
+  _info "Using phpbind"
+  _debug fulldomain "$fulldomain"
+  _debug txtvalue "$txtvalue"
+
+  PHPBIND_PASSWORD="${PHPBIND_PASSWORD:-$(_readaccountconf_mutable PHPBIND_PASSWORD)}"
+  PHPBIND_DNS_SERVER="${PHPBIND_DNS_SERVER:-$(_readaccountconf_mutable PHPBIND_DNS_SERVER)}"
+
+  uri="$PHPBIND_DNS_SERVER"
+  data="?password=${PHPBIND_PASSWORD}&hostname=${fulldomain}&txt=${txtvalue}&action=delete"
+  result="$(_get "${uri}${data}")"
+  _debug "Result: $result"
+
+  if ! _startswith "$result" 'good'; then
+    _info "Can't remove $fulldomain"
+  fi
+
+}
+
+####################  Private functions below ##################################
+</code></pre>
+</figure>
+</maincode>
+<p>If you are setting up a freshly installed server which never had a DNS server before and needs a LetsEncrypt certificate for itself then you might have to change https to http and once everything starts working you can switch back to https for secure PHP API. You can also manually add a TXT record by calling the API in the web browser address bar (See below).</p>
+<maincode>
+<figure>
+<figcaption>Run these commands in client terminal</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">export PHPBIND_PASSWORD="y6piHUklqGhZn6BhULmYraNhEfZKlSep"
+export PHPBIND_DNS_SERVER="https://example.com/acme.php"</code></pre>
+</figure>
+</maincode>
+<p>Acme.sh command to use.</p>
+<maincode>
+<figure>
+<figcaption>acme.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">acme.sh --issue --dns dns_phpbind -d 'example.com' -d 'www.example.com' --preferred-chain "ISRG Root X2" --keylength ec-256 --server letsencrypt</code></pre>
+</figure>
+</maincode>
+<p>Manually adding and removing the TXT records</p>
+<maincode>
+<figure>
+<figcaption>Adding TXT record</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify</code></pre>
+</figure>
+</maincode>
+
+<maincode>
+<figure>
+<figcaption>Removing TXT record</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">https://example.com/acme.php?password=y6piHUklqGhZn6BhULmYraNhEfZKlSep&hostname=_acme-challenge.example.com&txt=acmetxtrecordtoverify&action=delete</code></pre>
+</figure>
+</maincode>
+
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>

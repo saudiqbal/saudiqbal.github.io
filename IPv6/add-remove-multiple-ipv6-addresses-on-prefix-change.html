@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Add remove multiple ipv6 addresses on prefix change</title>
+<meta name="keywords" content="add,remove,multiple,ipv6,address,prefix,change">
+<meta name="description" content="Add remove multiple ipv6 address on prefix change">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Add remove multiple IPv6 addresses on prefix change</h1>
+<article>
+<p>A bash script to add and delete multiple IPv6 addresses on prefix change.</p>
+<p>First step is to create a text file with "0000:0000:0000:0000" as text which will store the IPv6 prefix of your server. Create a file using this example.</p>
+<maincode>
+<figure>
+<figcaption>IPv6Prefix.txt</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">echo "0000:0000:0000:0000" > $HOME/IPv6Prefix.txt
+chmod 777 $HOME/IPv6Prefix.txt</code></pre>
+</figure>
+</maincode>
+<p>If you choose to manually create the file then first create a blank file IPv6Prefix.txt and save it in /root/IPv6Prefix.txt, now open the file and type 0000:0000:0000:0000 and save and close the file. For some reason the IPv6Prefix.txt should not be empty for comparison this is why I had to type zero and save the file. Give the permissions 0777 to IPv6Prefix.txt so the script can write to it.</p>
+<p>Now the second step is to create a text file containing all your IPv6 suffixes that you want to add to your server. For example</p>
+<maincode>
+<figure>
+<figcaption>ipv6-addresses.txt</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">printf %s '5e37:080b:66b7:68bb
+52bf:52fe:a1df:60e3
+3b32:a9d4:a9f3:074f
+9ec7:f4da:b166:0a5f
+620c:eb97:3e93:ece3
+551b:dda7:d78d:c09a
+cf34:cb8b:b1be:12a4
+3600:af53:10ad:f647
+9527:dcc4:4926:51ba
+76a2:410f:704b:8d9c' >> $HOME/ipv6-addresses.txt</code></pre>
+</figure>
+</maincode>
+<p>Now create a bash file to do all the processing. You need to create a schedule to periodically check the IPv6 prefix for change. Change the interface name (ens18) to the name of your interface.</p>
+<maincode>
+<figure>
+<figcaption>ipv6-add-delete.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+IPv6PrefixFile=$HOME/IPv6Prefix.txt
+IPv6Prefix=$(cat $IPv6PrefixFile)
+
+__rfc5952_expand () {
+read addr mask < <(IFS=/; echo $1)
+quads=$(grep -oE "[a-fA-F0-9]{1,4}" <<< ${addr/\/*} | wc -l)
+grep -qs ":$" <<< $addr && { addr="${addr}0000"; (( quads++ )); }
+grep -qs "^:" <<< $addr && { addr="0000${addr}"; (( quads++ )); }
+[ $quads -lt 8 ] && addr=${addr/::/:$(for (( i=1; i<=$(( 8 - quads )) ; i++ )); do printf "0000:"; done)}
+addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}"; delim=":"; done)
+[ ! -z $mask ] && echo $addr/$mask || echo $addr
+}
+
+IPv6Current=$(/sbin/ip -6 addr | grep inet6 | grep -vE 'host|temporary' | grep -F 'scope global dynamic' | sed -e 's/^.*inet6 \([^ ]*\)\/.*$/\1/;t;d' | grep '^2' | head -n1)
+IPv6Current="$(__rfc5952_expand $IPv6Current)"
+
+IPv6Current=${IPv6Current:0:19}
+
+if [ $IPv6Current != $IPv6Prefix ]; then
+
+for i in $(cat $HOME/ipv6-addresses.txt);
+do
+	ip -6 addr del ${IPv6Prefix}:${i} dev ens18
+	ip -6 addr add ${IPv6Current}:${i} dev ens18
+done
+
+echo $IPv6Current > $IPv6PrefixFile
+fi
+
+exit 0</code></pre>
+</figure>
+</maincode>
+<p>The final step is to reset the file IPv6Prefix.txt on your computer startup or reboot. Create a crontab entry to reset the file on each reboot.</p>
+<maincode>
+<figure>
+<figcaption>crontab -e</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">@reboot sleep 60 && echo "0000:0000:0000:0000" > $HOME/IPv6Prefix.txt</code></pre>
+</figure>
+</maincode>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>

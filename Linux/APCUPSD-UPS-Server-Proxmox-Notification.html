@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>APCUPSD UPS server for Proxmox, notifications</title>
+<meta name="keywords" content="APCUPSD, UPS, Server, Proxmox, Notifications">
+<meta name="description" content="APCUPSD UPS server for Proxmox, notifications">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">APCUPSD UPS server for Proxmox, notifications</h1>
+<article>
+<p>Are you looking to setup your own UPS server for notifications and monitoring or shutdown / starting other servers then this simple tutorial is for you.</p>
+<p style="font-weight: bold;">Installation of required softwares</p>
+<p>Nginx web server <span class="customcode">apt install nginx</span></p>
+<p>PHP <span class="customcode">apt install php-fpm php-sqlite3</span></p>
+<p>Wakeonlan <span class="customcode">apt install wakeonlan</span></p>
+<p>APCUPSD <span class="customcode">apt install apcupsd</span></p>
+<p>Extract and upload all the files from the zip file in their appropriate directories and chmod all the bash (.sh) files to 755. Also chmod /etc/cron.daily/proxmox-daily-boot file to 755. Where ever you see <span class="customcode"># Your additional notification API goes here</span> replace that line with your own call for other notifications like sending an email, just add your desired text message</p>
+<p>Replace <span class="customcode">rpi.example.com</span> to the hostname or IP address of your UPS server</p>
+<p>Replace <span class="customcode">proxmox.example.com</span> to the hostname or IP address of your proxmox server, if you have one</p>
+<p>Replace <span class="customcode">MAC_ADDR="D1:AE:52:C9:D3:C2"</span> to the MAC address of your server for Wake On LAN</p>
+<p>To change the delay of shutting down the Proxmox or other servers change the sleep value of "sleep 180" in <span class="customcode">onbattery-proxmox.sh</span>, When the onbattery event is triggered the scripts wait for 3 minutes before shutting down the Proxmos server.
+<maincode>
+<figure>
+<figcaption>Crontab entries</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">crontab -e
+
+@reboot sleep 60 && /bin/bash /root/start-up.sh > /dev/null 2>&1
+
+@reboot sleep 60 && /bin/bash /etc/cron.daily/proxmox-daily-boot > /dev/null 2>&1</code></pre>
+</figure>
+</maincode>
+<p>Explanation of bash script <span class="customcode">/root/offbattery-proxmox.sh</span> : <span class="customcode">networkup 25 proxmox.example.com</span> number 25 means re-try 25 times with a delay of <span class="customcode">sleep 900</span> 15 minutes for about 6 hours and when the battery charge is at least 25% and UPS is online <span class="customcode">[ "$batterystatus" -ge 25 ] && [ $upsstatus == "ONLINE" ]</span> then start the Proxmox server</p>
+<a href="https://github.com/saudiqbal/saudiqbal.github.io/raw/refs/heads/main/files/APCUPSD-UPS.zip" class="download-button" download>Download</a>
+<p><h2>Screenshot</h2></p>
+<p><img src="/images/apcupsd-ups.jpg" alt="" class="fluidimg"></p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>

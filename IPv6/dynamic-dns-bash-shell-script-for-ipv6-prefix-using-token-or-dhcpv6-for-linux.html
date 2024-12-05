@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux</title>
+<meta name="keywords" content="dynamic, dns, bash, shell, script, for, ipv6, prefix, using, token, or, dhcpv6, for, linux">
+<meta name="description" content="Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Dynamic DNS bash shell script for IPv6 prefix using token or DHCPv6 for Linux</h1>
+<article>
+<p>A bash script to update your preferred Dynamic DNS service with dynamic IPv6 prefix. There are two versions of this script, one with IPv6 token and one with DHCPv6. If you use your router to set a fixed suffix then you can use the DHCPv6 version or if you use IPv6 token to set a suffix then use the token version.</p>
+<p>First step is to create a text file which will contain the IPv6 address to compare with the new one. Run these commands to automatically create the file with a 0 in it.</p>
+<maincode>
+<figure>
+<figcaption>Bash command</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">echo "0" > $HOME/ddns-ipv6-address.txt
+chmod 777 $HOME/ddns-ipv6-address.txt</code></pre>
+</figure>
+</maincode>
+<p>If you choose to manually create the file then first create a blank file storedipaddress.txt and save it in /root/ddns-ipv6-address.txt, now open the file and type 0 and save and close the file. For some reason the storedipaddress.txt should not be empty for comparison this is why I had to type zero and save the file. Give the permissions 0777 to storedipaddress.txt so the script can write to it.</p>
+<p><strong>If you use token to set your IPv6 suffix:</strong></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Second step:</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Now create a new file ddns-updater-hourly and save it in /etc/cron.hourly/ddns-updater-hourly (file name should not have any extension) and chmod 0755 for permission.</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Example suffix used in this script 71c6:b34f:8e2a:54f5</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>Change the section "# Your DDNS update command goes here" with the command you are given by your DDNS provider such as Cloudflare.</span></p>
+<p class="_1qeIAgB0cPwnLhDF9XSiJM"><span>/etc/cron.hourly/ddns-updater-hourly file content</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/cron.hourly/ddns-updater-hourly</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+SUFFIX="::71c6:b34f:8e2a:54f5"
+ADDRSTORE=$HOME/ddns-ipv6-address.txt
+STOREDIPV6=$(cat $ADDRSTORE)
+
+__rfc5952_expand () {
+    read addr mask < <(IFS=/; echo $1)
+    quads=$(grep -oE "[a-fA-F0-9]{1,4}" <<< ${addr/\/*} | wc -l)
+    grep -qs ":$" <<< $addr && { addr="${addr}0000"; (( quads++ )); }
+    grep -qs "^:" <<< $addr && { addr="0000${addr}"; (( quads++ )); }
+    [ $quads -lt 8 ] && addr=${addr/::/:$(for (( i=1; i<=$(( 8 - quads )) ; i++ )); do printf "0000:"; done)}
+    addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}"; delim=":"; done)
+    [ ! -z $mask ] && echo $addr/$mask || echo $addr
+}
+
+SUFFIX="$(__rfc5952_expand $SUFFIX)"
+SUFFIX=${SUFFIX: -19}
+ALLIPV6=$(/sbin/ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep '^2')
+for i in $ALLIPV6; do
+EXPANDED="$(__rfc5952_expand $i)"
+EXPANDEDSUFFIX=${EXPANDED: -19}
+if [ $EXPANDEDSUFFIX == $SUFFIX ]; then
+
+if [ $EXPANDED != $STOREDIPV6 ]; then
+# Your DDNS update command(s) go here
+# Use the variable $EXPANDED to substitute the IPv6 address in your script.
+echo $EXPANDED > $ADDRSTORE
+logger "DDNS new IP address detected $EXPANDED"
+fi
+
+fi
+done
+exit 0</code></pre>
+</figure>
+</maincode>
+<p><strong>If you use DHCPv6 to set your IPv6 suffix:</strong></p>
+<p>If you use your router to set a static suffix using DHCPv6 then use this script since there is no need to use a token.</p>
+<p>First step:</p>
+<p>It is the same as above to create a text file to store the IPv6 address. Follow the command above or manually create a text file in the correct location.</p>
+<p>Second step:</p>
+<p><span>/etc/cron.hourly/ddns-updater-hourly file content</span></p>
+<maincode>
+<figure>
+<figcaption>/etc/cron.hourly/ddns-updater-hourly</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+SUFFIX="::71c6:b34f:8e2a:54f5"
+ADDRSTORE=$HOME/ddns-ipv6-address.txt
+STOREDIPV6=$(cat $ADDRSTORE)
+
+__rfc5952_expand () {
+    read addr mask < <(IFS=/; echo $1)
+    quads=$(grep -oE "[a-fA-F0-9]{1,4}" <<< ${addr/\/*} | wc -l)
+    grep -qs ":$" <<< $addr && { addr="${addr}0000"; (( quads++ )); }
+    grep -qs "^:" <<< $addr && { addr="0000${addr}"; (( quads++ )); }
+    [ $quads -lt 8 ] && addr=${addr/::/:$(for (( i=1; i<=$(( 8 - quads )) ; i++ )); do printf "0000:"; done)}
+    addr=$(for quad in $(IFS=:; echo ${addr}); do printf "${delim}%04x" "0x${quad}"; delim=":"; done)
+    [ ! -z $mask ] && echo $addr/$mask || echo $addr
+}
+
+SUFFIX="$(__rfc5952_expand $SUFFIX)"
+SUFFIX=${SUFFIX: -19}
+ALLIPV6=$(/sbin/ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep '^2')
+for i in $ALLIPV6; do
+EXPANDED="$(__rfc5952_expand $i)"
+EXPANDEDSUFFIX=${EXPANDED: -19}
+if [ $EXPANDEDSUFFIX == $SUFFIX ]; then
+
+if [ $EXPANDED != $STOREDIPV6 ]; then
+# Your DDNS update command(s) go here
+# Use the variable $EXPANDED to substitute the IPv6 address in your script.
+echo $EXPANDED > $ADDRSTORE
+logger "DDNS new IP address detected $EXPANDED"
+fi
+
+fi
+done
+exit 0</code></pre>
+</figure>
+</maincode>
+<p>Now edit the variables with your own values and save the file and it should run every hour to update the DDNS server.  You can also save the file somewhere else and create your own cron job to your desired schedule.</p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+<p>Related: <a href="/IPv6/ipv6-home-server-with-dynamic-prefix-for-vpn-web-server-rdp-and-firewall-setup-guide.html">Server setup for dynamic IPv6 prefix</a></p>
+</article>
+
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+</script>
+</body>
+</html>

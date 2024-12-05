@@ -1,0 +1,196 @@
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f0f0f0;
+}
+.content {
+line-height: 2;
+}
+.titletextshadow {
+margin: 15px 15px 5px 15px;
+color: #000;
+text-shadow: 0 0 3px #000;
+letter-spacing: 4px;
+font-size: 2em;
+font-weight: bold;
+}
+.footer{
+text-align: center;
+}
+.fluidimg {
+max-width: 100%;
+height: auto;
+}
+article {
+margin: 5px 15px;
+}
+.customcode {
+border: 1px solid #BCBEC0;
+background: #F1F3F5;
+padding: 4px 4px 2px 4px;
+border-radius: 3px;
+font-family: 'Courier New', monospace;
+}
+.custompre {
+white-space: pre-wrap;
+background: #c3ac94;
+}
+.header {
+font-family: 'Open Sans', sans-serif;
+background-color: #1a1a1a;
+width: 100%;
+z-index: 3;
+font-weight:300;
+line-height: 40px;
+height: auto;
+}
+.header .headerlogo {
+padding: 10px 20px;
+color: #fff;
+font-size: 18px;
+}
+.header .headertext {
+padding: 10px 20px;
+text-decoration: none;
+color: #fff;
+}
+.header ul {
+margin: 0;
+padding: 0;
+list-style: none;
+overflow: hidden;
+height: auto;
+}
+.header li a {
+display: block;
+padding: 0px 20px;
+text-decoration: none;
+color: #fff;
+height: auto;
+}
+.header li a:hover,
+.header input:hover {
+opacity:.6;
+}
+.header > a {
+display: block;
+float: left;
+padding: 0px 20px;
+text-decoration: none;
+}
+.header ul {
+clear: both;
+max-height: 0;
+transition: max-height .2s ease-out;
+}
+.header label {
+cursor: pointer;
+display: inline-block;
+float: right;
+padding: 19px 20px;
+position: relative;
+user-select: none;
+}
+.header label span {
+background: #fff;
+display: block;
+height: 2px;
+position: relative;
+transition: background .2s ease-out;
+width: 18px;
+}
+.header label span:before,
+.header label span:after {
+background: #fff;
+content: '';
+display: block;
+height: 100%;
+position: absolute;
+transition: all .2s ease-out;
+width: 100%;
+}
+.header label span:before {
+top: 5px;
+transform-origin: 50% 100%;
+}
+.header label span:after {
+top: -5px;
+transform-origin: 10% 100%;
+}
+.header input {
+display: none;
+}
+.header input:checked ~ ul {
+max-height: 240px;
+}
+.header input:checked ~ label span {
+background: transparent;
+}
+.header input:checked ~ label span:before {
+transform: rotate(-45deg);
+}
+.header input:checked ~ label span:after {
+transform: rotate(45deg);
+}
+.header input:checked ~ label:not(.steps) span:before,
+.header input:checked ~ label:not(.steps) .span:after {
+top: 0;
+}
+.header .logout-btn {
+color: #fff;
+background: #4444;
+box-shadow: 0px 0px 4px rgba(0,0,0) inset;
+height: 40px;
+}
+.header #modal-1 {
+vertical-align: middle;
+height: 40px;
+}
+a.download-button {
+	font-size:30px;
+	color:#fff;
+	border-color:#3278BE;
+	text-decoration:none;
+	display:block;
+	width:478px;
+	padding:10px;
+	border:1px solid #DDD;
+	text-align:center;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+	border-radius:5px;
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4195DD), to(#003C82));
+	background:-moz-linear-gradient(0% 90% 90deg, #003C82, #4195DD);
+}
+a.download-button:hover {
+	color:#000;
+	background:#FFFFFF;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
+	background:-moz-linear-gradient(0% 90% 90deg, #EEE, #FFF);
+}
+a.download-button:active {
+	background:#4195DD;
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#003C82), to(#4195DD));
+	background:-moz-linear-gradient(0% 90% 90deg, #4195DD, #003C82);
+}
+@media (min-width: 640px) {
+.header {
+height: 40px;
+}
+.header li {
+float: left;
+}
+.header li a {
+padding: 0px 30px;
+}
+.header ul {
+clear: none;
+float: right;
+max-height: none;
+}
+.header label {
+display: none;
+}
+}

@@ -1,0 +1,187 @@
+.header {
+font-family: 'Open Sans', sans-serif;
+background-color: #1a1a1a;
+width: 100%;
+z-index: 3;
+font-weight:300;
+line-height: 40px;
+height: auto;
+}
+.header .headerlogo {
+padding: 10px 20px;
+color: #fff;
+font-size: 18px;
+}
+.header .headertext {
+padding: 10px 20px;
+text-decoration: none;
+color: #fff;
+}
+.header ul {
+margin: 0;
+padding: 0;
+list-style: none;
+overflow: hidden;
+height: auto;
+}
+.header li a {
+display: block;
+padding: 0px 20px;
+text-decoration: none;
+color: #fff;
+height: auto;
+}
+.header li a:hover,
+.header input:hover {
+opacity:.6;
+}
+.header > a {
+display: block;
+float: left;
+padding: 0px 20px;
+text-decoration: none;
+}
+.header ul {
+clear: both;
+max-height: 0;
+transition: max-height .2s ease-out;
+}
+.header label {
+cursor: pointer;
+display: inline-block;
+float: right;
+padding: 19px 20px;
+position: relative;
+user-select: none;
+}
+.header label span {
+background: #fff;
+display: block;
+height: 2px;
+position: relative;
+transition: background .2s ease-out;
+width: 18px;
+}
+.header label span:before,
+.header label span:after {
+background: #fff;
+content: '';
+display: block;
+height: 100%;
+position: absolute;
+transition: all .2s ease-out;
+width: 100%;
+}
+.header label span:before {
+top: 5px;
+transform-origin: 50% 100%;
+}
+.header label span:after {
+top: -5px;
+transform-origin: 10% 100%;
+}
+.header input {
+display: none;
+}
+.header input:checked ~ ul {
+max-height: 240px;
+}
+.header input:checked ~ label span {
+background: transparent;
+}
+.header input:checked ~ label span:before {
+transform: rotate(-45deg);
+}
+.header input:checked ~ label span:after {
+transform: rotate(45deg);
+}
+.header input:checked ~ label:not(.steps) span:before,
+.header input:checked ~ label:not(.steps) .span:after {
+top: 0;
+}
+.header .logout-btn {
+color: #fff;
+background: #4444;
+box-shadow: 0px 0px 4px rgba(0,0,0) inset;
+height: 40px;
+}
+.header #modal-1 {
+vertical-align: middle;
+height: 40px;
+}
+/* MODAL START */
+#modal-overlay {
+background: #000;
+filter: alpha(opacity=60);
+height: 100%;
+left: 0;
+-moz-opacity: 0.6;
+-webkit-opacity: 0.6;
+-ms-filter: alpha(opacity=60);
+opacity: 0.6;
+position: absolute;
+top: 0;
+width: 100%;
+z-index: 998;
+}
+#modal-container {
+background: #fff;
+border: 1px solid #ababab;
+box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+height: auto;
+padding: 10px;
+font-family: arial,sans-serif;
+font-size: 14px;
+position: absolute;
+z-index: 998;
+}
+#modal-header {
+height: 20px;
+overflow: hidden;
+clear: both;
+}
+#modal-close {
+background: #fff url('/static-content/images/modal-close.png') no-repeat center center;
+cursor: pointer;
+display: block;
+filter: alpha(opacity=60);
+-moz-opacity: 0.6;
+-webkit-opacity: 0.6;
+-ms-filter: alpha(opacity=60);
+opacity: 0.6;
+float: right;
+height: 20px;
+width: 20px;
+}
+#modal-close:hover {
+filter: alpha(opacity=100);
+-moz-opacity: 1.0;
+-webkit-opacity: 1.0;
+-ms-filter: alpha(opacity=100);
+opacity: 1.0;
+}
+#modal-content {
+display: block;
+padding: 0 20px 10px 20px;
+z-index: 999;
+}
+/* MODAL END */
+@media (min-width: 640px) {
+.header {
+height: 40px;
+}
+.header li {
+float: left;
+}
+.header li a {
+padding: 0px 30px;
+}
+.header ul {
+clear: none;
+float: right;
+max-height: none;
+}
+.header label {
+display: none;
+}
+}
