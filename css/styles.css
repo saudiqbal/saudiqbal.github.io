@@ -147,13 +147,12 @@ vertical-align: middle;
 height: 40px;
 }
 a.download-button {
-	font-size:30px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:25px;
 	color:#fff;
 	border-color:#3278BE;
 	text-decoration:none;
-	display:block;
-	width:478px;
-	padding:10px;
+	padding: 5px 50px;
 	border:1px solid #DDD;
 	text-align:center;
 	-moz-border-radius:5px;
