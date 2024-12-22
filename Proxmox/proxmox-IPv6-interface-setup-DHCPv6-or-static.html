@@ -93,7 +93,6 @@ iface vmbr0 inet dhcp
 iface vmbr0 inet6 dhcp
 	gateway fd00::1
 	accept_ra 2
-	pre-down dhclient -6 -r vmbr0
 	post-up ip6tables -t nat -A PREROUTING -p tcp -d fd00::10 --dport 443 -j REDIRECT --to-ports 8006</code></pre>
 </figure>
 </maincode>
