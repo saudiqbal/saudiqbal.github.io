@@ -41,7 +41,6 @@ do
 done
 
 logger -p warning "IPv6 privacy extension failed, restarting"
-sleep 5
 sysctl -w net.ipv6.conf.ens18.use_tempaddr=0
 sleep 15
 sysctl -w net.ipv6.conf.ens18.use_tempaddr=2
