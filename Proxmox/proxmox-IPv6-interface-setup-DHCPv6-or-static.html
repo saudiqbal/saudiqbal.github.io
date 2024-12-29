@@ -22,7 +22,8 @@
 <h1 class="titletextshadow">Proxmox IPv6 interface setup DHCPv6 or static</h1>
 <article>
 <p>Proxmox host setup instructions for setting up IPv6 using DHCPv6 or static configuration. This configuration example also allows the default port 8006 on 443 so that you can directly access your Proxmox server without typing :8006 in the end.</p>
-<p>Proxmox bridge example with static IPv6 and IPv4, change the IPs accordingly. Iptable config this example for Proxmox IP addresses are fd00::10 and 192.168.1.10 for allowing direct access without typing the port 8006.</p>
+<p style="font-weight: bold;">Static config</p>
+<p>Proxmox bridge example with static IPv6 and IPv4, change the IPs accordingly. Iptable config this example for Proxmox IP addresses are fd00::10 and 192.168.1.10 for allowing direct Proxmox access on port 443.</p>
 <maincode>
 <figure>
 <figcaption>/etc/network/interfaces</figcaption>
@@ -59,7 +60,8 @@ iface vmbr0 inet6 static
 	post-up ip6tables -t nat -A PREROUTING -p tcp -d fd00::10 --dport 443 -j REDIRECT --to-ports 8006</code></pre>
 </figure>
 </maincode>
-<p>Proxmox bridge example with DHCPv6 for IPv6 and DHCPv4 for IPv4, change the IPs accordingly</p>
+<p style="font-weight: bold;">DHCP config</p>
+<p>Proxmox bridge example with DHCPv6 for IPv6 and DHCPv4 for IPv4, change the IPs accordingly for direct Proxmox access on port 443.</p>
 <maincode>
 <figure>
 <figcaption>/etc/network/interfaces</figcaption>
