@@ -35,7 +35,7 @@ IPv6privacycheck=$(/sbin/ip -6 addr | grep inet6 | grep -v "::1" | grep -v "inet
 if [ -z "$IPv6privacycheck" ]
 then
 
-for i in $(/sbin/ip -6 addr | grep 'temporary' | sed -e 's/^.*inet6 \([^ ]*\)\/.*$/\1/;t;d' | grep '^fd');
+for i in $(/sbin/ip -6 addr | grep 'temporary' | sed -e 's/^.*inet6 \([^ ]*\)\/.*$/\1/;t;d');
 do
 	ip -6 addr del ${i}/64 dev ens18
 done
