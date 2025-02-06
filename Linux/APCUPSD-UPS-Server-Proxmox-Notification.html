@@ -23,10 +23,10 @@
 <article>
 <p>Are you looking to setup your own UPS server for notifications and monitoring or shutdown / starting other servers then this simple tutorial is for you.</p>
 <p style="font-weight: bold;">Installation of required softwares</p>
-<p>Nginx web server <span class="customcode">apt install nginx</span></p>
-<p>PHP <span class="customcode">apt install php-fpm php-sqlite3</span></p>
-<p>Wakeonlan <span class="customcode">apt install wakeonlan</span></p>
-<p>APCUPSD <span class="customcode">apt install apcupsd</span></p>
+<p>Nginx web server <span class="customcode"><span id="nginx">apt install nginx</span> <button onclick="copyToClipboard('nginx')">Copy Code</button></p>
+<p>PHP <span class="customcode"><span id="php-fpm">apt install php-fpm php-sqlite3</span> <button onclick="copyToClipboard('php-fpm')">Copy Code</button></p>
+<p>Wakeonlan <span class="customcode"><span id="wakeonlan">apt install wakeonlan</span> <button onclick="copyToClipboard('wakeonlan')">Copy Code</button></p>
+<p>APCUPSD <span class="customcode"><span id="apcupsd">apt install apcupsd</span> <button onclick="copyToClipboard('apcupsd')">Copy Code</button></p>
 <p style="font-weight: bold;">Customization of files</p>
 <p>Extract and upload all the files from the zip file in their appropriate directories and chmod all the bash (.sh) files to 755. Also chmod /etc/cron.daily/proxmox-daily-boot file to 755. Where ever you see <span class="customcode"># Your additional notification API goes here</span> replace that line with your own call for other notifications like sending an email, just add your desired text message</p>
 <p>Replace <span class="customcode">rpi.example.com</span> to the hostname or IP address of your UPS server</p>
