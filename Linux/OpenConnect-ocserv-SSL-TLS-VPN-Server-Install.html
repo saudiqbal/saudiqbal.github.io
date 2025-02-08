@@ -23,12 +23,13 @@
 <article>
 <p>Are you looking to setup and install your own SSL / TLS VPN server which works from all over the world even with restrictive firewalls and countries then this is a good alternative for Wireguard which is easily blocked.</p>
 <p>Tested on Debian 12. Use your own VPN subdomain or a dynamic DNS hostname and point to the IPv6 / IPv4 address of your VPN server.</p>
-<p style="font-weight: bold;">Installation of OpenConnect (ocserv) VPN server. Create a new bash file in /root/vpnsetup.sh</p>
+<p style="font-weight: bold;">Installation of OpenConnect (ocserv) VPN server.</p>
+<p>Create a new bash file in /root/vpnsetup.sh</p>
 <maincode>
 <figure>
-<figcaption>Crontab entries</figcaption>
+<figcaption>/root/vpnsetup.sh</figcaption>
 <pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">#!/usr/bin/env bash
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
 
 # Text color
 RD=$(echo "\033[01;31m")
