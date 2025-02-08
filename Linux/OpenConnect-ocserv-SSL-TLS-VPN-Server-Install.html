@@ -141,8 +141,8 @@ table ip filter {
 
 	chain forward {
 		type filter hook forward priority 0;
-		iifname "$iname" oifname "vpns0" accept;
-		iifname "vpns0" oifname "$iname" accept;
+		iifname "$iname" oifname "vpns*" accept;
+		iifname "vpns*" oifname "$iname" accept;
 	}
 
 	chain output {
@@ -176,8 +176,8 @@ table ip6 filter {
 
 	chain forward {
 		type filter hook forward priority 0;
-		iifname "$iname" oifname "vpns0" accept;
-		iifname "vpns0" oifname "$iname" accept;
+		iifname "$iname" oifname "vpns*" accept;
+		iifname "vpns*" oifname "$iname" accept;
 	}
 
 	chain output {
