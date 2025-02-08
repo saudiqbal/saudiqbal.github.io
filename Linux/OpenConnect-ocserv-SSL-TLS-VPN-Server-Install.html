@@ -278,6 +278,7 @@ echo "=========================================="
 <p><span class="customcode"><span id="acmeinstall">curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online -m email@example.com --home ~/acme.sh</span> <button onclick="copyToClipboard('acmeinstall')">Copy Code</button></span></p>
 <p><span class="customcode"><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpndomain</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></span></p>
 <p><span class="customcode"><span id="acmevpn">acme.sh --issue --dns dns_acmedns -d 'vpn.example.com' --cert-file /etc/LetsEncrypt/vpndomain/cert.pem --key-file /etc/LetsEncrypt/vpndomain/key.pem --fullchain-file /etc/LetsEncrypt/vpndomain/fullchain.pem --reloadcmd "systemctl reload ocserv" --preferred-chain "ISRG Root X2" --keylength ec-256 --syslog 6</span> <button onclick="copyToClipboard('acmevpn')">Copy Code</button></span></p>
+<p>Now edit the paths for the correct LetsEncrypt certificates in the config file /etc/ocserv/ocserv.conf</p>
 <p>server-cert = /etc/LetsEncrypt/vpndomain/fullchain.pem</p>
 <p>server-key = /etc/LetsEncrypt/vpndomain/key.pem</p>
 <p style="font-weight: bold;">OpenConnect Clients</p>
