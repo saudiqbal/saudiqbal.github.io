@@ -276,11 +276,11 @@ echo "=========================================="
 <p>It is highly recommended to use a valid SSL/TLS certificate to secure your server, for example LetsEncrypt Change the paths for certificate to LetsEncrypt.</p>
 <p>Install acme.sh</p>
 <p><span class="customcode"><span id="acmeinstall">curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online -m email@example.com --home ~/acme.sh</span> <button onclick="copyToClipboard('acmeinstall')">Copy Code</button></span></p>
-<p><span class="customcode"><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpndomain</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></span></p>
-<p><span class="customcode"><span id="acmevpn">acme.sh --issue --dns dns_acmedns -d 'vpn.example.com' --cert-file /etc/LetsEncrypt/vpndomain/cert.pem --key-file /etc/LetsEncrypt/vpndomain/key.pem --fullchain-file /etc/LetsEncrypt/vpndomain/fullchain.pem --reloadcmd "systemctl reload ocserv" --preferred-chain "ISRG Root X2" --keylength ec-256 --syslog 6</span> <button onclick="copyToClipboard('acmevpn')">Copy Code</button></span></p>
+<p><span class="customcode"><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpn</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></span></p>
+<p><span class="customcode"><span id="acmevpn">acme.sh --issue --dns dns_acmedns -d 'vpn.example.com' --cert-file /etc/LetsEncrypt/vpn/cert.pem --key-file /etc/LetsEncrypt/vpn/key.pem --fullchain-file /etc/LetsEncrypt/vpn/fullchain.pem --reloadcmd "systemctl reload ocserv" --preferred-chain "ISRG Root X2" --keylength ec-256 --syslog 6</span> <button onclick="copyToClipboard('acmevpn')">Copy Code</button></span></p>
 <p>Now edit the paths for the correct LetsEncrypt certificates in the config file /etc/ocserv/ocserv.conf</p>
-<p>server-cert = /etc/LetsEncrypt/vpndomain/fullchain.pem</p>
-<p>server-key = /etc/LetsEncrypt/vpndomain/key.pem</p>
+<p>server-cert = /etc/LetsEncrypt/vpn/fullchain.pem</p>
+<p>server-key = /etc/LetsEncrypt/vpn/key.pem</p>
 <p style="font-weight: bold;">OpenConnect Clients</p>
 <p>Android: <a href="https://play.google.com/store/apps/details?id=com.cisco.anyconnect.vpn.android.avf">link</a></p>
 <p>Linux: <a href="https://its.gmu.edu/knowledge-base/how-to-install-cisco-secure-client-on-linux/">link</a></p>
