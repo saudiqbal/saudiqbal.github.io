@@ -110,7 +110,7 @@ systemctl restart ocserv
 msg_ok "Ocserv config done!"
 iname=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | sed 's/ //g')
 echo "Configuring Nftables..."
-tee > /etc/nftables.conf <<EOF
+tee > /etc/nftables.conf &lt;&lt;EOF
 #!/usr/sbin/nft -f
 
 flush ruleset
