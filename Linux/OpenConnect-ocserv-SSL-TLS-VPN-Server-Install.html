@@ -269,15 +269,15 @@ echo "=========================================="
 </code></pre>
 </figure>
 </maincode>
-<p>Give execution permission to the bash script <span class="customcode"><span id="chmod">chmod +x vpnsetup.sh</span> <button onclick="copyToClipboard('chmod')">Copy Code</button></p>
-<p>Start the installation by running the command <span class="customcode"><span id="run">bash vpnsetup.sh</span> <button onclick="copyToClipboard('run')">Copy Code</button></p>
+<p>Give execution permission to the bash script <span class="customcode"><span id="chmod">chmod +x vpnsetup.sh</span> <button onclick="copyToClipboard('chmod')">Copy Code</button></span></p>
+<p>Start the installation by running the command <span class="customcode"><span id="run">bash vpnsetup.sh</span> <button onclick="copyToClipboard('run')">Copy Code</button></span></p>
 <p>To add or remove more users run the setup file again.</p>
 <p style="font-weight: bold;">LetsEncrypt certificates</p>
 <p>It is highly recommended to use a valid SSL/TLS certificate to secure your server, for example LetsEncrypt Change the paths for certificate to LetsEncrypt.</p>
 <p>Install acme.sh</p>
-<p><span id="acmeinstall">curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online -m email@example.com --home ~/acme.sh</span> <button onclick="copyToClipboard('acmeinstall')">Copy Code</button></p>
-<p><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpndomain</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></p>
-<p><span id="acmevpn">acme.sh --issue --dns dns_acmedns -d 'vpn.example.com' --cert-file /etc/LetsEncrypt/vpndomain/cert.pem --key-file /etc/LetsEncrypt/vpndomain/key.pem --fullchain-file /etc/LetsEncrypt/vpndomain/fullchain.pem --reloadcmd "systemctl reload ocserv" --preferred-chain "ISRG Root X2" --keylength ec-256 --syslog 6</span> <button onclick="copyToClipboard('acmevpn')">Copy Code</button></p>
+<p><span class="customcode"><span id="acmeinstall">curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online -m email@example.com --home ~/acme.sh</span> <button onclick="copyToClipboard('acmeinstall')">Copy Code</button></span></p>
+<p><span class="customcode"><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpndomain</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></span></p>
+<p><span class="customcode"><span id="acmevpn">acme.sh --issue --dns dns_acmedns -d 'vpn.example.com' --cert-file /etc/LetsEncrypt/vpndomain/cert.pem --key-file /etc/LetsEncrypt/vpndomain/key.pem --fullchain-file /etc/LetsEncrypt/vpndomain/fullchain.pem --reloadcmd "systemctl reload ocserv" --preferred-chain "ISRG Root X2" --keylength ec-256 --syslog 6</span> <button onclick="copyToClipboard('acmevpn')">Copy Code</button></span></p>
 <p>server-cert = /etc/LetsEncrypt/vpndomain/fullchain.pem</p>
 <p>server-key = /etc/LetsEncrypt/vpndomain/key.pem</p>
 <p style="font-weight: bold;">OpenConnect Clients</p>
