@@ -271,7 +271,7 @@ echo "=========================================="
 </maincode>
 <p>Give execution permission to the bash script <span class="customcode"><span id="chmod">chmod +x vpnsetup.sh</span> <button onclick="copyToClipboard('chmod')">Copy Code</button></span></p>
 <p>Start the installation by running the command <span class="customcode"><span id="run">bash vpnsetup.sh</span> <button onclick="copyToClipboard('run')">Copy Code</button></span></p>
-<p>To add or remove more users run the setup file again.</p>
+<p>To add or remove more users run the setup file again. The script above generates a self signed certificate and when you connect to your VPN server you will see warning before you connect to it which you can ignore if you are OK with it. If you want a valid certificate then read below.</p>
 <p style="font-weight: bold;">LetsEncrypt certificates</p>
 <p>It is highly recommended to use a valid SSL/TLS certificate to secure your server, for example LetsEncrypt Change the paths for certificate to LetsEncrypt.</p>
 <p>Install acme.sh</p>
