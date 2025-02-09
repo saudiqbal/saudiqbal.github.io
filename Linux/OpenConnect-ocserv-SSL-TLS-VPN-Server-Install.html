@@ -214,7 +214,7 @@ systemctl start nftables
 sed -i -e "s?#net.ipv4.ip_forward=1?net.ipv4.ip_forward=1?g" /etc/sysctl.conf
 sed -i -e "s?#net.ipv6.conf.all.forwarding=1?net.ipv6.conf.all.forwarding=1?g" /etc/sysctl.conf
 echo "net.ipv6.conf.$iname.accept_ra=2" >> /etc/sysctl.conf
-echo "accept_ra 2" >> /etc/network/interfaces
+echo -e "\naccept_ra 2\n" >> /etc/network/interfaces
 sysctl -p
 #echo "Ocserv setup done!"
 msg_ok "Ocserv setup done!"
