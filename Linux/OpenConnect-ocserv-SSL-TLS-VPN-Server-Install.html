@@ -22,7 +22,7 @@
 <h1 class="titletextshadow">OpenConnect ocserv SSL / TLS VPN server install and setup guide</h1>
 <article>
 <p>Are you looking to setup and install your own SSL / TLS VPN server which works from all over the world even with restrictive firewalls and countries then this is a good alternative for Wireguard which is easily blocked.</p>
-<p>Tested on Debian 12. Use your own VPN subdomain or a dynamic DNS hostname and point to the IPv6 / IPv4 address of your VPN server.</p>
+<p>Tested on Debian 12 on a fresh install. Use your own VPN subdomain or a dynamic DNS hostname and point to the IPv6 / IPv4 address of your VPN server.</p>
 <p style="font-weight: bold;">Installation of OpenConnect (ocserv) VPN server.</p>
 <p>Create a new bash file in /root/vpnsetup.sh <span class="customcode"><span id="vpnsetup">nano /root/vpnsetup.sh</span> <button onclick="copyToClipboard('vpnsetup')">Copy Code</button></span> and paste the content from below.</p>
 <maincode>
@@ -214,6 +214,7 @@ systemctl start nftables
 sed -i -e "s?#net.ipv4.ip_forward=1?net.ipv4.ip_forward=1?g" /etc/sysctl.conf
 sed -i -e "s?#net.ipv6.conf.all.forwarding=1?net.ipv6.conf.all.forwarding=1?g" /etc/sysctl.conf
 echo "net.ipv6.conf.$iname.accept_ra=2" >> /etc/sysctl.conf
+echo "accept_ra 2" >> /etc/network/interfaces
 sysctl -p
 #echo "Ocserv setup done!"
 msg_ok "Ocserv setup done!"
@@ -273,7 +274,7 @@ echo "=========================================="
 <p>Start the installation by running the command <span class="customcode"><span id="run">bash /root/vpnsetup.sh</span> <button onclick="copyToClipboard('run')">Copy Code</button></span></p>
 <p>To add or remove more users run the setup file again just skip installing the server again. The script above generates a self signed certificate and when you connect to your VPN server you will see warning before you connect to it which you can ignore if you are OK with it. If you want a valid certificate then read below.</p>
 <p style="font-weight: bold;">LetsEncrypt certificates</p>
-<p>It is highly recommended to use a valid SSL/TLS certificate to secure your server, for example LetsEncrypt Change the paths for certificate to LetsEncrypt.</p>
+<p>It is highly recommended to use a valid SSL/TLS certificate to secure your server, for example LetsEncrypt. Change the paths for certificate to LetsEncrypt.</p>
 <p>Install acme.sh</p>
 <p><span class="customcode"><span id="acmeinstall">curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online -m email@example.com --home ~/acme.sh</span> <button onclick="copyToClipboard('acmeinstall')">Copy Code</button></span></p>
 <p><span class="customcode"><span id="acmedirectory">mkdir -p /etc/LetsEncrypt/vpn</span> <button onclick="copyToClipboard('acmedirectory')">Copy Code</button></span></p>
