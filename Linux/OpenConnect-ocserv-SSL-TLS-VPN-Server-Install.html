@@ -88,7 +88,7 @@ IPv6Subnet=$(printf "2001:db8:%s"; openssl rand -hex 4 | sed 's/\(....\)/\1:/g; 
 IPv6Subnet+="::/64"
 sed -i -e "s?#server-cert = /etc/ocserv/server-cert.pem?server-cert = /etc/ocserv/server-cert.pem?g" /etc/ocserv/ocserv.conf
 sed -i -e "s?#server-key = /etc/ocserv/server-key.pem?server-key = /etc/ocserv/server-key.pem?g" /etc/ocserv/ocserv.conf
-sed -i -e "s?keepalive = 32400?keepalive = 300?g" /etc/ocserv/ocserv.conf
+sed -i -e "s?keepalive = 32400?keepalive = 25?g" /etc/ocserv/ocserv.conf
 sed -i -e "s?try-mtu-discovery = false?try-mtu-discovery = true?g" /etc/ocserv/ocserv.conf
 sed -i -e "s?idle-timeout = 1200?#idle-timeout = 1200?g" /etc/ocserv/ocserv.conf
 sed -i -e "s?mobile-idle-timeout = 2400?#mobile-idle-timeout = 2400?g" /etc/ocserv/ocserv.conf
