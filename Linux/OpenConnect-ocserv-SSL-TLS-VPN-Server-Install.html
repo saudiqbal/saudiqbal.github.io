@@ -63,19 +63,7 @@ echo "=========================================="
 echo "=========  VPN SERVER SETUP  ============="
 echo "=========================================="
 
-echo -n "Start VPN server setup? [y/N]? "
-read answer
-if [ "$answer" != "${answer#[Yy]}" ] ;then
-echo "Starting VPN server setup"
-else
-echo "Exiting VPN server setup"
-exit
-fi
-sleep 1
-
-echo -n "Install and setup Ocserv VPN Server [y/N]? "
-read answer
-if [ "$answer" != "${answer#[Yy]}" ] ;then
+function install() {
 apt install ocserv
 #echo "Ocserv server installed!"
 msg_ok "Ocserv server installed!"
@@ -141,8 +129,8 @@ table ip filter {
 
 	chain forward {
 		type filter hook forward priority 0;
-		iifname "$iname" oifname "vpns*" accept;
-		iifname "vpns*" oifname "$iname" accept;
+		iifname "$iname" oifname "vpns*" accept
+		iifname "vpns*" oifname "$iname" accept
 	}
 
 	chain output {
@@ -176,8 +164,8 @@ table ip6 filter {
 
 	chain forward {
 		type filter hook forward priority 0;
-		iifname "$iname" oifname "vpns*" accept;
-		iifname "vpns*" oifname "$iname" accept;
+		iifname "$iname" oifname "vpns*" accept
+		iifname "vpns*" oifname "$iname" accept
 	}
 
 	chain output {
@@ -218,19 +206,15 @@ echo -e "\naccept_ra 2\n" >> /etc/network/interfaces
 sysctl -p
 #echo "Ocserv setup done!"
 msg_ok "Ocserv setup done!"
-else
-msg_info "Skipped"
-fi
-#sleep 1
+show_menu
+}
 
-echo -n "Add VPN user [y/N]? "
-read answer
-if [ "$answer" != "${answer#[Yy]}" ] ;then
+function adduser() {
 echo -n "Enter Username: "
 read username
 ocpasswd -c /etc/ocserv/passwd $username
 #echo "New user added!"
-msg_ok "New user added!"
+msg_ok "New user $username added!"
 answer=yes
 while [ "$answer" = yes ]
 do
@@ -241,32 +225,60 @@ echo -n "Enter Username: "
 read username
 ocpasswd -c /etc/ocserv/passwd $username
 #echo "New user added!"
-msg_ok "New user added!"
+msg_ok "New user $username added!"
 sleep 1
 answer=yes
 fi
 done
-else
-msg_info "Skipped"
-fi
-#sleep 1
+show_menu
+}
 
-echo -n "Delete VPN user [y/N]? "
-read answer
-if [ "$answer" != "${answer#[Yy]}" ] ;then
+function deluser() {
 echo -n "Enter Username: "
 read username
 ocpasswd -c /etc/ocserv/passwd -d $username
-echo "$username user deleted!"
-else
-msg_info "Skipped"
-fi
-#sleep 1
+msg_ok "User $username deleted!"
+show_menu
+}
 
+function default_option() {
 clear
 echo "=========================================="
 echo "======== VPN SERVER SETUP DONE  =========="
 echo "=========================================="
+
+}
+
+function show_menu() {
+  echo "Choose an option:"
+  echo "1. Install Ocserv OpenConnect SSL VPN server"
+  echo "2. Add VPN User"
+  echo "3. Delete VPN User"
+  echo "4. Exit setup"
+  echo -n "Enter your choice (1 - 4): "
+  read user_input
+
+  case "$user_input" in
+    1)
+      install
+      ;;
+    2)
+      adduser
+      ;;
+    3)
+      deluser
+      ;;
+    4)
+      default_option
+      ;;
+    *)
+      default_option
+      ;;
+  esac
+}
+
+show_menu
+
 </code></pre>
 </figure>
 </maincode>
