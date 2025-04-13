@@ -57,6 +57,7 @@
 </div>
 </div>
 <script>
+setTimeout(() => {
 var protocol = 'https://';
 var domain = 'saudiqbal.com';
 var file = '/si-visitor.php?url=';
@@ -64,7 +65,6 @@ var url = window.location.href;
 var and = "&referrer=";
 var referrer = document.referrer;
 var address = protocol+domain+file+url+and+referrer;
-
 var xmlhttp;
 if (window.XMLHttpRequest) {
 xmlhttp=new XMLHttpRequest();
@@ -74,6 +74,7 @@ xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 }
 xmlhttp.open("GET",address,true);
 xmlhttp.send();
+}, 1000)
 </script>
 </body>
 </html>
