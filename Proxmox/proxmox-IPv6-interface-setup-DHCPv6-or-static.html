@@ -98,17 +98,8 @@ iface vmbr0 inet6 dhcp
 	post-up ip6tables -t nat -A PREROUTING -p tcp -d fd00::10 --dport 443 -j REDIRECT --to-ports 8006</code></pre>
 </figure>
 </maincode>
-<p>Now edit the file <span class="customcode">/etc/dhcp/dhclient.conf</span> and add this code at the bottom of the file.</p>
-<maincode>
-<figure>
-<figcaption>/etc/dhcp/dhclient.conf</figcaption>
-<pre>
-<code contenteditable="false" tabindex="0" spellcheck="false">interface "vmbr0" {
-send dhcp6.client-id 00:03:00:01:bc:24:11:00:00:00;
-}</code></pre>
-</figure>
-</maincode>
-<p>Then run these commands in the Proxmox terminal <span class="customcode">rm /var/lib/dhcp/*</span> and <span class="customcode">systemctl restart networking</span></p>
+<p>Now edit the file <span class="customcode">/etc/default/networking</span> and comment out <span class="customcode">SKIP_DOWN_AT_SYSRESET = yes</span> by changing it to <span class="customcode">#SKIP_DOWN_AT_SYSRESET="yes"</span></p>
+<p>Then run these commands in the Proxmox terminal <span class="customcode">systemctl restart networking</span></p>
 <p>Finally don't forget to add <span class="customcode">net.ipv6.conf.vmbr0.accept_ra=2</span> to your <span class="customcode">/etc/sysctl.conf</span> file and reboot ProxMox.</p>
 <p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
 </article>
