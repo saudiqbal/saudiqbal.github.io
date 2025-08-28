@@ -62,6 +62,7 @@ iface vmbr0 inet6 static
 </maincode>
 <p style="font-weight: bold;">DHCPv6 IPv6 and DHCP IPv4 config</p>
 <p>Proxmox bridge example with DHCPv6 for IPv6 and DHCPv4 for IPv4, change the IPs accordingly.</p>
+<p>Proxmox 9: If you are using Proxmox 9 then before making any changes for using DHCP don't forget to install <span class="customcode">apt install isc-dhcp-client</span> otherwise the server will not boot.</p>
 <maincode>
 <figure>
 <figcaption>/etc/network/interfaces</figcaption>
