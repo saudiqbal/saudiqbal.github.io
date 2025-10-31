@@ -37,7 +37,7 @@ sudo systemctl enable networking</code></pre>
 <p>After executing the above commands do not reboot your Raspberry yet or it will not boot.</p>
 </fieldset>
 <p>Now generate a new random IPv6 address suffix like this one <strong>::71c6:b34f:8e2a:54f5</strong> or your own easy to remember like <strong>::2</strong> or <strong>::1000</strong>. In this example I will use ::71c6:b34f:8e2a:54f5 as my desired IPv6 address. Example below for systemd-networkd, ifupdown and netplan.</p>
-<p style="font-weight: bold;">systemd-networkd</p>
+<p style="font-weight: bold;" id="systemd-networkd">systemd-networkd</p>
 <p>Create systemd-network config file <span class="customcode"><span id="systemd-networkd-config-file">nano /etc/systemd/network/00-ethernet.network</span> <button onclick="copyToClipboard('systemd-networkd-config-file')">Copy Code</button></span></p>
 <maincode>
 <figure>
@@ -74,7 +74,7 @@ Token=::71c6:b34f:8e2a:54f5
 <p>Enable systemd-networkd <span class="customcode"><span id="systemd-networkd-config-enable">systemctl enable systemd-networkd</span> <button onclick="copyToClipboard('systemd-networkd-config-enable')">Copy Code</button></span></p>
 <p>Purge ifupdown <span class="customcode"><span id="ifupdownpurge">apt purge ifupdown</span> <button onclick="copyToClipboard('ifupdownpurge')">Copy Code</button></span></p>
 <p>Restart systemd-networkd <span class="customcode"><span id="systemd-networkd-config-restart">systemctl restart systemd-networkd</span> <button onclick="copyToClipboard('systemd-networkd-config-restart')">Copy Code</button></span></p>
-<p style="font-weight: bold;">ifupdown</p>
+<p style="font-weight: bold;" id="ifupdown">ifupdown</p>
 <p>Now edit the /etc/network/interfaces file and replace the code with this one replacing the token and gateway of your router.</p>
 <maincode>
 <figure>
@@ -93,7 +93,7 @@ iface eth0 inet6 auto
 	up ip token set ::71c6:b34f:8e2a:54f5 dev eth0</code></pre>
 </figure>
 </maincode>
-<p style="font-weight: bold;">Netplan</p>
+<p style="font-weight: bold;" id="Netplan">Netplan</p>
 <maincode>
 <figure>
 <figcaption>Netplan</figcaption>
@@ -117,7 +117,7 @@ iface eth0 inet6 auto
 </figure>
 </maincode>
 <p>Save the file and reboot your server or Raspberry Pi.</p>
-<p><strong>Router configuration</strong></p>
+<p id="RouterConfiguration"><strong>Router configuration</strong></p>
 <p>Next step is to setup your router firewall where we will use the suffix <span>71c6:b34f:8e2a:54f5 to match the last 4 octects to a full IPv6 address. The prefix can be dynamic and can change whenever it wants and your server will continue to work fine. Now go to your router firewall, Asus and OpenWRT config is similar and use these values as an example.</span></p>
 <p><span style="text-decoration: underline;">Asus router example</span></p>
 <p>Service name: Your preferred name</p>
