@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Web GUI Self Hosted TLS SSL Monitoring Notification Bash Script</title>
+<meta name="description" content="Web GUI Self Hosted TLS SSL Monitoring Notification Bash Script">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Web GUI Self Hosted TLS SSL Monitoring Notification Bash Script</h1>
+<article>
+<p>A quick and easy to setup guide for getting TLS/SSL certificate expiry notifications using API or Email</p>
+<p>Tested on Debian 13 on a fresh install.</p>
+<p>Install Sqlite3 <span class="customcode"><span id="sqlite3">apt install sqlite3</span> <button onclick="copyToClipboard('sqlite3')">Copy Code</button></span></p>
+<p>Download setup.sh <span class="customcode"><span id="setupdownload">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/setup.sh -o "/var/www/html/TLSMonitor/setup.sh"</span> <button onclick="copyToClipboard('setupdownload')">Copy Code</button></span></p>
+<p>Download daily-tls-expiry-check.sh <span class="customcode"><span id="daily-tls-expiry-check">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/daily-tls-expiry-check.sh -o "/var/www/html/TLSMonitor/daily-tls-expiry-check.sh"</span> <button onclick="copyToClipboard('daily-tls-expiry-check')">Copy Code</button></span></p>
+<p>Download index.php <span class="customcode"><span id="phpfiledownload">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/index.php -o "/var/www/html/TLSMonitor/index"</span> <button onclick="copyToClipboard('phpfiledownload')">Copy Code</button></span></p>
+<p>Give execution permission to the bash script <span class="customcode"><span id="chmod">chmod +x /var/www/html/TLSMonitor/setup.sh</span> <button onclick="copyToClipboard('chmod')">Copy Code</button></span></p>
+<p>And</p>
+<p>Give execution permission to the bash script <span class="customcode"><span id="chmodcron">chmod +x /var/www/html/TLSMonitor/daily-tls-expiry-check.sh</span> <button onclick="copyToClipboard('chmodcron')">Copy Code</button></span></p>
+<p>Start the installation by running the command <span class="customcode"><span id="run">bash /var/www/html/TLSMonitor/setup.sh</span> <button onclick="copyToClipboard('run')">Copy Code</button></span></p>
+<p>To add or remove more domains or subdomains run the setup file again.</p>
+<p style="font-weight: bold;">Crontab Setup</p>
+<p>Add a cron job by editing cron <span class="customcode">crontab -e</span></p>
+<p>Start the installation by running the command <span class="customcode"><span id="cronjob">0 0 * * * /bin/bash /var/www/html/TLSMonitor/daily-tls-expiry-check.sh > /dev/null 2>&1</span> <button onclick="copyToClipboard('cronjob')">Copy Code</button></span></p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
