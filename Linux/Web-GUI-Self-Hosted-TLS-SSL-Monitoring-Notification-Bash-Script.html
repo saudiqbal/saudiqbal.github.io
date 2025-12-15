@@ -20,12 +20,12 @@
 <div class="content">
 <h1 class="titletextshadow">Web GUI Self Hosted TLS SSL Monitoring Notification Bash Script</h1>
 <article>
-<p>A quick and easy to setup guide for getting TLS/SSL certificate expiry notifications using API or Email</p>
+<p>A quick and easy to setup guide for getting TLS/SSL certificate expiry notifications using API or Email. You should already have a webserver and PHP installed before using this script.</p>
 <p>Tested on Debian 13 on a fresh install.</p>
 <p>Install Sqlite3 <span class="customcode"><span id="sqlite3">apt install sqlite3</span> <button onclick="copyToClipboard('sqlite3')">Copy Code</button></span></p>
-<p>Download setup.sh <span class="customcode"><span id="setupdownload">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/setup.sh -o "/var/www/html/TLSMonitor/setup.sh"</span> <button onclick="copyToClipboard('setupdownload')">Copy Code</button></span></p>
-<p>Download daily-tls-expiry-check.sh <span class="customcode"><span id="daily-tls-expiry-check">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/daily-tls-expiry-check.sh -o "/var/www/html/TLSMonitor/daily-tls-expiry-check.sh"</span> <button onclick="copyToClipboard('daily-tls-expiry-check')">Copy Code</button></span></p>
-<p>Download index.php <span class="customcode"><span id="phpfiledownload">curl https://gist.githubusercontent.com/saudiqbal/7e6e8a90444c3213203acbf263bea6ce/raw/index.php -o "/var/www/html/TLSMonitor/index"</span> <button onclick="copyToClipboard('phpfiledownload')">Copy Code</button></span></p>
+<p>Download setup.sh <span class="customcode"><span id="setupdownload">curl https://raw.githubusercontent.com/saudiqbal/saudiqbal.github.io/refs/heads/main/files/TLSMonitor/setup.sh -o "/var/www/html/TLSMonitor/setup.sh"</span> <button onclick="copyToClipboard('setupdownload')">Copy Code</button></span></p>
+<p>Download daily-tls-expiry-check.sh <span class="customcode"><span id="daily-tls-expiry-check">curl https://raw.githubusercontent.com/saudiqbal/saudiqbal.github.io/refs/heads/main/files/TLSMonitor/daily-tls-expiry-check.sh -o "/var/www/html/TLSMonitor/daily-tls-expiry-check.sh"</span> <button onclick="copyToClipboard('daily-tls-expiry-check')">Copy Code</button></span></p>
+<p>Download index.php <span class="customcode"><span id="phpfiledownload">curl https://raw.githubusercontent.com/saudiqbal/saudiqbal.github.io/refs/heads/main/files/TLSMonitor/index.php -o "/var/www/html/TLSMonitor/index.php"</span> <button onclick="copyToClipboard('phpfiledownload')">Copy Code</button></span></p>
 <p>Give execution permission to the bash script <span class="customcode"><span id="chmod">chmod +x /var/www/html/TLSMonitor/setup.sh</span> <button onclick="copyToClipboard('chmod')">Copy Code</button></span></p>
 <p>And</p>
 <p>Give execution permission to the bash script <span class="customcode"><span id="chmodcron">chmod +x /var/www/html/TLSMonitor/daily-tls-expiry-check.sh</span> <button onclick="copyToClipboard('chmodcron')">Copy Code</button></span></p>
