@@ -38,6 +38,7 @@
 <p>If you want to probe the router on a different schedule, like every 3 hours use this example</p>
 <p>Add new hourly cron <span class="customcode"><span id="cronjobcustom">0 */3 * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjobcustom')">Copy Code</button></span> and change the value of $ProbeInterval = 1; to $ProbeInterval = 3; in file router.php or interface.php depending if you are monitoring a router or a local interface.</p>
 <p>Now in your web browser open http://yourwebserver/BandwidthMonitor and see if it works, give it few hours for the data to populate.</p>
+<p>This is just a hobby project I made and not made for accurate data measurement. If you see any calculation mistakes and find a solution send me a PR.</p>
 <p><a href="https://github.com/saudiqbal/BandwidthMonitor" class="download-button" download>Download</a></p>
 <p style="font-weight: bold;">Screenshot</p>
 <p><img src="https://i.postimg.cc/Vzn2zk0K/screenshot.jpg" alt="TLS Monitor Screenshot" class="fluidimg" /></p>
