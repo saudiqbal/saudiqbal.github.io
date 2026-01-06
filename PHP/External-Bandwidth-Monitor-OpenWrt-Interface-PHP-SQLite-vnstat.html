@@ -24,7 +24,7 @@
 <p style="font-weight: bold;">Notes</p>
 <p>64 bit system is required as the script deals with very large numbers.</p>
 <p>To monitor OpenWrt router use router.php and to monitor a local Linux interface use interface.php file</p>
-<p>Before installing make sure the time zone in php.ini is correctly set because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system. Use the bash code below to quickly find the php.ini file and change the time zone.</p>
+<p>Before installing make sure the time zone in php.ini is correctly set otherwise you will get incorrect data because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system. Use the bash code below to quickly find the php.ini file and change the time zone or change the time zone in php.ini file manually to your local one.</p>
 <span class="customcode"><span id="fixtimezone">find /etc -type f -name "php.ini" -exec sed -i 's/;date.timezone =/date.timezone = "America\/New_York"/g' {} +</span> <button onclick="copyToClipboard('fixtimezone')">Copy Code</button></span>
 <p>Restart Apache or Nginx</p>
 <p>Apache <span class="customcode"><span id="restartapache">systemctl restart apache2</span> <button onclick="copyToClipboard('restartapache')">Copy Code</button></span> / Nginx <span class="customcode"><span id="restartnginx">systemctl restart php8.4-fpm</span> <button onclick="copyToClipboard('restartnginx')">Copy Code</button></span></p>
