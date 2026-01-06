@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>External Bandwidth Monitor for OpenWrt / Interface using PHP and SQLite like Vnstat</title>
+<meta name="description" content="External Bandwidth Monitor for OpenWrt / Interface using PHP and SQLite like Vnstat">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">External Bandwidth Monitor for OpenWrt / Interface using PHP and SQLite like Vnstat</h1>
+<article>
+<p>For personal or testing use recommended. Tested on Debian 13 on a Proxmox VM / Raspberry Pi and a VPS server.</p>
+<p style="font-weight: bold;">Notes</p>
+<p>64 bit system is required as the script deals with very large numbers.</p>
+<p>To monitor OpenWrt router use router.php and to monitor a local Linux interface use interface.php file</p>
+<p>Before installing make sure the time zone in php.ini is correctly set because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system. Use the bash code below to quickly find the php.ini file and change the time zone.</p>
+<span class="customcode"><span id="fixtimezone">find /etc -type f -name "php.ini" -exec sed -i 's/;date.timezone =/date.timezone = "America\/New_York"/g' {} +</span> <button onclick="copyToClipboard('fixtimezone')">Copy Code</button></span>
+<p>Restart Apache or Nginx</p>
+<p>Apache <span class="customcode"><span id="restartapache">systemctl restart apache2</span> <button onclick="copyToClipboard('restartapache')">Copy Code</button></span> / Nginx <span class="customcode"><span id="restartnginx">systemctl restart php8.4-fpm</span> <button onclick="copyToClipboard('restartnginx')">Copy Code</button></span></p>
+<p style="font-weight: bold;">Router Setup</p>
+<p>Copy networkinfo.sh file to /www/cgi-bin/networkinfo.sh using WinSCP and chmod permission to 755. Now open a web browser and open http://192.168.1.1/cgi-bin/networkinfo.sh (your routers IP address) and check if the data is correctly displayed.</p>
+<p style="font-weight: bold;">Bandwidth Monitor Install</p>
+<p>Upload rest of the files in /var/www/html/BandwidthMonitor. After uploading run setup.php to create the SQLite database.</p>
+<p>Cron job setup</p>
+<p>Change router.php to interface.php for monitoring local interface, and replace the name of the interface in line 4 (ens18) in interface.php file.</p>
+<p>Add new hourly cron <span class="customcode"><span id="cronjob">0 * * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjob')">Copy Code</button></span></p>
+<p>If you want to probe the router on a different schedule, like every 3 hours use this example</p>
+<p>Add new hourly cron <span class="customcode"><span id="cronjobcustom">0 */3 * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjobcustom')">Copy Code</button></span> and change the value of $ProbeInterval = 1; to $ProbeInterval = 3; in file router.php or interface.php depending if you are monitoring a router or a local interface.</p>
+<p>Now in your web browser open http://yourwebserver/BandwidthMonitor and see if it works, give it few hours for the data to populate.</p>
+<p><a href="https://github.com/saudiqbal/BandwidthMonitor" class="download-button" download>Download</a></p>
+<p style="font-weight: bold;">Screenshot</p>
+<p><img src="https://i.postimg.cc/Vzn2zk0K/screenshot.jpg" alt="TLS Monitor Screenshot" class="fluidimg" /></p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
