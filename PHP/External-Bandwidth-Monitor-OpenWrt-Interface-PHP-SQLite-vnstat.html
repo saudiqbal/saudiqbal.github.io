@@ -31,7 +31,7 @@
 <p style="font-weight: bold;">Router Setup</p>
 <p>Copy networkinfo.sh file to /www/cgi-bin/networkinfo.sh using WinSCP and chmod permission to 755. Now open a web browser and open http://192.168.1.1/cgi-bin/networkinfo.sh (your routers IP address) and check if the data is correctly displayed.</p>
 <p style="font-weight: bold;">Bandwidth Monitor Install</p>
-<p>Upload rest of the files in /var/www/html/BandwidthMonitor. After uploading run setup.php to create the SQLite database.</p>
+<p>Upload rest of the files in /var/www/html/BandwidthMonitor. After uploading run setup.php to create the SQLite database. Change the IP address to your router's IP address in <span class="customcode">$url = 'http://192.168.1.1/cgi-bin/networkinfo.sh';</span> in router.php</p>
 <p>Cron job setup</p>
 <p>Change router.php to interface.php for monitoring local interface, and replace the name of the interface in line 4 (ens18) in interface.php file.</p>
 <p>Add new hourly cron <span class="customcode"><span id="cronjob">0 * * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjob')">Copy Code</button></span></p>
