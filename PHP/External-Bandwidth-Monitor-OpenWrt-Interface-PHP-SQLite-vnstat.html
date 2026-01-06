@@ -24,8 +24,9 @@
 <p style="font-weight: bold;">Notes</p>
 <p>64 bit system is recommended as the script deals with very large numbers.</p>
 <p>To monitor OpenWrt router use router.php and to monitor a local Linux interface use interface.php file.</p>
-<p>Before installing make sure the time zone in php.ini is correctly set otherwise you will get incorrect data because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system. Use the bash code below to quickly find the php.ini file and change the time zone or change the time zone in php.ini file manually to your local one. You can also manually add <span class="customcode">date_default_timezone_set('America/New_York');</span> to router.php or interface.php directly if you like.</p>
-<span class="customcode"><span id="fixtimezone">find /etc -type f -name "php.ini" -exec sed -i 's/;date.timezone =/date.timezone = "America\/New_York"/g' {} +</span> <button onclick="copyToClipboard('fixtimezone')">Copy Code</button></span>
+<p>Before installing make sure the time zone is correctly set otherwise you will get incorrect data because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system.
+Change the time zone <span class="customcode">date_default_timezone_set('America/New_York');</span> to router.php or interface.php directly to match your local time zone. You can also use the bash code below to quickly find the php.ini file directly and change the time zone or change the time zone in php.ini file manually to your local one.
+<span class="customcode"><span id="fixtimezone">find /etc -type f -name "php.ini" -exec sed -i 's/;date.timezone =/date.timezone = "America\/New_York"/g' {} +</span> <button onclick="copyToClipboard('fixtimezone')">Copy Code</button></span></p>
 <p>Restart Apache or Nginx</p>
 <p>Apache <span class="customcode"><span id="restartapache">systemctl restart apache2</span> <button onclick="copyToClipboard('restartapache')">Copy Code</button></span> / Nginx <span class="customcode"><span id="restartnginx">systemctl restart php8.4-fpm</span> <button onclick="copyToClipboard('restartnginx')">Copy Code</button></span></p>
 <p style="font-weight: bold;">Router Setup</p>
