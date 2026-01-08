@@ -27,7 +27,40 @@
 <p>Before installing make sure the time zone is correctly set otherwise you will get incorrect data because the cron job was NOT using the correct time zone even when the time zone was correctly set for the Linux system.
 Change the time zone <span class="customcode">date_default_timezone_set('America/New_York');</span> in config.php directly to match your local time zone <a href="https://www.php.net/manual/en/timezones.php">[Full List]</a>.</p>
 <p style="font-weight: bold;">Router Setup</p>
-<p>Copy networkinfo.sh file to /www/cgi-bin/networkinfo.sh using WinSCP and chmod permission to 755. Now open a web browser and open http://192.168.1.1/cgi-bin/networkinfo.sh (your routers IP address) and check if the data is correctly displayed. You will need to upload / chmod the networkinfo.sh file after every sysupgrade, or to preserve it on every sysupgrade go to OpenWrt > System > Backup / Flash firmware > Configuration and add the line <span class="customcode">/www/cgi-bin/networkinfo.sh</span> at the bottom in the config text area.</p>
+<p>Create a file networkinfo.sh in your OpenWrt router which transmit display Rx and Tx data through an API. Log into your OpenWrt router through SSH and paste the command below in the terminal to create the API.<br>
+<maincode>
+<figure>
+<figcaption>/www/cgi-bin/networkinfo.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">
+cat << "EOF" >> /www/cgi-bin/networkinfo.sh
+#!/bin/sh
+printf "Content-Type: text/plain\n\n"
+
+# Get the physical device name for the 'wan' interface
+WAN_IFACE=$(ubus call network.interface.wan status | jsonfilter -e '@.l3_device')
+
+if [ -n "$WAN_IFACE" ]; then
+	# Read the RX bytes count from the sysfs entry
+	RX_BYTES=$(cat /sys/class/net/"$WAN_IFACE"/statistics/rx_bytes)
+	#echo "WAN RX Bytes: $RX_BYTES"
+	TX_BYTES=$(cat /sys/class/net/"$WAN_IFACE"/statistics/tx_bytes)
+	#echo "WAN TX Bytes: $TX_BYTES"
+else
+	echo "Could not find WAN physical interface."
+fi
+
+echo "{"
+echo "\"rx_bytes\": \"$RX_BYTES\","
+echo "\"tx_bytes\": \"$TX_BYTES\""
+echo "}"
+exit 0
+EOF
+chmod +x /www/cgi-bin/networkinfo.sh
+</code></pre>
+</figure>
+</maincode>
+<p>Instead of SSH you can also manually copy networkinfo.sh file to /www/cgi-bin/networkinfo.sh using WinSCP and chmod permission to 755. Now open a web browser and open http://192.168.1.1/cgi-bin/networkinfo.sh (your routers IP address) and check if the data is correctly displayed. You will need to upload / chmod the networkinfo.sh file after every sysupgrade, or to preserve it on every sysupgrade go to OpenWrt > System > Backup / Flash firmware > Configuration and add the line <span class="customcode">/www/cgi-bin/networkinfo.sh</span> at the bottom in the config text area.</p>
 <p style="font-weight: bold;">Bandwidth Monitor Install</p>
 <p>Upload rest of the files in /var/www/html/BandwidthMonitor. After uploading run setup.php to create the SQLite database. Change the IP address to your router's IP address in <span class="customcode">$url = 'http://192.168.1.1/cgi-bin/networkinfo.sh';</span> in config.php</p>
 <p>Cron job setup</p>
