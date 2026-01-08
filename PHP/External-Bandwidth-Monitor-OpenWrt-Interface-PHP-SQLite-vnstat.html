@@ -64,7 +64,7 @@ chmod +x /www/cgi-bin/networkinfo.sh
 <p style="font-weight: bold;">Bandwidth Monitor Install</p>
 <p>Upload rest of the files in <span class="customcode">/var/www/html/BandwidthMonitor</span>. After uploading run setup.php to create the SQLite database. Change the IP address to your router's IP address in <span class="customcode">$url = 'http://192.168.1.1/cgi-bin/networkinfo.sh';</span> in config.php</p>
 <p>Cron job setup</p>
-<p>Switch from router.php to interface.php for monitoring a local interface, and replace the name of the interface in line 4 (ens18) in interface.php file.</p>
+<p>If you want to monitor a local Computer interface instead of OpenWrt router then switch from router.php to interface.php, and replace the name of the interface in line 4 (ens18) in interface.php file.</p>
 <p>Add new hourly cron <span class="customcode"><span id="cronjob">0 * * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjob')">Copy Code</button></span></p>
 <p>If you want to probe the router on a different schedule, like every 3 hours use this example</p>
 <p>Add new hourly cron <span class="customcode"><span id="cronjobcustom">0 */3 * * * /usr/bin/php /var/www/html/BandwidthMonitor/router.php</span> <button onclick="copyToClipboard('cronjobcustom')">Copy Code</button></span> and change the value of <span class="customcode">$ProbeInterval = 1;</span> to <span class="customcode">$ProbeInterval = 3;</span> in file router.php or interface.php depending if you are monitoring a router or a local interface.</p>
