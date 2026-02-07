@@ -28,7 +28,7 @@
 <p>Wakeonlan <span class="customcode"><span id="wakeonlan">apt install wakeonlan</span> <button onclick="copyToClipboard('wakeonlan')">Copy Code</button></span></p>
 <p>APCUPSD <span class="customcode"><span id="apcupsd">apt install apcupsd</span> <button onclick="copyToClipboard('apcupsd')">Copy Code</button></span></p>
 <p style="font-weight: bold;">Customization of files</p>
-<p>Extract and upload all the files from the zip file in their appropriate directories and chmod all the bash (.sh) files to 755. Where ever you see <span class="customcode"># Your additional notification API goes here</span> replace that line with your own call for other notifications like sending an email, just add your desired text message</p>
+<p>Extract and upload all the files from the zip file in their appropriate directories and chmod all the bash (.sh) files to 755. Where ever you see <span class="customcode"># Your additional notification API goes here</span> replace that line with your own call for other notifications like sending an email, just add your desired text message. Uncomment all curl entries for log entries to your notification server.</p>
 <p>Replace <span class="customcode">rpi.example.com</span> to the hostname or IP address of your UPS server</p>
 <p>Replace <span class="customcode">proxmox.example.com</span> to the hostname or IP address of your proxmox server, if you have one</p>
 <p>Replace <span class="customcode">MAC_ADDR="D1:AE:52:C9:D3:C2"</span> to the MAC address of your server for Wake On LAN</p>
