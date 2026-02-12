@@ -68,7 +68,7 @@ var text = element.innerHTML;
 CopyToClipboard(text);
 }
 
-function CopyToClipboard(text) {
+async function CopyToClipboard(text) {
 try {
 	await navigator.clipboard.writeText(text);
 	} catch (error) {
