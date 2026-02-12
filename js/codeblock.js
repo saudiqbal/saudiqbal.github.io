@@ -62,16 +62,20 @@ async function copyCode(block, button) {
 	}, 1000);
 }
 
-function copyToClipboard(target) {
-var element = document.getElementById(target);
-var text = element.innerHTML;
-CopyToClipboard(text);
+function decodeHtmlEntities(encodedString) {
+const textarea = document.createElement('textarea');
+textarea.innerHTML = encodedString;
+return textarea.value;
 }
-
-async function CopyToClipboard(text) {
-try {
-	await navigator.clipboard.writeText(text);
-	} catch (error) {
-		console.warn('Unable to copy.', error);
-	}
+function copyToClipboard(text) {
+var element = document.getElementById(text);
+const textToCopy = element.innerHTML;
+const decoded = decodeHtmlEntities(textToCopy);
+navigator.clipboard.writeText(decoded)
+.then(() => {
+	console.log('Text copied to clipboard successfully');
+})
+.catch((error) => {
+	console.error('Error copying text to clipboard:', error);
+});
 }
