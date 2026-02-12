@@ -68,13 +68,10 @@ var text = element.innerHTML;
 CopyToClipboard(text);
 }
 
-function CopyToClipboard (text) {
-const textArea = document.createElement("textarea");
-textArea.value = text;
-textArea.style.position = "fixed";
-textArea.style.opacity = "0";
-document.body.appendChild(textArea);
-textArea.select();
-document.execCommand("copy");
-document.body.removeChild(textArea);
+function CopyToClipboard(text) {
+try {
+	await navigator.clipboard.writeText(text);
+	} catch (error) {
+		console.warn('Unable to copy.', error);
+	}
 }
