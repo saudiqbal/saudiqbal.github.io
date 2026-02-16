@@ -176,7 +176,7 @@ a.download-button:active {
 }
 .code-group {
 position: relative;
-display: flex;
+display: inline-flex;
 flex-wrap: wrap;
 align-items: stretch;
 font-family: monospace;
