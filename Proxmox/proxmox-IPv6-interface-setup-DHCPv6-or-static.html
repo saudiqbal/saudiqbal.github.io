@@ -62,7 +62,7 @@ iface vmbr0 inet6 static
 </maincode>
 <p style="font-weight: bold;">DHCPv6 IPv6 and DHCP IPv4 config</p>
 <p>Proxmox bridge example with DHCPv6 for IPv6 and DHCPv4 for IPv4, change the IPs accordingly.</p>
-<p>Proxmox 9: If you are using Proxmox 9 then before making any changes for using DHCP don't forget to install <span class="customcode">apt install isc-dhcp-client</span> otherwise the server will not boot.</p>
+<p>Proxmox 9: If you are using Proxmox 9 then before making any changes for using DHCP don't forget to install <span class="code-group"><span class="code-group-plain">apt install isc-dhcp-client</span></span> otherwise the server will not boot.</p>
 <maincode>
 <figure>
 <figcaption>/etc/network/interfaces</figcaption>
@@ -99,9 +99,9 @@ iface vmbr0 inet6 dhcp
 	post-up ip6tables -t nat -A PREROUTING -p tcp -d fd00::10 --dport 443 -j REDIRECT --to-ports 8006</code></pre>
 </figure>
 </maincode>
-<p>Now edit the file <span class="customcode">/etc/default/networking</span> and comment out <span class="customcode">SKIP_DOWN_AT_SYSRESET="yes"</span> by changing it to <span class="customcode">#SKIP_DOWN_AT_SYSRESET="yes"</span></p>
-<p>Then run these commands in the Proxmox terminal <span class="customcode">systemctl restart networking</span></p>
-<p>Finally don't forget to add <span class="customcode">net.ipv6.conf.vmbr0.accept_ra=2</span> to your <span class="customcode">/etc/sysctl.conf</span> file and reboot ProxMox.</p>
+<p>Now edit the file <span class="code-group"><span class="code-group-plain">/etc/default/networking</span></span> and comment out <span class="code-group"><span class="code-group-plain">SKIP_DOWN_AT_SYSRESET="yes"</span></span> by changing it to <span class="code-group"><span class="code-group-plain">#SKIP_DOWN_AT_SYSRESET="yes"</span></span></p>
+<p>Then run these commands in the Proxmox terminal <span class="code-group"><span class="code-group-plain">systemctl restart networking</span></span></p>
+<p>Finally don't forget to add <span class="code-group"><span class="code-group-plain">net.ipv6.conf.vmbr0.accept_ra=2</span></span> to your <span class="code-group"><span class="code-group-plain">/etc/sysctl.conf</span></span> file and reboot ProxMox.</p>
 <p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
 </article>
 
