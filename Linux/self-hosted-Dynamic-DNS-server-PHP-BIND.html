@@ -23,12 +23,12 @@
 <article>
 <p>Are you looking to setup your own Dynamic DNS server then this guide is for you. I use Debian Linux so this guide is based on Debian 12 at the time of this writing.</p>
 <p style="font-weight: bold;">Domain registrar DNS records setup</p>
-<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>First add a new DNS record for your dns server, for example <span class="code-group"><span class="code-group-plain">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span></span> or / and <span class="code-group"><span class="code-group-plain">dns.example.com A 203.0.113.9</span></span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
 <p>Now create a NS record in your domain registrar, for example.<br>
-<span class="customcode">NS record dns.example.com pointing to dns.example.com</span>
+<span class="code-group"><span class="code-group-plain">NS record dns.example.com pointing to dns.example.com</span></span>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
-<p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
+<p>Install BIND9 DNS server <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="bindinstall">apt install bind9 dnsutils</span></span><span onclick="copyToClipboard('bindinstall')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
 <p>Now we start configuring BIND9 server.</p>
 <maincode>
 <figure>
@@ -114,8 +114,8 @@ dns.example.com.             IN      A          203.0.113.9
 </code></pre>
 </figure>
 </maincode>
-<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone dns.example.com. /var/lib/bind/dns.example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
-<p>If you get no error after checking the zone file restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
+<p>Now check the zone file by running <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="zonecheck">named-checkzone dns.example.com. /var/lib/bind/dns.example.com.zone</span></span><span onclick="copyToClipboard('zonecheck')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
+<p>If you get no error after checking the zone file restart BIND server with your new settings <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="bindrestart">systemctl restart bind9</span></span><span onclick="copyToClipboard('bindrestart')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
 <p style="font-weight: bold;">PHP setup</p>
 <p>Now we will use PHP script to update our dynamic DNS server. Create a new PHP file dns.php on your server with the content below.</p>
 <maincode>
@@ -298,17 +298,17 @@ echo &apos;good&apos;&semi;
 </maincode>
 <p style="font-weight: bold;">Examples to update the DNS server</p>
 <p>Updating using the default IP used by the client<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com</span></span><br>
 Updating by manually specifying IPv6 address<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2</span></span><br>
 Updating by manually specifying IPv4 address<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myip=10.10.10.0</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myip=10.10.10.0</span></span><br>
 Updating my manually specifying both IPv6 and IPv4 address<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0</span></span><br>
 Setting custom TTL (in seconds)<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0&ttl=60</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&myipv6=fd22::2&myip=10.10.10.0&ttl=60</span></span><br>
 Deleting the hostname<br>
-<span class="customcode">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&action=delete</span><br>
+<span class="code-group"><span class="code-group-plain">https://www.example.com/dns.php?password=rUOrbg8R2RvVmOhcVoOGnIRIgWCY0W5x&hostname=homevpn.dns.example.com&action=delete</span></span><br>
 </p>
 
 <p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
