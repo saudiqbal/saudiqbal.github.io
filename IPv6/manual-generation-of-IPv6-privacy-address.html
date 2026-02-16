@@ -22,7 +22,7 @@
 <h1 class="titletextshadow">Manually generating IPv6 privacy address</h1>
 <article>
 <p>This is a quick tutorial to manually generate IPv6 address on a preferred schedule. Tested on Debian 12.</p>
-<p>First create a new text file in your home directory for storing IPv6 prefix. For example <span class="customcode">/root/IPv6/IPv6-prefix.txt</span> with a 0 in it and save it and set chmod 777 as permission for write access. Then create three bash scripts in your home directory as listed below and chmod 755 for execution permission for all of them. Change the name ens18 with the name of your ethenrnet adapter. Change the value <span class="customcode">preferred_lft 97200</span> to your desired lifespan of your IPv6 address.</p>
+<p>First create a new text file in your home directory for storing IPv6 prefix. For example <span class="code-group"><span class="code-group-plain">/root/IPv6/IPv6-prefix.txt</span></span> with a 0 in it and save it and set chmod 777 as permission for write access. Then create three bash scripts in your home directory as listed below and chmod 755 for execution permission for all of them. Change the name ens18 with the name of your ethenrnet adapter. Change the value <span class="customcode">preferred_lft 97200</span> to your desired lifespan of your IPv6 address.</p>
 <maincode>
 <figure>
 <figcaption>/root/IPv6/IPv6-Add-Privacy-Address.sh</figcaption>
