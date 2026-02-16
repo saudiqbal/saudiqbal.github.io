@@ -174,6 +174,120 @@ a.download-button:active {
 	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#EEE));
 	background:-moz-linear-gradient(0% 90% 90deg, #EEE, #FFF);
 }
+.code-group {
+position: relative;
+display: flex;
+flex-wrap: wrap;
+align-items: stretch;
+font-family: monospace;
+}
+.code-group-prepend {
+margin-right: -1px;
+}
+.code-group>.form-control:not(:first-child), .code-group>.custom-select:not(:first-child) {
+border-top-left-radius: 0;
+border-bottom-left-radius: 0;
+}
+.code-group>.form-control, .code-group>.form-control-plaintext, .code-group>.custom-select, .code-group>.custom-file {
+position: relative;
+width: fit-content;
+min-width: 0;
+margin-bottom: 0;
+}
+.code-group>*, *::before, *::after {
+box-sizing: border-box;
+}
+.code-group>.code-group-prepend>.btn, .code-group>.code-group-prepend>.code-group-text, .code-group:not(.has-validation)>.code-group-append:not(:last-child)>.btn, .code-group:not(.has-validation)>.code-group-append:not(:last-child)>.code-group-text, .code-group.has-validation>.code-group-append:nth-last-child(n+3)>.btn, .code-group.has-validation>.code-group-append:nth-last-child(n+3)>.code-group-text, .code-group>.code-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle), .code-group>.code-group-append:last-child>.code-group-text:not(:last-child) {
+border-top-right-radius: 0;
+border-bottom-right-radius: 0;
+}
+.code-group-text {
+display: flex;
+align-items: center;
+padding: .100rem .800rem;
+margin-bottom: 0;
+font-size: 1rem;
+font-weight: 400;
+line-height: 20px;
+text-align: center;
+white-space: nowrap;
+color: #000;
+background-color: #fff;
+border: 1px solid #ced4da;
+border-radius: .25rem;
+}
+.form-control:hover {
+background-color: #00aa00;
+color: #55ff7f;
+}
+.form-control {
+display: block;
+width: 50px;
+line-height: 20px;
+padding: .175rem .75rem;
+font-size: 1rem;
+font-weight: 400;
+line-height: 1;
+color: #495057;
+background-color: #e9ecef;
+background-clip: padding-box;
+border: 1px solid #ced4da;
+border-radius: .25rem;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+cursor: default;
+}
+.code-group-prepend, .code-group-append {
+display: flex;
+}
+.code-group-plain {
+display: flex;
+align-items: center;
+padding: .100rem .800rem;
+margin-bottom: 0;
+font-size: 1rem;
+font-weight: 400;
+line-height: 20px;
+text-align: center;
+white-space: nowrap;
+color: #000;
+background-color: #fff;
+border: 1px solid #ced4da;
+border-radius: .25rem;
+}
+.copy-tooltip {
+position: relative;
+display: inline-block;
+}
+.copy-tooltip .copy-tooltiptext {
+visibility: hidden;
+width: 100px;
+background-color: #555;
+color: #fff;
+text-align: center;
+border-radius: 6px;
+padding: 5px;
+position: absolute;
+z-index: 1;
+bottom: 125%;
+left: 50%;
+margin-left: -50px;
+opacity: 0;
+transition: opacity 0.3s;
+}
+.copy-tooltip .copy-tooltiptext::after {
+content: "";
+position: absolute;
+top: 100%;
+left: 50%;
+margin-left: -5px;
+border-width: 5px;
+border-style: solid;
+border-color: #555 transparent transparent transparent;
+}
+.copy-tooltip:hover .copy-tooltiptext {
+visibility: visible;
+opacity: 1;
+}
 @media (min-width: 640px) {
 .header {
 height: 40px;
