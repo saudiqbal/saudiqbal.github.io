@@ -220,6 +220,9 @@ border-radius: .25rem;
 background-color: #00aa00;
 color: #55ff7f;
 }
+.form-control:active {
+background-color: #ff0000;
+}
 .form-control {
 display: block;
 width: 50px;
