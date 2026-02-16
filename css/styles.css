@@ -260,7 +260,7 @@ display: inline-block;
 }
 .copy-tooltip .copy-tooltiptext {
 visibility: hidden;
-width: 75px;
+width: 50px;
 background-color: #555;
 color: #fff;
 text-align: center;
