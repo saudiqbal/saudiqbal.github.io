@@ -23,17 +23,17 @@
 <article>
 <p>Are you looking to setup your own DNS server for LetsEncrypt's ACME DNS-01 verification challenges with PHP API then this guide is for you. LetsEncrypt wild card certificates can also be requested using the same DNS records. I use Debian Linux so this guide is based on Debian 12 at the time of this writing. This guide assumes that you already have PHP installed on your system.</p>
 <p style="font-weight: bold;">Domain registrar DNS records setup</p>
-<p>First add a new DNS record for your dns server, for example <span class="customcode">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span> or / and <span class="customcode">dns.example.com A 203.0.113.9</span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
+<p>First add a new DNS record for your dns server, for example <span class="code-group"><span class="code-group-plain">dns.example.com AAAA 2001:0db8:a55b:42df:5d01:2359:a67e:737d</span></span> or / and <span class="code-group"><span class="code-group-plain">dns.example.com A 203.0.113.9</span></span> A/AAAA record with your server IP where you will serve your BIND9 DNS server.</p>
 <p>Now for each hostname create a NS record in your domain registrar, for example.<br>
-<span class="customcode">NS _acme-challenge.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.www.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.homeserver.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.fileserver.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.gameserver.example.com dns.example.com</span><br>
-<span class="customcode">NS _acme-challenge.plexserver.example.com dns.example.com</span>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.example.com dns.example.com</span></span><br>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.www.example.com dns.example.com</span></span><br>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.homeserver.example.com dns.example.com</span></span><br>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.fileserver.example.com dns.example.com</span></span><br>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.gameserver.example.com dns.example.com</span></span><br>
+<span class="code-group"><span class="code-group-plain">NS _acme-challenge.plexserver.example.com dns.example.com</span></span>
 </p>
 <p style="font-weight: bold;">Server Setup</p>
-<p>Install BIND9 DNS server <span class="customcode"><span id="bindinstall">apt install bind9 dnsutils</span> <button onclick="copyToClipboard('bindinstall')">Copy Code</button></span></p>
+<p>Install BIND9 DNS server <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="bindinstall">apt install bind9 dnsutils</span></span><span onclick="copyToClipboard('bindinstall')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
 <p>Now we start configuring the BIND9 server. This example includes the main domain which covers all the subdomains using the DNS server for generating LetsEncrypt certificates</p>
 <maincode>
 <figure>
@@ -57,7 +57,7 @@ zone "example.com" IN {
 </code></pre>
 </figure>
 </maincode>
-<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="customcode">listen-on { 127.0.0.1; 203.0.113.9; };</span>, I only use IPv6 so mine is set to <span class="customcode">listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };</span></p>
+<p>Now configure named.conf.options file, replace the example IP with your own, for IPv4 use <span class="code-group"><span class="code-group-plain">listen-on { 127.0.0.1; 203.0.113.9; };</span></span>, I only use IPv6 so mine is set to <span class="code-group"><span class="code-group-plain">listen-on-v6 { ::1; 2001:0db8:a55b:42df:5d01:2359:a67e:737d; };</span></span></p>
 <maincode>
 <figure>
 <figcaption>/etc/bind/named.conf.options</figcaption>
@@ -120,8 +120,8 @@ dns.example.com.             IN      A          203.0.113.9
 </code></pre>
 </figure>
 </maincode>
-<p>Now check the zone file by running <span class="customcode"><span id="zonecheck">named-checkzone example.com. /var/lib/bind/example.com.zone</span> <button onclick="copyToClipboard('zonecheck')">Copy Code</button></span></p>
-<p>Now restart BIND server with your new settings <span class="customcode"><span id="bindrestart">systemctl restart bind9</span> <button onclick="copyToClipboard('bindrestart')">Copy Code</button></span></p>
+<p>Now check the zone file by running <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="zonecheck">named-checkzone example.com. /var/lib/bind/example.com.zone</span></span><span onclick="copyToClipboard('zonecheck')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
+<p>Now restart BIND server with your new settings <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="bindrestart">systemctl restart bind9</span></span><span onclick="copyToClipboard('bindrestart')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
 <p style="font-weight: bold;">PHP Setup</p>
 <p>Now create a new file acme.php with the content below where your BIND9 server and PHP is installed. Passwords for example.com and www.example.com needs to be the same.</p>
 <maincode>
@@ -222,7 +222,7 @@ echo &apos;good&apos;&semi;
 </figure>
 </maincode>
 <p style="font-weight: bold;">Client Server Setup</p>
-<p>Now install acme.sh <span class="customcode"><span id="installacme">curl https://get.acme.sh | sh -s email=my@example.com</span> <button onclick="copyToClipboard('installacme')">Copy Code</button></span></p>
+<p>Now install acme.sh <span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="installacme">curl https://get.acme.sh | sh</span></span><span onclick="copyToClipboard('installacme')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy Text</span></span></span></p>
 <p>We now need to create a new acme DNS plugin to interact with our PHP API. After installing acme.sh create a new file (dns_phpbind.sh) in the acme plugin directory named /root/.acme.sh/dnsapi/dns_phpbind.sh</p>
 <maincode>
 <figure>
