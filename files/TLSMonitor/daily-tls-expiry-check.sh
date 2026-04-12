@@ -1,6 +1,6 @@
 #!/bin/bash
 date=$(date '+%Y-%m-%d %H:%M:%S')
-DAYS="5"
+DAYS="14"
 DB_FILE_NAME="/var/www/html/TLSMonitor/TLS.db"
 RESULT=$(sqlite3 "${DB_FILE_NAME}" "SELECT name, value FROM domains;")
 IFS=$'\n'
