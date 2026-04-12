@@ -25,6 +25,12 @@ logger -t TLSMonitor -p warning "TLS CHECK OK - Certificate for $domainname expi
 # SQLite
 sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='OK', timestamp='$(date -d @"$expirationdate" '+%Y-%m-%d')' WHERE name='$domainname';"
 fi;
+datetoday=$(date '+%Y-%m-%d')
+expiringtoday=$(date -d @$expirationdate +'%Y-%m-%d')
+if [ "$datetoday" == "$expiringtoday" ]; then
+# API Call
+curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires today" --data-urlencode "message=[$date] Certificate for $domainname expires today"
+fi
 done
 #unset IFS
 
