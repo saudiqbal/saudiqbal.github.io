@@ -17,8 +17,9 @@ logger -t TLSMonitor -p warning "TLS CHECK WARNING - Certificate for $domainname
 sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='ER', timestamp='$(date -d @"$expirationdate" '+%Y-%m-%d')' WHERE name='$domainname';"
 # Send notification only once
 if [ "${statusvalue}" = "OK" ]; then
-# API Call
-curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d')" --data-urlencode "message=[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
+# API Call or Email
+#mail -s "Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d')" -r "from@example.com" "to@example.com" <<< "[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
+#curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d')" --data-urlencode "message=[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
 fi
 else
 logger -t TLSMonitor -p warning "TLS CHECK OK - Certificate for $domainname expires on $(date -d @"$expirationdate" '+%Y-%m-%d')"
@@ -28,8 +29,9 @@ fi;
 datetoday=$(date '+%Y-%m-%d')
 expiringtoday=$(date -d @$expirationdate +'%Y-%m-%d')
 if [ "$datetoday" == "$expiringtoday" ]; then
-# API Call
-curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires today" --data-urlencode "message=[$date] Certificate for $domainname expires today"
+# API Call or Email
+#mail -s "Certificate expires(ed) today" -r "from@example.com" "to@example.com" <<< "[$date] Certificate for $domainname expires(ed) today"
+#curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires(ed) today" --data-urlencode "message=[$date] Certificate for $domainname expires(ed) today"
 fi
 done
 #unset IFS
