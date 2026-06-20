@@ -29,17 +29,17 @@
 <figcaption>index.php</figcaption>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">&lt;?php
-$startTime = array_sum(explode(' ', microtime()));
-header("Cache-Control: no-store, must-revalidate");
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>Data Calculator</title>
-<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet" type="text/css" href="/lib/css/dashboard-header.css">
-<style>
+$startTime = array_sum(explode(&apos; &apos;, microtime()));
+header(&quot;Cache-Control: no-store, must-revalidate&quot;);
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;Data Calculator&lt;/title&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;user-scalable=yes, initial-scale=1, width=device-width&quot;&gt;
+&lt;link rel=&quot;icon&quot; href=&quot;data:;base64,iVBORw0KGgo=&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/lib/css/dashboard-header.css&quot;&gt;
+&lt;style&gt;
 /* Checkbox */
 .box-inpt {
 	position: absolute;
@@ -90,155 +90,155 @@ header("Cache-Control: no-store, must-revalidate");
 	font-family: sans-serif;
 }
 .span-input::before {
-	content: "ON";
+	content: &quot;ON&quot;;
 	left: -80px;
 	background-color: #00da00;
 }
 .span-input::after {
-	content: "OFF";
+	content: &quot;OFF&quot;;
 	right: -80px;
 	background-color: #ff002f;
 }
-</style>
-</head>
-<body>
-<div class="header">
-<span class="headerlogo">Current Data Calculator</span>
-<input class="menu-btn" type="checkbox" id="menu-btn" />
-<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
-<ul class="menu">
-<li><a href="/">Home</a></li>
-</ul>
-</div>
-<div class="content">
-<div class="card">
-<div class="primary-title">
-<div class="primary-text">Bandwidth Monitoring</div>
-</div>
-<div class="supporting-text" style="font-size: 14px; line-height: 14px;">
-<span style="line-height: 2.5em;"></span><span class="box-inpt"><input id="subscribeCheckbox" class="autosave-checkbox" type="checkbox" data-id="buzzer"><span class="box-span-inpt"><span class="span-input"></span></span></span>
-<br><br><br>
-<span class="totaldata"></span><br>
-<span class="rxdata"></span><br>
-<span class="txdata"></span>
-</div>
-<hr>
-<div class="actions">
-<div class="cardfooter"></div>
-<div class="cardfooter float-right"><button id="clear-storage-btn">Clear All Data</button></div>
-</div>
-</div>
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;header&quot;&gt;
+&lt;span class=&quot;headerlogo&quot;&gt;Current Data Calculator&lt;/span&gt;
+&lt;input class=&quot;menu-btn&quot; type=&quot;checkbox&quot; id=&quot;menu-btn&quot; /&gt;
+&lt;label class=&quot;menu-icon&quot; for=&quot;menu-btn&quot;&gt;&lt;span class=&quot;navicon&quot;&gt;&lt;/span&gt;&lt;/label&gt;
+&lt;ul class=&quot;menu&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;div class=&quot;card&quot;&gt;
+&lt;div class=&quot;primary-title&quot;&gt;
+&lt;div class=&quot;primary-text&quot;&gt;Bandwidth Monitoring&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;supporting-text&quot; style=&quot;font-size: 14px; line-height: 14px;&quot;&gt;
+&lt;span style=&quot;line-height: 2.5em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;box-inpt&quot;&gt;&lt;input id=&quot;subscribeCheckbox&quot; class=&quot;autosave-checkbox&quot; type=&quot;checkbox&quot; data-id=&quot;buzzer&quot;&gt;&lt;span class=&quot;box-span-inpt&quot;&gt;&lt;span class=&quot;span-input&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;span class=&quot;totaldata&quot;&gt;&lt;/span&gt;&lt;br&gt;
+&lt;span class=&quot;rxdata&quot;&gt;&lt;/span&gt;&lt;br&gt;
+&lt;span class=&quot;txdata&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+&lt;div class=&quot;actions&quot;&gt;
+&lt;div class=&quot;cardfooter&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;cardfooter float-right&quot;&gt;&lt;button id=&quot;clear-storage-btn&quot;&gt;Clear All Data&lt;/button&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 
-<div class="card">
-<div class="primary-title">
-<div class="primary-text">Probe router</div>
-</div>
-<div class="supporting-text" style="font-size: 14px; line-height: 14px;">
-<button id="loadDataBtn">Probe router</button>
-<div id="contentDisplay">Content will appear here...</div>
-</div>
-<hr>
-<div class="actions">
-<div class="cardfooter"></div>
-<div class="cardfooter float-right"></div>
-</div>
-</div>
-</div>
-<script>
+&lt;div class=&quot;card&quot;&gt;
+&lt;div class=&quot;primary-title&quot;&gt;
+&lt;div class=&quot;primary-text&quot;&gt;Probe router&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;supporting-text&quot; style=&quot;font-size: 14px; line-height: 14px;&quot;&gt;
+&lt;button id=&quot;loadDataBtn&quot;&gt;Probe router&lt;/button&gt;
+&lt;div id=&quot;contentDisplay&quot;&gt;Content will appear here...&lt;/div&gt;
+&lt;/div&gt;
+&lt;hr&gt;
+&lt;div class=&quot;actions&quot;&gt;
+&lt;div class=&quot;cardfooter&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;cardfooter float-right&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
 localStorage.clear();
-document.getElementById("subscribeCheckbox").checked = false;
-document.querySelector('.totaldata').innerHTML = "";
-document.querySelector('.rxdata').innerHTML = "";
-document.querySelector('.txdata').innerHTML = "";
+document.getElementById(&quot;subscribeCheckbox&quot;).checked = false;
+document.querySelector(&apos;.totaldata&apos;).innerHTML = &quot;&quot;;
+document.querySelector(&apos;.rxdata&apos;).innerHTML = &quot;&quot;;
+document.querySelector(&apos;.txdata&apos;).innerHTML = &quot;&quot;;
 
 // 1. Select the button and container elements
-const button = document.getElementById('loadDataBtn');
-const display = document.getElementById('contentDisplay');
+const button = document.getElementById(&apos;loadDataBtn&apos;);
+const display = document.getElementById(&apos;contentDisplay&apos;);
 
 // 2. Add the click event listener to the button
-button.addEventListener('click', () => {
+button.addEventListener(&apos;click&apos;, () =&gt; {
 	// 3. Initiate the asynchronous network request
-	fetch('router.php')
-	.then(response => {
+	fetch(&apos;router.php&apos;)
+	.then(response =&gt; {
 		if (!response.ok) {
-			throw new Error('Network response failure');
+			throw new Error(&apos;Network response failure&apos;);
 		}
 		return response.json(); // Or response.text() if plaintext
 	})
-	.then(data => {
+	.then(data =&gt; {
 		// 4. Update the DOM with the received data
 		display.innerText = JSON.stringify(data);
 	})
-	.catch(error => {
-		console.error('Error fetching data:', error);
-		display.innerText = 'Failed to load data.';
+	.catch(error =&gt; {
+		console.error(&apos;Error fetching data:&apos;, error);
+		display.innerText = &apos;Failed to load data.&apos;;
 	});
 });
 
-const checkbox = document.getElementById('subscribeCheckbox');
+const checkbox = document.getElementById(&apos;subscribeCheckbox&apos;);
 
-checkbox.addEventListener('change', (event) => {
+checkbox.addEventListener(&apos;change&apos;, (event) =&gt; {
     if (event.target.checked) {
-	fetch('router.php')
-	.then(response => {
+	fetch(&apos;router.php&apos;)
+	.then(response =&gt; {
 		if (!response.ok) {
-			throw new Error('Network response failure');
+			throw new Error(&apos;Network response failure&apos;);
 		}
 		return response.json(); // Or response.text() if plaintext
 	})
-	.then(data => {
+	.then(data =&gt; {
 		// 4. Update the DOM with the received data
-		localStorage.setItem('rxStart', data.rx);
-		localStorage.setItem('txStart', data.tx);
+		localStorage.setItem(&apos;rxStart&apos;, data.rx);
+		localStorage.setItem(&apos;txStart&apos;, data.tx);
 		let rxStart = data.rx;
 		let txStart = data.tx;
 	})
-	.catch(error => {
-		console.error('Error fetching data:', error);
-		display.innerText = 'Failed to load data.';
+	.catch(error =&gt; {
+		console.error(&apos;Error fetching data:&apos;, error);
+		display.innerText = &apos;Failed to load data.&apos;;
 	});
     } else {
-	fetch('router.php')
-	.then(response => {
+	fetch(&apos;router.php&apos;)
+	.then(response =&gt; {
 		if (!response.ok) {
-			throw new Error('Network response failure');
+			throw new Error(&apos;Network response failure&apos;);
 		}
 		return response.json(); // Or response.text() if plaintext
 	})
-	.then(data => {
+	.then(data =&gt; {
 		// 4. Update the DOM with the received data
-		localStorage.setItem('rxStop', data.rx);
-		localStorage.setItem('txStop', data.tx);
-		rxStart = localStorage.getItem('rxStart');
-		txStart = localStorage.getItem('txStart');
-		let rxStop = localStorage.getItem('rxStop');
-		let txStop = localStorage.getItem('txStop');
+		localStorage.setItem(&apos;rxStop&apos;, data.rx);
+		localStorage.setItem(&apos;txStop&apos;, data.tx);
+		rxStart = localStorage.getItem(&apos;rxStart&apos;);
+		txStart = localStorage.getItem(&apos;txStart&apos;);
+		let rxStop = localStorage.getItem(&apos;rxStop&apos;);
+		let txStop = localStorage.getItem(&apos;txStop&apos;);
 		let totalRx = rxStop - rxStart;
 		let totalTx = txStop - txStart;
 		let totalCombined = totalRx + totalTx;
 		totalCombined = fileSizeSI(totalCombined);
-		document.querySelector('.totaldata').innerHTML = "Total Data: <b>"+totalCombined+"</b>";
+		document.querySelector(&apos;.totaldata&apos;).innerHTML = &quot;Total Data: &lt;b&gt;&quot;+totalCombined+&quot;&lt;/b&gt;&quot;;
 		totalRx = fileSizeSI(totalRx);
-		document.querySelector('.rxdata').innerHTML = "Rx: <b>"+totalRx+"</b>";
+		document.querySelector(&apos;.rxdata&apos;).innerHTML = &quot;Rx: &lt;b&gt;&quot;+totalRx+&quot;&lt;/b&gt;&quot;;
 		totalTx = fileSizeSI(totalTx);
-		document.querySelector('.txdata').innerHTML = "Tx: <b>"+totalTx+"</b>";
+		document.querySelector(&apos;.txdata&apos;).innerHTML = &quot;Tx: &lt;b&gt;&quot;+totalTx+&quot;&lt;/b&gt;&quot;;
 	})
-	.catch(error => {
-		console.error('Error fetching data:', error);
+	.catch(error =&gt; {
+		console.error(&apos;Error fetching data:&apos;, error);
 	});
     }
 });
 
 // 1. Select the button element
-const clearBtn = document.getElementById('clear-storage-btn');
+const clearBtn = document.getElementById(&apos;clear-storage-btn&apos;);
 // 2. Add a click event listener
-clearBtn.addEventListener('click', () => {
+clearBtn.addEventListener(&apos;click&apos;, () =&gt; {
 // 3. Clear all localStorage for the current domain
 localStorage.clear();
-document.getElementById("subscribeCheckbox").checked = false;
-document.querySelector('.totaldata').innerHTML = "";
-document.querySelector('.rxdata').innerHTML = "";
-document.querySelector('.txdata').innerHTML = "";
+document.getElementById(&quot;subscribeCheckbox&quot;).checked = false;
+document.querySelector(&apos;.totaldata&apos;).innerHTML = &quot;&quot;;
+document.querySelector(&apos;.rxdata&apos;).innerHTML = &quot;&quot;;
+document.querySelector(&apos;.txdata&apos;).innerHTML = &quot;&quot;;
 // 4. (Optional) Refresh the page or update the UI to reflect changes
 //location.reload();
 });
@@ -246,22 +246,22 @@ document.querySelector('.txdata').innerHTML = "";
 function fileSizeSI(bytes) {
 	const exponent = Math.floor(Math.log(bytes) / Math.log(1000.0));
 	const decimal = (bytes / Math.pow(1000.0, exponent)).toFixed(exponent ? 2 : 0);
-		if (bytes <= 0) {
-		return "0 Bytes";
+		if (bytes &lt;= 0) {
+		return &quot;0 Bytes&quot;;
 	}
-	return `${decimal} ${exponent ? `${'kMGTPEZY'[exponent - 1]}B` : 'B'}`;
+	return `${decimal} ${exponent ? `${&apos;kMGTPEZY&apos;[exponent - 1]}B` : &apos;B&apos;}`;
 }
-var number_of_elements = document.getElementsByClassName('siunits').length;
+var number_of_elements = document.getElementsByClassName(&apos;siunits&apos;).length;
 var i=0;
-while (i<number_of_elements) {
-var sivalue = document.getElementsByClassName("siunits")[i].innerText;
+while (i&lt;number_of_elements) {
+var sivalue = document.getElementsByClassName(&quot;siunits&quot;)[i].innerText;
 sivalue = fileSizeSI(sivalue);
-document.getElementsByClassName('siunits')[i].textContent = "("+sivalue+")";
+document.getElementsByClassName(&apos;siunits&apos;)[i].textContent = &quot;(&quot;+sivalue+&quot;)&quot;;
 i++;
 }
-</script>
-</body>
-</html>
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 </code></pre>
 </figure>
 </maincode>
