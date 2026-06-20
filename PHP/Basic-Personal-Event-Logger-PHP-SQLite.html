@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Personal event logger using PHP, SQLite</title>
+<meta name="description" content="Personal event logger using PHP, SQLite">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Personal self hosted event logger using PHP and SQLite</h1>
+<article>
+<p>Made a quick personal events logger in my spare time to self host. Online services close accounts all the time for no reason and people lose their data so I decided to make something easy to make and use.</p>
+<p style="font-weight: bold;">Notes</p>
+<p>Requires PHP, SQLite and a web server.</p>
+<p><a href="https://github.com/saudiqbal/saudiqbal.github.io/raw/refs/heads/main/files/PersonalEvents.zip" class="download-button" download>Download</a></p>
+<p style="font-weight: bold;">Screenshot</p>
+<p><img src="/images/PersonalEvents.jpg" alt="Bandwidth Monitor Screenshot" class="fluidimg" /></p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
