@@ -1,4 +1,5 @@
 #!/bin/bash
+logger -t TLSMonitor -p warning "TLS certificate expiry check start ***"
 date=$(date '+%Y-%m-%d %H:%M:%S')
 DAYS="14"
 DB_FILE_NAME="/var/www/html/TLSMonitor/TLS.db"
@@ -9,12 +10,12 @@ for line in ${lines[@]}; do
 domainname=$(echo "$line" | cut -d'|' -f1)
 statusvalue=$(echo "$line" | cut -d'|' -f2)
 logger -t TLSMonitor -p warning "TLS certificate checking if $domainname expires in less than $DAYS days"
-expirationdate=$(date -d "$(: | openssl s_client -connect "$domainname":443 -servername "$domainname" 2>/dev/null | openssl x509 -text | grep 'Not After' |awk '{print $4,$5,$7}')" '+%s');
+expirationdate=$(date -d "$(: | openssl s_client -connect "$domainname":443 -servername "$domainname" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)" +%s);
 indays=$(($(date +%s) + (86400*DAYS)));
 if [ "$indays" -gt "$expirationdate" ]; then
 logger -t TLSMonitor -p warning "TLS CHECK WARNING - Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
 # SQLite
-sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='ER', timestamp='$(date -d @"$expirationdate" '+%Y-%m-%d')' WHERE name='$domainname';"
+sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='ER', timestamp='$expirationdate' WHERE name='$domainname';"
 # Send notification only once
 if [ "${statusvalue}" = "OK" ]; then
 # API Call or Email
@@ -24,7 +25,7 @@ fi
 else
 logger -t TLSMonitor -p warning "TLS CHECK OK - Certificate for $domainname expires on $(date -d @"$expirationdate" '+%Y-%m-%d')"
 # SQLite
-sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='OK', timestamp='$(date -d @"$expirationdate" '+%Y-%m-%d')' WHERE name='$domainname';"
+sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='OK', timestamp='$expirationdate' WHERE name='$domainname';"
 fi;
 datetoday=$(date '+%Y-%m-%d')
 expiringtoday=$(date -d @$expirationdate +'%Y-%m-%d')
@@ -35,5 +36,5 @@ if [ "$datetoday" == "$expiringtoday" ]; then
 fi
 done
 #unset IFS
-
+logger -t TLSMonitor -p warning "TLS certificate expiry check end ***"
 exit 0

@@ -397,7 +397,7 @@ elseif ($row[1] == 'OK')
 echo "<tr>\n";
 echo "<td>" . $row[0] . "</td>";
 echo "<td style=\"padding-left: 20px;\">" . $domainstatus . "</td>";
-echo "<td style=\"padding-left: 20px;\">" . $row[2] . "</td>\n";
+echo "<td style=\"padding-left: 20px;\">" . date('Y-m-d H:i:s', $row[2]) . " <span class=\"relativetimestamp\" style=\"display: none;\">".date('Y-m-d H:i:s', $row[2])."</span></td>\n";
 echo "</tr>\n";
 }
 echo "</table>";
@@ -406,5 +406,27 @@ $dbh = null;
 </div>
 </div>
 </div>
+<script>
+// Relative TimeStamp
+var number_of_elements = document.getElementsByClassName('relativetimestamp').length;
+var i=0;
+while (i<number_of_elements) {
+var rtivalue = document.getElementsByClassName("relativetimestamp")[i].innerText;
+rtivalue = getRelativeTimeString(new Date(rtivalue))
+document.getElementsByClassName('relativetimestamp')[i].textContent = "("+rtivalue+")";
+document.getElementsByClassName('relativetimestamp')[i].style.display = "";
+i++;
+}
+function getRelativeTimeString(date, lang = navigator.language) {
+const timeMs = typeof date === "number" ? date : date.getTime();
+const deltaSeconds = Math.round((timeMs - Date.now()) / 1000);
+const cutoffs = [60, 3600, 86400, 86400 * 365, 86400 * 365, 86400 * 365, Infinity];
+const units = ["second", "minute", "hour", "day", "week", "day", "year"];
+const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(deltaSeconds));
+const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
+const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+return rtf.format(Math.round(deltaSeconds / divisor), units[unitIndex]);
+}
+</script>
 </body>
 </html>
