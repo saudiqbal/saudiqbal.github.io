@@ -13,17 +13,17 @@ logger -t TLSMonitor -p warning "TLS certificate checking if $domainname expires
 expirationdate=$(date -d "$(: | openssl s_client -connect "$domainname":443 -servername "$domainname" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)" +%s);
 indays=$(($(date +%s) + (86400*DAYS)));
 if [ "$indays" -gt "$expirationdate" ]; then
-logger -t TLSMonitor -p warning "TLS CHECK WARNING - Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
+logger -t TLSMonitor -p warning "TLS CHECK WARNING - Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')"
 # SQLite
 sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='ER', timestamp='$expirationdate' WHERE name='$domainname';"
 # Send notification only once
 if [ "${statusvalue}" = "OK" ]; then
 # API Call or Email
-#mail -s "Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d')" -r "from@example.com" "to@example.com" <<< "[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
-#curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d')" --data-urlencode "message=[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d')"
+#mail -s "Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')" -r "from@example.com" "to@example.com" <<< "[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')"
+#curl -sSG "http://example.com/api.php?token=password" --data-urlencode "title=Certificate expires on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')" --data-urlencode "message=[$date] Certificate for $domainname expires in less than $DAYS days, on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')"
 fi
 else
-logger -t TLSMonitor -p warning "TLS CHECK OK - Certificate for $domainname expires on $(date -d @"$expirationdate" '+%Y-%m-%d')"
+logger -t TLSMonitor -p warning "TLS CHECK OK - Certificate for $domainname expires on $(date -d @"$expirationdate" '+%Y-%m-%d %H:%M:%S')"
 # SQLite
 sqlite3 "${DB_FILE_NAME}" "UPDATE domains SET value='OK', timestamp='$expirationdate' WHERE name='$domainname';"
 fi;
