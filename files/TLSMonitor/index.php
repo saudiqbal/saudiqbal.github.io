@@ -424,7 +424,7 @@ const cutoffs = [60, 3600, 86400, 86400 * 365, 86400 * 365, 86400 * 365, Infinit
 const units = ["second", "minute", "hour", "day", "week", "day", "year"];
 const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(deltaSeconds));
 const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
-const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto", style: "long", });
 return rtf.format(Math.round(deltaSeconds / divisor), units[unitIndex]);
 }
 </script>
