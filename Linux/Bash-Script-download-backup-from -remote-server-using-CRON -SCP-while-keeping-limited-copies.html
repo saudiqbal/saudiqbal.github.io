@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Bash Script to download backup from a remote server using CRON and SCP while keeping limited copies.</title>
+<meta name="keywords" content="Bash, Script, download, backup, remote, server, CRON, SCP">
+<meta name="description" content="Bash Script to download backup from a remote server using CRON and SCP while keeping limited copies.">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Bash Script to download backup from a remote server using CRON and SCP while keeping limited copies.</h1>
+<article>
+<p>A simple and easy to download backup from remote servers using CRON and SCP. This example keeps last 4 weekly and 12 monthly backups. Change the values you desire.</p>
+<p style="font-weight: bold;">Remote Server Setup</p>
+<maincode>
+<figure>
+<figcaption>Bash commands</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">## Server Setup
+# SSH commands for creating user and download upload directories
+
+groupadd backupusers
+useradd -g backupusers -s /sbin/nologin backupuser
+mkdir -p /mnt/SystemAdmin/BackupStorage/{upload,download}
+chown backupuser:backupusers /mnt/SystemAdmin/BackupStorage/{upload,download}
+chown root:root /mnt/SystemAdmin/BackupStorage
+chmod 755 /mnt/SystemAdmin/BackupStorage
+
+echo "
+Match User backupuser
+	AuthorizedKeysFile /mnt/SystemAdmin/AuthorizedKeys/BackupUser
+	ForceCommand internal-sftp
+	PasswordAuthentication no
+	ChrootDirectory /mnt/SystemAdmin/BackupStorage
+	PermitTunnel no
+	AllowAgentForwarding no
+	AllowTcpForwarding no
+	X11Forwarding no
+" >> /etc/ssh/sshd_config
+
+# Paste your generated SSH key below
+mkdir -p /mnt/SystemAdmin/AuthorizedKeys
+cat > /mnt/SystemAdmin/AuthorizedKeys/BackupUser << EOF
+ssh-ed25519 yourlongsshkeygoeshere BackupUser
+EOF
+
+chmod 0600 /mnt/SystemAdmin/AuthorizedKeys/BackupUser
+chown -R backupuser:backupusers /mnt/SystemAdmin/AuthorizedKeys/BackupUser
+systemctl restart sshd</code></pre>
+</figure>
+</maincode>
+<p>Bash script to find files to backup and zip them, include your desired file extensions to backup.</p>
+<maincode>
+<figure>
+<figcaption>/root/Scripts/zip-backup.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+wdir="/var/www"
+backup_dir="/mnt/SystemAdmin/BackupStorage/download"
+backupfilename="${backup_dir}/Backup.zip"
+find "$wdir" -type f '(' -name '*.db' -o -name '*.php' -o -name '*.ini' ')' -exec zip -r "$backupfilename" {} +
+logger -t SystemAdmin -p warning "Zip Backup job complete"
+exit 0</code></pre>
+</figure>
+</maincode>
+<p>Cron setup. It creates a cron job at 5:30 and calls the zip-backup.sh bash script which zips the files in the archive that you want to include in the backup</p>
+<span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="servercronjob">30 5 * * * /bin/bash /root/Scripts/zip-backup.sh > /dev/null 2>&1</span></span><span onclick="copyToClipboard('servercronjob')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span>
+<p style="font-weight: bold;">Local Backup Server Setup</p>
+<p>Change the path to /pathtosshkey/id_ed25519_BackupUser your SSH key file</a>
+<p>Create two bash files below</p>
+<maincode>
+<figure>
+<figcaption>/root/SCP-Server1Weekly.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+FILENAME_PREFIX="/root/Downloads/Server1Weekly"
+FILENAME_EXTENSION="zip"
+NUM_COPIES_TO_KEEP=4
+# Do not use name with any space or special characters
+SCRIPT_NAME="[RemoteServer1]"
+NL="\n"
+LOCKFILE="/tmp/${SCRIPT_NAME}Weekly.lock"
+
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+NEW_FILENAME="${FILENAME_PREFIX}_${TIMESTAMP}.${FILENAME_EXTENSION}"
+
+scp -o StrictHostKeyChecking=accept-new -i /pathtosshkey/id_ed25519_BackupUser backupuser@www.remoteserver1.com:/download/Backup.zip ${NEW_FILENAME}
+if [ $? -eq 0 ]; then
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Download successful"
+log_message+="${NL}${SCRIPT_NAME} Download successful"
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Downloading backup to ${NEW_FILENAME}"
+log_message="${SCRIPT_NAME} Downloading backup to ${NEW_FILENAME}"
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Managing old copies"
+log_message+="${NL}${SCRIPT_NAME} Managing old copies"
+OLD_FILES_TO_DELETE=$(ls -tr "${FILENAME_PREFIX}_"*".${FILENAME_EXTENSION}" | head -n -"${NUM_COPIES_TO_KEEP}")
+if [ -n "$OLD_FILES_TO_DELETE" ]; then
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting old copies"
+log_message+="${NL}${SCRIPT_NAME} Deleting old copies"
+echo "$OLD_FILES_TO_DELETE" | while read -r file; do
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting: $file"
+rm "$file"
+echo "$file">>"/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
+done
+IFS=$'\n'
+for line in $(cat "/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"); do
+log_message+="${NL}${SCRIPT_NAME} $line Deleted"
+done
+rm "/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
+else
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} copies present"
+log_message+="${NL}${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} copies present"
+fi
+if [ -e $LOCKFILE ]
+then
+rm $LOCKFILE
+fi
+else
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Download failed"
+log_message+="${NL}${SCRIPT_NAME} Download failed"
+touch $LOCKFILE
+fi
+# Notification API if you need one
+#generate_post_data()
+#{
+#cat <<EOF
+#{
+#"token": "password",
+#"title": "$SCRIPT_NAME Backup",
+#"message": "$log_message"
+#}
+#EOF
+#}
+#curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data "$(generate_post_data)" "http://example.com/notification-json.php"
+exit 0
+</code></pre>
+</figure>
+</maincode>
+<p>Monthly backup bash script</p>
+<maincode>
+<figure>
+<figcaption>/root/SCP-Server1Monthly.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+FILENAME_PREFIX_WEEKLY="/root/Downloads/HomeServerWeekly"
+FILENAME_PREFIX="/root/Downloads/HomeServerMonthly"
+FILENAME_EXTENSION="zip"
+NUM_COPIES_TO_KEEP=12
+# Do not use name with any space or special characters
+SCRIPT_NAME="[HomeServer]"
+NL="\n"
+
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+
+LOCKFILE="/tmp/${SCRIPT_NAME}Weekly.lock"
+if [ -e $LOCKFILE ]
+then
+	logger -t SystemAdmin -p warning "${SCRIPT_NAME} Monthly copy failed because of lock file"
+	echo "ERROR: Monthly copy failed because of lock file"
+	log_message+="${NL}${SCRIPT_NAME} Monthly copy failed because of lock file"
+else
+
+NEW_FILENAME="${FILENAME_PREFIX}_${TIMESTAMP}.${FILENAME_EXTENSION}"
+
+LATEST_FILE_TO_COPY=$(ls -t "${FILENAME_PREFIX_WEEKLY}_"*".${FILENAME_EXTENSION}" | head -n 1)
+if [ -n "$LATEST_FILE_TO_COPY" ]; then
+cp "$LATEST_FILE_TO_COPY" ${NEW_FILENAME}
+if [ $? -eq 0 ]; then
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Monthly copy successful"
+log_message+="${NL}${SCRIPT_NAME} Monthly copy successful"
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Monthly backup to ${NEW_FILENAME}"
+log_message="${SCRIPT_NAME} Monthly backup to ${NEW_FILENAME}"
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Managing old monthly copies"
+log_message+="${NL}${SCRIPT_NAME} Managing old monthly copies"
+OLD_FILES_TO_DELETE=$(ls -tr "${FILENAME_PREFIX}_"*".${FILENAME_EXTENSION}" | head -n -"${NUM_COPIES_TO_KEEP}")
+if [ -n "$OLD_FILES_TO_DELETE" ]; then
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting old monthly copies"
+log_message+="${NL}${SCRIPT_NAME} Deleting old monthly copies"
+echo "$OLD_FILES_TO_DELETE" | while read -r file; do
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting: $file"
+rm "$file"
+echo "$file">>"/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
+done
+IFS=$'\n'
+for line in $(cat "/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"); do
+log_message+="${NL}${SCRIPT_NAME} $line Deleted"
+done
+rm "/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
+else
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} monthly copies present"
+log_message+="${NL}${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} monthly copies present"
+fi
+else
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Monthly copy failed"
+log_message+="${NL}${SCRIPT_NAME} Monthly copy failed"
+fi
+else
+logger -t SystemAdmin -p warning "${SCRIPT_NAME} Error: Monthly copy failed, file does not exist or is inaccessible."
+log_message+="${NL}${SCRIPT_NAME} Error: Monthly copy failed, file does not exist or is inaccessible."
+echo "${SCRIPT_NAME} Error: Monthly copy failed, file does not exist or is inaccessible."
+fi
+
+# Notification API if you need one
+#generate_post_data()
+#{
+#cat <<EOF
+#{
+#"token": "password",
+#"title": "$SCRIPT_NAME Backup",
+#"message": "$log_message"
+#}
+#EOF
+#}
+#curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data "$(generate_post_data)" "http://example.com/notification-json.php"
+
+fi
+exit 0
+</code></pre>
+</figure>
+</maincode>
+<p>Cron setup for backup server. It creates a cron job at 5:45, 15 minutes after the remote server made a backup zip file. It runs on 1,7,14,21,28 of every month, change it to daily if you want daily backup and change the numbers of backup to keep.</p>
+<span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="clientcronjob1">45 5 1,7,14,21,28 * * /bin/bash /root/SCP-Server1Weekly.sh > /dev/null 2>&1</span></span><span onclick="copyToClipboard('clientcronjob1')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span>
+<p>Monthly cron to create last 12 monthly backups.</p>
+<span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="clientcronjob2">55 5 1 * * /bin/bash /root/SCP-Server1Monthly.sh > /dev/null 2>&1</span></span><span onclick="copyToClipboard('clientcronjob2')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span>
+
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
