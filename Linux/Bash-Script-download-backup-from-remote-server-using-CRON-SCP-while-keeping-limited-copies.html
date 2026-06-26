@@ -60,7 +60,7 @@ chown -R backupuser:backupusers /mnt/SystemAdmin/AuthorizedKeys/BackupUser
 systemctl restart sshd</code></pre>
 </figure>
 </maincode>
-<p>Bash script to find files to backup and zip them, include your desired file extensions to backup.</p>
+<p>Bash script to find files to backup and zip them, include your desired file extensions to backup. Working dir starts at /var/www, change it to your desired start of working directory and the script will recursively search and include the files in the backup zip file.</p>
 <maincode>
 <figure>
 <figcaption>/root/Scripts/zip-backup.sh</figcaption>
