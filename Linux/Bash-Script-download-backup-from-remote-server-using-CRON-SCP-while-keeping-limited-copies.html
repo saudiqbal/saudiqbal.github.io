@@ -93,7 +93,7 @@ NUM_COPIES_TO_KEEP=4
 # Do not use name with any space or special characters
 SCRIPT_NAME="[RemoteServer1]"
 NL="\n"
-LOCKFILE="/tmp/${SCRIPT_NAME}Weekly.lock"
+LOCKFILE="/var/tmp/${SCRIPT_NAME}Weekly.lock"
 
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 NEW_FILENAME="${FILENAME_PREFIX}_${TIMESTAMP}.${FILENAME_EXTENSION}"
@@ -113,13 +113,13 @@ log_message+="${NL}${SCRIPT_NAME} Deleting old copies"
 echo "$OLD_FILES_TO_DELETE" | while read -r file; do
 logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting: $file"
 rm "$file"
-echo "$file">>"/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
+echo "$file">>"/var/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
 done
 IFS=$'\n'
-for line in $(cat "/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"); do
+for line in $(cat "/var/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"); do
 log_message+="${NL}${SCRIPT_NAME} $line Deleted"
 done
-rm "/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
+rm "/var/tmp/deleteoldfiles${SCRIPT_NAME}Weekly.txt"
 else
 logger -t SystemAdmin -p warning "${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} copies present"
 log_message+="${NL}${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} copies present"
@@ -166,7 +166,7 @@ NL="\n"
 
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
-LOCKFILE="/tmp/${SCRIPT_NAME}Weekly.lock"
+LOCKFILE="/var/tmp/${SCRIPT_NAME}Weekly.lock"
 if [ -e $LOCKFILE ]
 then
 	logger -t SystemAdmin -p warning "${SCRIPT_NAME} Monthly copy failed because of lock file"
@@ -193,13 +193,13 @@ log_message+="${NL}${SCRIPT_NAME} Deleting old monthly copies"
 echo "$OLD_FILES_TO_DELETE" | while read -r file; do
 logger -t SystemAdmin -p warning "${SCRIPT_NAME} Deleting: $file"
 rm "$file"
-echo "$file">>"/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
+echo "$file">>"/var/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
 done
 IFS=$'\n'
-for line in $(cat "/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"); do
+for line in $(cat "/var/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"); do
 log_message+="${NL}${SCRIPT_NAME} $line Deleted"
 done
-rm "/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
+rm "/var/tmp/deleteoldfiles${SCRIPT_NAME}Monthly.txt"
 else
 logger -t SystemAdmin -p warning "${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} monthly copies present"
 log_message+="${NL}${SCRIPT_NAME} No old copies to delete or fewer than ${NUM_COPIES_TO_KEEP} monthly copies present"
