@@ -21,8 +21,8 @@
 <div class="content">
 <h1 class="titletextshadow">Bash Script to download backup from a remote server using CRON and SCP while keeping limited copies.</h1>
 <article>
-<p>A simple and easy to download backup from remote servers using CRON and SCP. This example keeps last 4 weekly and 12 monthly backups. Change the values you desire.</p>
-<p>Replace ssh-ed25519 yourlongsshkeygoeshere BackupUser with your own SSH Key.</p>
+<p>A simple and easy to download backup from remote servers using CRON and SCP. This example keeps last 4 weekly and 12 monthly backups. Change the values you desire. The way this works is that the remote server creates a zip backup at a specific time (cron) and then 15 minutes later (cron) local server downloads that zip file using SCP.</p>
+<p>Before running the commands below in your terminal replace <span class="code-group"><span class="code-group-plain">ssh-ed25519 yourlongsshkeygoeshere BackupUser</span></span> with your own SSH Key (line 26).</p>
 <p style="font-weight: bold;">Remote Server Setup</p>
 <maincode>
 <figure>
