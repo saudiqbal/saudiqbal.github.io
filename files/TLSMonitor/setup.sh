@@ -7,7 +7,7 @@ clear
 
 function nameadd {
 sqlite3 "${DB_FILE_NAME}" "INSERT INTO domains (name, value, timestamp) VALUES ('$1', '0' , '0');"
-} 
+}
 
 function namedelete {
 sqlite3 "${DB_FILE_NAME}" "DELETE FROM domains WHERE name = '$1'"
@@ -30,10 +30,10 @@ fi
 
 result=""
 case $CHOICE in
-	"1")   
+	"1")
 		exit
 	;;
-	"2")   
+	"2")
 		if [ -f "$DB_FILE_NAME" ]; then
 		result="Database file already exists"
 		else
@@ -42,7 +42,7 @@ case $CHOICE in
 		fi
 		whiptail --title "Information" --msgbox "$result" 10 70
 	;;
-	"3")   
+	"3")
 		NAME=$(whiptail --inputbox "Please enter (sub)domain to monitor" 10 100 3>&1 1>&2 2>&3)
 		if [ -z "$NAME" ]; then
 		result="Cancelled"
@@ -57,15 +57,45 @@ case $CHOICE in
 		fi
 		whiptail --title "Information" --msgbox "$result" 20 70
 	;;
-	"4")   
-		NAME=$(whiptail --inputbox "Please enter (sub)domain to remove" 10 100 3>&1 1>&2 2>&3)
-		if [ -z "$NAME" ]; then
-		result="Cancelled"
+	"4")
+		readarray -t my_array < <(sqlite3 "${DB_FILE_NAME}" "SELECT name FROM domains;")
+		# 2. Iterate through the generated array safely
+		for item in "${my_array[@]}"; do
+		#echo "$item"
+		items+=("$item" )
+		done
+		# 2. Build the structured array required by whiptail (Tag, Description, Status)
+		whiptail_args=()
+		for i in "${!items[@]}"; do
+			tag="${items[$i]}"
+			description="${items[$i]}"
+			# Set the very first item as 'ON' by default, others 'OFF'
+			#if [ "$i" -eq 0 ]; then
+			#status="ON"
+			#else
+			status="OFF"
+			#fi
+			whiptail_args+=("$tag" "$description" "$status")
+		done
+		# 3. Calculate list height dynamically
+		list_height=${#items[@]}
+		unset items
+		# 4. Run whiptail and capture the chosen tag
+		# We swap stdout and stderr (3>&1 1>&2 2>&3) because whiptail prints the choice to stderr
+		choice=$(whiptail --title "Delete a hostneme" --notags --radiolist "Use [Space] to select an option, then press [Enter]:" 20 70 "$list_height" "${whiptail_args[@]}" 3>&1 1>&2 2>&3)
+		# 5. Handle the user's action
+		exit_status=$?
+		if [ $exit_status -eq 0 ]; then
+			if [[ -n "$choice" ]]; then
+			namedelete $choice
+			result="Hostname $choice has been removed from the database"
+			whiptail --title "Information" --msgbox "$result" 10 70
+			else
+			whiptail --title "Information" --msgbox "No selection was made" 10 70
+			fi
 		else
-		namedelete $NAME
-		result="Hostname $NAME has been removed from the database"
+			whiptail --title "Information" --msgbox "Cencelled" 10 70
 		fi
-		whiptail --title "Information" --msgbox "$result" 20 70
 	;;
 	"5")
 		AllDomains=$(sqlite3 "${DB_FILE_NAME}" "SELECT name FROM domains;")
