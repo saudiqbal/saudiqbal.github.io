@@ -82,7 +82,7 @@ case $CHOICE in
 		unset items
 		# 4. Run whiptail and capture the chosen tag
 		# We swap stdout and stderr (3>&1 1>&2 2>&3) because whiptail prints the choice to stderr
-		choice=$(whiptail --title "Delete a hostneme" --notags --radiolist "Use [Space] to select an option, then press [Enter]:" 20 70 "$list_height" "${whiptail_args[@]}" 3>&1 1>&2 2>&3)
+		choice=$(whiptail --title "Delete a hostname" --notags --radiolist "Use [Space] to select an option, then press [Enter]:" 20 70 "$list_height" "${whiptail_args[@]}" 3>&1 1>&2 2>&3)
 		# 5. Handle the user's action
 		exit_status=$?
 		if [ $exit_status -eq 0 ]; then
