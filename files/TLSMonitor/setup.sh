@@ -3,7 +3,7 @@
 mkdir -p /var/www/html/TLSMonitor
 DB_FILE_NAME="/var/www/html/TLSMonitor/TLS.db"
 
-clear
+#clear
 
 function nameadd {
 sqlite3 "${DB_FILE_NAME}" "INSERT INTO domains (name, value, timestamp) VALUES ('$1', '0' , '0');"
@@ -40,7 +40,7 @@ case $CHOICE in
 		sqlite3 "${DB_FILE_NAME}" "CREATE TABLE domains (rowid INTEGER PRIMARY KEY, name TEXT UNIQUE, value TEXT, timestamp TEXT);"
 		result="New database has been setup."
 		fi
-		whiptail --title "Information" --msgbox "$result" 10 70
+		whiptail --title "Information" --msgbox "$result" 20 70
 	;;
 	"3")
 		NAME=$(whiptail --inputbox "Please enter (sub)domain to monitor" 10 100 3>&1 1>&2 2>&3)
@@ -89,21 +89,25 @@ case $CHOICE in
 			if [[ -n "$choice" ]]; then
 			namedelete $choice
 			result="Hostname $choice has been removed from the database"
-			whiptail --title "Information" --msgbox "$result" 10 70
+			whiptail --title "Information" --msgbox "$result" 20 70
 			else
-			whiptail --title "Information" --msgbox "No selection was made" 10 70
+			whiptail --title "Information" --msgbox "No selection was made" 20 70
 			fi
 		else
-			whiptail --title "Information" --msgbox "Cencelled" 10 70
+			whiptail --title "Information" --msgbox "Cencelled" 20 70
 		fi
 	;;
 	"5")
 		AllDomains=$(sqlite3 "${DB_FILE_NAME}" "SELECT name FROM domains;")
-		result="(Scroll down to see more)\n\n"
-		result+="$AllDomains"
-		result+="\n\nEnd of list"
-		whiptail --scrolltext --title "Information" --msgbox "$result" 20 70
+		AllDomains="${AllDomains// /$'\n'}"
+		#echo -e "$AllDomains"
+		TEMP_FILE=$(mktemp)
+		echo -e "(Scroll down to see more)\n\n" > "$TEMP_FILE"
+		echo -e "$AllDomains" >> "$TEMP_FILE"
+		echo -e "\n\nEnd of list" >> "$TEMP_FILE"
+		whiptail --title "List of host names" --textbox "$TEMP_FILE" 20 70 --scrolltext
+		rm -f "$TEMP_FILE"
 	;;
 esac
 done
-exit
+exit 0
