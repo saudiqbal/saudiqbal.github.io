@@ -384,13 +384,19 @@ $dbh  = new PDO("sqlite:/var/www/html/TLSMonitor/TLS.db");
 $query =  "SELECT name, value, timestamp FROM domains";
 echo "<table style=\"font-size: 14px;\">\n";
 echo "<tr><th>Domain</th style=\"padding-left: 20px;\"><th></th><th style=\"padding-left: 20px;\">Expiring</th></tr>\n";
+$DAYS=14;
+$indays=time() + (86400*$DAYS);
 foreach ($dbh->query($query) as $row)
 {
-if ($row[1] == 'ER')
+if (time() > $row[2])
 {
-	$domainstatus = ' <svg height="15" width="15" class="blinkingdot"><circle cx="10" cy="10" r="5" fill="#FF0000"></svg>';
+	$domainstatus = ' <svg height="15" width="15" class="blinkingdot"><circle cx="10" cy="10" r="5" fill="#ff0000"></svg>';
 }
-elseif ($row[1] == 'OK')
+elseif ($indays > $row[2] && time() < $row[2])
+{
+	$domainstatus = ' <svg height="15" width="15" class="blinkingdot"><circle cx="10" cy="10" r="5" fill="#FF7900"></svg>';
+}
+else
 {
 	$domainstatus = ' <svg height="15" width="15"><circle cx="10" cy="10" r="5" fill="#00FF00"></svg>';
 }
