@@ -68,11 +68,18 @@ systemctl restart sshd</code></pre>
 <pre>
 <code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
 
+date=$(date '+%Y-%m-%d %H:%M:%S')
+logger -t SystemAdmin -p warning "Zip Backup Job Start"
 wdir="/var/www"
 backup_dir="/mnt/SystemAdmin/BackupStorage/download"
 backupfilename="${backup_dir}/Backup.zip"
+if [ -e $backupfilename ]
+then
+rm "$backupfilename"
+fi
 find "$wdir" -type f '(' -name '*.db' -o -name '*.php' -o -name '*.ini' ')' -exec zip -r "$backupfilename" {} +
-logger -t SystemAdmin -p warning "Zip Backup job complete"
+echo "Archive created on $date" | zip -z $backupfilename
+logger -t SystemAdmin -p warning "Zip Backup Job End"
 exit 0</code></pre>
 </figure>
 </maincode>
