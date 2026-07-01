@@ -105,7 +105,7 @@ LOCKFILE="/var/tmp/${SCRIPT_NAME}Weekly.lock"
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 NEW_FILENAME="${FILENAME_PREFIX}_${TIMESTAMP}.${FILENAME_EXTENSION}"
 
-scp -o StrictHostKeyChecking=accept-new -i /pathtosshkey/id_ed25519_BackupUser backupuser@www.remoteserver1.com:/download/Backup.zip ${NEW_FILENAME}
+scp -o ConnectTimeout=30 -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i /pathtosshkey/id_ed25519_BackupUser backupuser@www.remoteserver1.com:/download/Backup.zip ${NEW_FILENAME}
 if [ $? -eq 0 ]; then
 logger -t SystemAdmin -p warning "${SCRIPT_NAME} Download successful"
 log_message+="${NL}${SCRIPT_NAME} Download successful"
