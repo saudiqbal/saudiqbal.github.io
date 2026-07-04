@@ -102,7 +102,7 @@ SCRIPT_NAME="[RemoteServer1]"
 NL="\n"
 LOCKFILE="/var/tmp/${SCRIPT_NAME}Weekly.lock"
 
-TIMESTAMP=$(date +%Y%m%d%H%M%S)
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 NEW_FILENAME="${FILENAME_PREFIX}_${TIMESTAMP}.${FILENAME_EXTENSION}"
 
 scp -o ConnectTimeout=30 -o BatchMode=yes -o StrictHostKeyChecking=accept-new -i /pathtosshkey/id_ed25519_BackupUser backupuser@www.remoteserver1.com:/download/Backup.zip ${NEW_FILENAME}
@@ -171,8 +171,7 @@ NUM_COPIES_TO_KEEP=12
 SCRIPT_NAME="[RemoteServer1]"
 NL="\n"
 
-TIMESTAMP=$(date +%Y%m%d%H%M%S)
-
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 LOCKFILE="/var/tmp/${SCRIPT_NAME}Weekly.lock"
 if [ -e $LOCKFILE ]
 then
