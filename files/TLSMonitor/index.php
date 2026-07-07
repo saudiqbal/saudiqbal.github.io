@@ -48,8 +48,8 @@ tr:hover {background-color: #5555ff;}
 	padding: 0 8px;
 	text-align: center;
 }
-th.sort-asc::after { content: " ▴"; }
-th.sort-desc::after { content: " ▾"; }
+th.sort-asc::after { content: " \25B2"; }
+th.sort-desc::after { content: " \25BC"; }
 .button:hover, .action-icon:hover {
 	background-color: rgba(158,158,158,0.2);
 }
