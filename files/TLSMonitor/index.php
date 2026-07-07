@@ -384,7 +384,7 @@ color: #E0E0E0;
 $dbh  = new PDO("sqlite:/var/www/html/TLSMonitor/TLS.db");
 $query =  "SELECT name, value, timestamp FROM domains";
 echo "<table style=\"font-size: 14px;\">\n";
-echo "<thead><tr><th data-type=\"text\">Domain</th style=\"padding-left: 20px;\"><th></th><th data-type=\"text\" style=\"padding-left: 20px;\">Expiring</th><th style=\"padding-left: 0px;\"></th></tr></thead>\n";
+echo "<thead><tr><th data-type=\"text\">Domain</th style=\"padding-left: 5px;\"><th></th><th data-type=\"text\" style=\"padding-left: 5px;\">Expiring</th><th style=\"padding-left: 0px;\"></th></tr></thead>\n";
 $DAYS=14;
 $indays=time() + (86400*$DAYS);
 foreach ($dbh->query($query) as $row)
@@ -403,8 +403,8 @@ else
 }
 echo "<tr>\n";
 echo "<td>" . $row[0] . "</td>\n";
-echo "<td style=\"padding-left: 20px;\">" . $domainstatus . "</td>\n";
-echo "<td style=\"padding-left: 20px;\">" . date('Y-m-d H:i:s', $row[2]) . "</td>\n";
+echo "<td style=\"padding-left: 5px;\">" . $domainstatus . "</td>\n";
+echo "<td style=\"padding-left: 5px;\">" . date('Y-m-d H:i:s', $row[2]) . "</td>\n";
 echo "<td style=\"padding-left: 0px;\"><span class=\"relativetimestamp\" style=\"display: none;\">".date('Y-m-d H:i:s', $row[2])."</span></td>\n";
 echo "</tr>\n";
 }
