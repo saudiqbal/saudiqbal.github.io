@@ -48,7 +48,8 @@ tr:hover {background-color: #5555ff;}
 	padding: 0 8px;
 	text-align: center;
 }
-
+th.sort-asc::after { content: " ▴"; }
+th.sort-desc::after { content: " ▾"; }
 .button:hover, .action-icon:hover {
 	background-color: rgba(158,158,158,0.2);
 }
@@ -383,7 +384,7 @@ color: #E0E0E0;
 $dbh  = new PDO("sqlite:/var/www/html/TLSMonitor/TLS.db");
 $query =  "SELECT name, value, timestamp FROM domains";
 echo "<table style=\"font-size: 14px;\">\n";
-echo "<tr><th>Domain</th style=\"padding-left: 20px;\"><th></th><th style=\"padding-left: 20px;\">Expiring</th></tr>\n";
+echo "<thead><tr><th data-type=\"text\">Domain</th style=\"padding-left: 20px;\"><th></th><th data-type=\"text\" style=\"padding-left: 20px;\">Expiring</th><th style=\"padding-left: 0px;\"></th></tr></thead>\n";
 $DAYS=14;
 $indays=time() + (86400*$DAYS);
 foreach ($dbh->query($query) as $row)
@@ -401,9 +402,10 @@ else
 	$domainstatus = ' <svg height="15" width="15"><circle cx="10" cy="10" r="5" fill="#00FF00"></svg>';
 }
 echo "<tr>\n";
-echo "<td>" . $row[0] . "</td>";
-echo "<td style=\"padding-left: 20px;\">" . $domainstatus . "</td>";
-echo "<td style=\"padding-left: 20px;\">" . date('Y-m-d H:i:s', $row[2]) . " <span class=\"relativetimestamp\" style=\"display: none;\">".date('Y-m-d H:i:s', $row[2])."</span></td>\n";
+echo "<td>" . $row[0] . "</td>\n";
+echo "<td style=\"padding-left: 20px;\">" . $domainstatus . "</td>\n";
+echo "<td style=\"padding-left: 20px;\">" . date('Y-m-d H:i:s', $row[2]) . "</td>\n";
+echo "<td style=\"padding-left: 0px;\"><span class=\"relativetimestamp\" style=\"display: none;\">".date('Y-m-d H:i:s', $row[2])."</span></td>\n";
 echo "</tr>\n";
 }
 echo "</table>";
@@ -433,6 +435,45 @@ const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
 const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto", style: "long", });
 return rtf.format(Math.round(deltaSeconds / divisor), units[unitIndex]);
 }
+
+// Table sort
+document.querySelectorAll('#myTable th').forEach(headerCell => {
+	headerCell.addEventListener('click', () => {
+		const table = headerCell.closest('table');
+		const tbody = table.querySelector('tbody');
+		const index = Array.from(headerCell.parentNode.children).indexOf(headerCell);
+		const type = headerCell.getAttribute('data-type');
+
+		// Determine the sort order toggle
+		const isAscending = !headerCell.classList.contains('sort-asc');
+
+		// Clear all sort classes from headers
+		table.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+
+		// Add new sort class to clicked header
+		headerCell.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+
+		// Convert HTMLCollection of rows to an Array
+		const rowsArray = Array.from(tbody.querySelectorAll('tr'));
+
+		// Sort the array of rows
+		rowsArray.sort((rowA, rowB) => {
+			const cellA = rowA.children[index].textContent.trim();
+			const cellB = rowB.children[index].textContent.trim();
+
+			if (type === 'number') {
+				return isAscending ? cellA - cellB : cellB - cellA;
+			} else {
+				return isAscending
+					? cellA.localeCompare(cellB)
+					: cellB.localeCompare(cellA);
+			}
+		});
+
+		// Re-append rows to the tbody in the sorted order
+		rowsArray.forEach(row => tbody.appendChild(row));
+	});
+});
 </script>
 </body>
 </html>
