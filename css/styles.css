@@ -191,6 +191,7 @@ text-align: left;
 display: inline-block;
 overflow:hidden;
 height: 30px;
+line-height: 30px;
 }
 #Warningalignleft {
 float: left;
@@ -200,6 +201,7 @@ font-size: 14pt;
 text-align: left;
 height: 30px;
 padding: 5px 20px;
+line-height: 30px;
 }
 #Warningalignright {
 float: left;
@@ -209,6 +211,7 @@ font-size: 14pt;
 text-align: left;
 height: 30px;
 padding: 5px 20px;
+line-height: 30px;
 }
 .code-group {
 position: relative;
