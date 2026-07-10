@@ -190,7 +190,7 @@ background: #ffe2c3;
 text-align: left;
 display: inline-block;
 overflow:hidden;
-height: 30px;
+height: 20px;
 line-height: 30px;
 }
 #Warningalignleft {
@@ -199,7 +199,7 @@ background-color:#ffd34f;
 color:#FFFFFF;
 font-size: 14pt;
 text-align: left;
-height: 30px;
+height: 20px;
 padding: 5px 20px;
 line-height: 30px;
 }
@@ -209,7 +209,7 @@ background-color:#fff3c7;
 color:#000000;
 font-size: 14pt;
 text-align: left;
-height: 30px;
+height: 20px;
 padding: 5px 20px;
 line-height: 30px;
 }
