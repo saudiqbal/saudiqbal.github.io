@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Personal Self Hosted Notes Web App Using PHP, SQLite</title>
+<meta name="description" content="Personal, notes, PHP, SQLite">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo">saudiqbal.github.io</span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="/">Home</a></li>
+<li><a href="https://www.saudiqbal.com/contact-me.php">Send Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Personal Self Hosted Notes Web App Using PHP, SQLite and Tinymce</h1>
+<article>
+<p>A quick and easy to use self hosted Notes web app using WYSIWYG Tinymce editor. Just upload all the files in the folder to your web server and it is ready for use.</p>
+<p style="font-weight: bold;">Notes</p>
+<p>Requires PHP, SQLite and a web server.</p>
+<p>Changelog:<br>
+[2026-07-11] Initial commit
+</p>
+<div id="WarningMainContent">
+<div id="Warningalignleft"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path style="fill:#ff5500" d="M19.64 16.36 11.53 2.3A1.85 1.85 0 0 0 10 1.21 1.85 1.85 0 0 0 8.48 2.3L.36 16.36C-.48 17.81.21 19 1.88 19h16.24c1.67 0 2.36-1.19 1.52-2.64zM11 16H9v-2h2zm0-4H9V6h2z"/></svg></div>
+<div id="Warningalignright">Made for local self hosting only, not for public Internet!</div>
+</div>
+<p><a href="https://github.com/saudiqbal/Self-Hosted-Notes-Web-App/archive/refs/heads/main.zip" class="download-button" download>Download</a></p>
+
+<p>
+<span style="display: inline-flex;align-items: center;gap: 8px;text-decoration: none;line-height: 24px;">
+Template source: <a href="https://codepen.io/ahmadnasr/pen/xjomGB"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a>
+</span>
+</p>
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal</a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
