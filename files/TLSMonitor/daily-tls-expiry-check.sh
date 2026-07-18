@@ -1,7 +1,7 @@
 #!/bin/bash
 logger -t TLSMonitor -p warning "[TLS CHECKER] Script start ***"
 date=$(date '+%Y-%m-%d %H:%M:%S')
-DAYS="14"
+DAYS="15"
 DB_FILE_NAME="/var/www/html/TLSMonitor/TLS.db"
 RESULT=$(sqlite3 "${DB_FILE_NAME}" "SELECT name, value, timestamp FROM domains;")
 IFS=$'\n'
