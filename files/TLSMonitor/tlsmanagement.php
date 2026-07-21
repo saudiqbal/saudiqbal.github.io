@@ -177,7 +177,7 @@ animation: 1s blink ease infinite;
 .table {
 margin: 10px auto;
 width: fit-content;
-min-width: 900px;
+min-width: 800px;
 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 display: table;
 }
@@ -203,6 +203,10 @@ background: #2980b9;
 .cell {
 padding: 3px 6px;
 display: table-cell;
+}
+.fit-column {
+width: 1px;
+white-space: nowrap;
 }
 @keyframes "blink" {
 from, to {
@@ -277,11 +281,11 @@ transition: transform 0.3s ease; /* Rotates smoothly */
 transform: rotate(180deg);
 }
 .collapsible-container {
-width: 900px;
+width: 800px;
 margin: 25px auto;
 }
 .content-div {
-width: 900px;
+width: 800px;
 }
 /* Login Group */
 .login-group {
@@ -575,12 +579,12 @@ color: #323232;
 <div class="cell">
 Name
 </div>
-<div class="cell">
+<div class="cell fit-column">
 Expiring
 </div>
-<div class="cell">
+<div class="cell fit-column">
 </div>
-<div class="cell">
+<div class="cell fit-column">
 </div>
 </div>
 <?php
@@ -629,7 +633,7 @@ else
 {
 	$domainstatus = ' <svg height="15" width="15"><circle cx="10" cy="10" r="5" fill="#00FF00"></svg>';
 }
-echo "<div class=\"row\"><div class=\"cell\" data-title=\"Name\" style=\"vertical-align: top;white-space: nowrap;\">" . $row['name'] . "</div><div class=\"cell\" data-title=\"Expiring\" style=\"vertical-align: top;white-space: nowrap;\">$domainstatus " . date('Y-m-d H:i:s', $row['timestamp']) . "</div><div class=\"cell\" data-title=\"RelativeTimeStanp\" style=\"vertical-align: top;white-space: nowrap;\"><span class=\"relativetimestamp\" style=\"display: none;\">" . date('Y-m-d H:i:s', $row['timestamp']) . "</span></div><div class=\"cell\" data-title=\"Edit\" style=\"vertical-align: top;\"><a href=\"tlsDomainDelete.php?Name=" . $row['name'] . "\" onclick=\"javascript:return confirm('Delete permanently?')\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18\"></path><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"></path><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"></path></svg></a></div>" . "</div>\n";
+echo "<div class=\"row\"><div class=\"cell\" data-title=\"Name\" style=\"vertical-align: top;white-space: nowrap;\">" . $row['name'] . "</div><div class=\"cell fit-column\" data-title=\"Expiring\" style=\"vertical-align: top;white-space: nowrap;\">$domainstatus " . date('Y-m-d H:i:s', $row['timestamp']) . "</div><div class=\"cell fit-column\" data-title=\"RelativeTimeStanp\" style=\"vertical-align: top;white-space: nowrap;\"><span class=\"relativetimestamp\" style=\"display: none;\">" . date('Y-m-d H:i:s', $row['timestamp']) . "</span></div><div class=\"cell fit-column\" data-title=\"Edit\" style=\"vertical-align: top;\"><a href=\"tlsDomainDelete.php?Name=" . $row['name'] . "\" onclick=\"javascript:return confirm('Delete permanently?')\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#ff0000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18\"></path><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"></path><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"></path></svg></a></div>" . "</div>\n";
 }
 echo '</div>' . "\xA";
 $db = NULL;
