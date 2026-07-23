@@ -188,7 +188,7 @@ transform: translateY(-1px);
 }
 #WarningMainContent {
 border: 1px solid #ff870d;
-margin: 25px auto;
+margin: 25px 0px;
 padding:0px 0px 0px 0px;
 width: fit-content;
 height: fit-content;
