@@ -367,6 +367,8 @@ max-height: none;
 .header label {
 display: none;
 }
+}
+@media screen and (max-width: 640px) {
 #WarningMainContent {
 display: flex;
 flex-direction: column;
