@@ -187,43 +187,50 @@ vertical-align: middle;
 transform: translateY(-1px);
 }
 #WarningMainContent {
-border: 1px solid #ffd34f;
-margin: 0px 0px;
+border: 1px solid #ff870d;
+margin: 25px auto;
 padding:0px 0px 0px 0px;
 width: fit-content;
--moz-box-shadow: 0 0 25px #ffd34f;
--webkit-box-shadow: 0 0 25px #ffd34f;
-box-shadow: 0 0 25px #ffd34f;
+height: fit-content;
 -webkit-border-radius: 5px 5px 5px 5px;
 -moz-border-radius: 5px 5px 5px 5px;
 border-radius: 5px 5px 5px 5px;
 color: #00529B;
 background: #ffe2c3;
 text-align: left;
-display: inline-block;
-overflow:hidden;
-height: 30px;
-line-height: 20px;
+display: flex;
+align-items: stretch;
 }
 #Warningalignleft {
+display: flex;
 float: left;
-background-color:#ffd34f;
+align-items: center;
+background-color:#ff870d;
 color:#FFFFFF;
 font-size: 14pt;
 text-align: left;
-height: 30px;
-padding: 5px 20px;
-line-height: 20px;
+padding: 15px 20px;
+-moz-box-shadow: 0 0 25px #FF9633;
+-webkit-box-shadow: 0 0 25px #FF9633;
+box-shadow: 0 0 25px #FF9633;
+-webkit-border-radius: 5px 0px 0px 5px;
+-moz-border-radius: 5px 0px 0px 5px;
+border-radius: 5px 0px 0px 5px;
 }
 #Warningalignright {
-float: left;
-background-color:#fff3c7;
+display: flex;
+float: right;
+background-color:#ffe2c3;
 color:#000000;
 font-size: 14pt;
+padding: 15px 20px;
 text-align: left;
-height: 30px;
-padding: 5px 20px;
-line-height: 20px;
+-moz-box-shadow: 0 0 25px #FF9633;
+-webkit-box-shadow: 0 0 25px #FF9633;
+box-shadow: 0 0 25px #FF9633;
+-webkit-border-radius: 0px 5px 5px 0px;
+-moz-border-radius: 0px 5px 5px 0px;
+border-radius: 0px 5px 5px 0px;
 }
 .code-group {
 position: relative;
@@ -359,5 +366,31 @@ max-height: none;
 }
 .header label {
 display: none;
+}
+#WarningMainContent {
+display: flex;
+flex-direction: column;
+width: calc(100% - 15px);
+}
+#Warningalignleft, #Warningalignright {
+justify-content: center;
+text-align: center;
+box-sizing: border-box;
+}
+#Warningalignleft {
+-moz-box-shadow: 0 0 25px #FF9633;
+-webkit-box-shadow: 0 0 25px #FF9633;
+box-shadow: 0 0 25px #FF9633;
+-webkit-border-radius: 5px 5px 0px 0px;
+-moz-border-radius: 5px 5px 0px 0px;
+border-radius: 5px 5px 0px 0px;
+}
+#Warningalignright {
+-moz-box-shadow: 0 0 25px #FF9633;
+-webkit-box-shadow: 0 0 25px #FF9633;
+box-shadow: 0 0 25px #FF9633;
+-webkit-border-radius: 0px 0px 5px 5px;
+-moz-border-radius: 0px 0px 5px 5px;
+border-radius: 0px 0px 5px 5px;
 }
 }
