@@ -33,17 +33,17 @@
 
 groupadd backupusers
 useradd -g backupusers -s /sbin/nologin backupuser
-mkdir -p /mnt/SystemAdmin/BackupStorage/{upload,download}
-chown backupuser:backupusers /mnt/SystemAdmin/BackupStorage/{upload,download}
-chown root:root /mnt/SystemAdmin/BackupStorage
-chmod 755 /mnt/SystemAdmin/BackupStorage
+mkdir -p /SystemAdmin/BackupStorage/{upload,download}
+chown backupuser:backupusers /SystemAdmin/BackupStorage/{upload,download}
+chown root:root /SystemAdmin/BackupStorage
+chmod 755 /SystemAdmin/BackupStorage
 
 echo "
 Match User backupuser
-	AuthorizedKeysFile /mnt/SystemAdmin/AuthorizedKeys/BackupUser
+	SSHFile /SystemAdmin/SSH/BackupUser
 	ForceCommand internal-sftp
 	PasswordAuthentication no
-	ChrootDirectory /mnt/SystemAdmin/BackupStorage
+	ChrootDirectory /SystemAdmin/BackupStorage
 	PermitTunnel no
 	AllowAgentForwarding no
 	AllowTcpForwarding no
@@ -51,13 +51,13 @@ Match User backupuser
 " >> /etc/ssh/sshd_config
 
 # Paste your generated SSH key below
-mkdir -p /mnt/SystemAdmin/AuthorizedKeys
-cat > /mnt/SystemAdmin/AuthorizedKeys/BackupUser << EOF
+mkdir -p /SystemAdmin/SSH
+cat > /SystemAdmin/SSH/BackupUser << EOF
 ssh-ed25519 yourlongsshkeygoeshere BackupUser
 EOF
 
-chmod 0600 /mnt/SystemAdmin/AuthorizedKeys/BackupUser
-chown -R backupuser:backupusers /mnt/SystemAdmin/AuthorizedKeys/BackupUser
+chmod 0600 /SystemAdmin/SSH/BackupUser
+chown -R backupuser:backupusers /SystemAdmin/SSH/BackupUser
 systemctl restart sshd</code></pre>
 </figure>
 </maincode>
@@ -71,7 +71,7 @@ systemctl restart sshd</code></pre>
 date=$(date '+%Y-%m-%d %H:%M:%S')
 logger -t SystemAdmin -p warning "Zip Backup Job Start"
 wdir="/var/www"
-backup_dir="/mnt/SystemAdmin/BackupStorage/download"
+backup_dir="/SystemAdmin/BackupStorage/download"
 backupfilename="${backup_dir}/Backup.zip"
 if [ -e $backupfilename ]
 then
