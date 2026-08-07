@@ -76,7 +76,7 @@ height: auto;
 }
 .header li a:hover,
 .header input:hover,
-.header a {
+.header a:hover {
 opacity:.6;
 }
 .header > a {
