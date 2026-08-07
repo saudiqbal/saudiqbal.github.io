@@ -75,7 +75,8 @@ color: #fff;
 height: auto;
 }
 .header li a:hover,
-.header input:hover {
+.header input:hover,
+.header a {
 opacity:.6;
 }
 .header > a {
