@@ -21,6 +21,6 @@ exit;
 }
 else
 {
-echo "Error deleting note";
+echo "Error deleting";
 }
 ?>
