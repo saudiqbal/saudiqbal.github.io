@@ -35,7 +35,7 @@ font-family: 'Courier New', monospace;
 white-space: pre-wrap;
 background: #c3ac94;
 }
-.header {
+.header ,a {
 font-family: 'Open Sans', sans-serif;
 background-color: #1a1a1a;
 width: 100%;
@@ -43,7 +43,6 @@ z-index: 3;
 font-weight:300;
 line-height: 40px;
 height: auto;
-color: #fff;
 }
 .header .headerlogo {
 padding: 10px 20px;
