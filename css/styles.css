@@ -156,6 +156,7 @@ height: 40px;
 .svg-span-icon {
 display: inline-block;
 vertical-align: middle;
+transform: translateY(-1px);
 }
 a.download-button {
 font-family: Arial, Helvetica, sans-serif;
