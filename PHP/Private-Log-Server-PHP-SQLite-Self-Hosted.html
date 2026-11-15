@@ -26,11 +26,11 @@
 Add a secret: Key = apikey, password = YourPassword<br>
 Method/URL: https://example.com/LogServer/notification-json.php<br>
 Body<br>
-{
-  "token": "{{ secrets.apikey }}",
-  "title": "{{ escape title }}",
-  "message": "{{ escape message }}",
-  "priority": "{{ severity }}"
+{<br>
+  "token": "{{ secrets.apikey }}",<br>
+  "title": "{{ escape title }}",<br>
+  "message": "{{ escape message }}",<br>
+  "priority": "{{ severity }}"<br>
 }
 </p>
 <p style="font-weight: bold;">Screenshot</p>
