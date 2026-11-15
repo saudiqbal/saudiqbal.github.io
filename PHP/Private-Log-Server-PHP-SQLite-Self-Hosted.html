@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Private Log Server PHP SQLite for Self Hosting</title>
+<meta name="description" content="Private Log Server PHP SQLite for Self Hosting">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/css/codeblock.css">
+</head>
+<body>
+<div class="header">
+<span class="headerlogo"><a href="/">saudiqbal.github.io <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" class="svg-span-icon"><path d="M20 7.093l-3-3v-2.093h3v5.093zm4 5.907h-3v10h-18v-10h-3l12-12 12 12zm-10 2h-4v6h4v-6z"/></svg></a></span>
+<input class="menu-btn" type="checkbox" id="menu-btn" />
+<label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+<ul class="menu">
+<li><a href="https://github.com/saudiqbal/saudiqbal.github.io/discussions">Discussion / Feedback</a></li>
+</ul>
+</div>
+<div class="content">
+<h1 class="titletextshadow">Private Log Server using PHP SQLite for Self Hosting</h1>
+<article>
+<p>A self hosted central log server for collecting logs from all sorts of different services.</p>
+<p style="font-weight: bold;">Screenshot</p>
+<p><img src="https://raw.githubusercontent.com/saudiqbal/saudiqbal.github.io/refs/heads/main/images/LogServer.jpg" alt="Private Log Server Screenshot" class="fluidimg" /></p>
+<p style="font-weight: bold;">Notes</p>
+<p>For personal or testing use recommended. Tested on Debian 13 on a Proxmox VM, Raspberry Pi and a VPS server.</p>
+<p style="font-weight: bold;">Examples for inserting logs into Database</p>
+<p>Curl Json call using POST</p>
+<maincode>
+<figure>
+<figcaption>jsonPOST.sh</figcaption>
+<pre>
+<code contenteditable="false" tabindex="0" spellcheck="false">#!/bin/bash
+
+SCRIPT_NAME="[Test Server]"
+NL="\n"
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+
+log_message+="${SCRIPT_NAME} Starting Json Post Test"
+log_message+="${NL}${SCRIPT_NAME} Processing Line 2"
+log_message+="${NL}${SCRIPT_NAME} Processing Line 3"
+log_message+="${NL}${SCRIPT_NAME} Ending Json Post Test"
+
+generate_post_data()
+{
+cat &lt;&lt;EOF
+{
+"token": "NloqYbEIS14h",
+"title": "$SCRIPT_NAME",
+"message": "$log_message"
+}
+EOF
+}
+curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data "$(generate_post_data)" "https://example.com/LogServer/notification-json.php"
+exit 0
+</code></pre>
+</figure>
+</maincode>
+<p>Curl Example</p>
+<p><span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="curl">curl -sSG --max-time 5 "https://example.com/LogServer/notification.php?token=NloqYbEIS14h" --data-urlencode "title=Test Title" --data-urlencode "message=Test server finished booting"</span></span><span onclick="copyToClipboard('curl')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span></p>
+<p>Wget Example</p>
+<p><span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="wget">wget -O - "https://example.com/LogServer/notification.php?token=NloqYbEIS14h&title=Wget Test Title&message=Wget Test server finished booting"</span></span><span onclick="copyToClipboard('wget')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span> and change the value of <span class="code-group"><span class="code-group-plain">$ProbeInterval = 1;</span></span> to <span class="code-group"><span class="code-group-plain">$ProbeInterval = 3;</span></span> in file router.php or interface.php depending if you are monitoring a router or a local interface.</p>
+<div id="WarningMainContent">
+<div id="Warningalignleft"><svg width="20" height="20"><path style="fill:#ffe2c3" d="M19.64 16.36 11.53 2.3A1.85 1.85 0 0 0 10 1.21 1.85 1.85 0 0 0 8.48 2.3L.36 16.36C-.48 17.81.21 19 1.88 19h16.24c1.67 0 2.36-1.19 1.52-2.64zM11 16H9v-2h2zm0-4H9V6h2z"/></svg></div>
+<div id="Warningalignright">Made for local self hosting only, not for public Internet!</div>
+</div>
+<p><span class="svg-span-text">Repository: <a href="https://github.com/saudiqbal/BandwidthMonitor"><svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a></span></p>
+<p><a href="https://github.com/saudiqbal/BandwidthMonitor/archive/refs/heads/main.zip" class="download-button" download>Download</a></p>
+
+<p><span>Let me know if you have any comments or if there is any error in this guide.</span></p>
+<p style="font-weight: bold;">## Disclaimer</p>
+<p>The software provided in this repository is for educational and informational purposes only. Under no circumstances shall the author or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages arising out of the use or inability to use this software. The author will not be liable for any special, incidental, consequential or indirect damages due to loss of data or any other reason.</p>
+</article>
+<div class="footer">
+<div style="margin: 0 auto; padding:25px;">
+<a href="https://www.saudiqbal.com" style="text-decoration: none;color: #000;">Saud Iqbal <svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a> / <a href="https://github.com/saudiqbal" style="text-decoration: none;color: #000;">https://github.com/saudiqbal <svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a>
+</div>
+</div>
+</div>
+<script src="/js/codeblock.js"></script>
+<script>
+setTimeout(() => {
+var protocol = 'https://';
+var domain = 'saudiqbal.com';
+var file = '/si-visitor.php?url=';
+var url = window.location.href;
+var and = "&referrer=";
+var referrer = document.referrer;
+var address = protocol+domain+file+url+and+referrer;
+var xmlhttp;
+if (window.XMLHttpRequest) {
+xmlhttp=new XMLHttpRequest();
+}
+else {
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET",address,true);
+xmlhttp.send();
+}, 1000)
+</script>
+</body>
+</html>
