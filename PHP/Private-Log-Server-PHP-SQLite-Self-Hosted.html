@@ -20,7 +20,7 @@
 <h1 class="titletextshadow">Private Log Server using PHP SQLite for Self Hosting</h1>
 <article>
 <p>A private self hosted central log server for collecting logs from all sorts of different services using Webhook, curl, wget or Json. To add or remove external authentication for service calls edit passwords and server names in notification.php and notification-json.php files.</p>
-<p><span class="svg-span-text">Quick Demo: Click on the table title to expand or collapse all log details at once. <a href="https://saudiqbal.github.io/PHP/LogServerExample.html" target="_blank"><svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a></span></p>
+<p><span class="svg-span-text">Quick Demo: Click on the table header row to expand or collapse all log details at once. <a href="https://saudiqbal.github.io/PHP/LogServerExample.html" target="_blank"><svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a></span></p>
 <p>You can omit the priority or add it using numbers from 1 to 10 which matches Proxmox or using the keywords - info, warning or error.</p>
 <p>To receive notifications as a Gotify server set an alias in your Apache or Nginx config. Example for Apache server <span class="code-group"><span class="code-group-plain">Alias /LogServer/gotify/message /var/www/html/LogServer/gotify/gotify.php</span></span></p>
 <p>To receive notifications from Proxmox server use this as an example<br>
