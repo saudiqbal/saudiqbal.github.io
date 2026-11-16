@@ -10,11 +10,14 @@ margin:0px;
 padding:0px;
 background-color: #ededed;
 }
-hr {
-	background-color: rgba(0,0,0,0.12);
-	border: none;
-	height: 1px;
-	margin: 0;
+hr.hr-style{
+border:0;
+height:1px;
+background-image:-webkit-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));
+background-image:-moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));
+background-image:-ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));
+background-image:-o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));
+margin:0px;
 }
 pre {
 	white-space: break-spaces;
@@ -714,8 +717,7 @@ color: #E0E0E0;
 <div class="detail-content">
 <div class="detail-inner">
 <pre>(0): Good, the cert is renewed.</pre>
----
-<br>Sunday, November 15 2026, 06:17:37 PM / User: Service2</div>
+<hr class="hr-style">Sunday, November 15 2026, 06:17:37 PM / User: Service2</div>
 </div>
 </div>
 </td>
