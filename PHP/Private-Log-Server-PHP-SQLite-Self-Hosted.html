@@ -20,7 +20,7 @@
 <h1 class="titletextshadow">Private Log Server using PHP SQLite for Self Hosting</h1>
 <article>
 <p>A private self hosted central log server for collecting logs from all sorts of different services using Webhook, curl, wget or Json. To add or remove external authentication for service calls edit passwords and server names in notification.php and notification-json.php files.</p>
-<p><span class="svg-span-text">Quick Demo: Click on the table header row to expand or collapse all log details at once. <a href="https://saudiqbal.github.io/PHP/LogServerExample.html" target="_blank"><svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a></span></p>
+<p><span class="svg-span-text"><span style="font-weight: bold;">Quick Demo:</span> Click on the table header row to expand or collapse all log details at once. <a href="https://saudiqbal.github.io/PHP/LogServerExample.html" target="_blank"><svg width="24" height="24" viewBox="0 0 48 48" class="svg-span-icon"><path d="M38 38H10V10h14V6H10c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V24h-4v14zM28 6v4h7.17L15.51 29.66l2.83 2.83L38 12.83V20h4V6H28z"/></svg></a></span></p>
 <p>You can omit the priority or add it using numbers from 1 to 10 which matches Proxmox or using the keywords - info, warning or error.</p>
 <p>To receive notifications as a Gotify server set an alias in your Apache or Nginx config. Example for Apache server <span class="code-group"><span class="code-group-plain">Alias /LogServer/gotify/message /var/www/html/LogServer/gotify/gotify.php</span></span></p>
 <p>To receive notifications from Proxmox server use this as an example<br>
@@ -38,6 +38,11 @@ Body<br>
 <p><img src="https://raw.githubusercontent.com/saudiqbal/saudiqbal.github.io/refs/heads/main/images/LogServer.jpg" alt="Private Log Server Screenshot" class="fluidimg" /></p>
 <p style="font-weight: bold;">Notes</p>
 <p>For personal or testing use recommended. Tested on Debian 13 on a Proxmox VM, Raspberry Pi and a VPS server.</p>
+<p>Changelog:<br>
+[2026-11-17] Added dark theme<br>
+[2026-11-16] Added search functionality<br>
+[2026-11-15] Initial commit
+</p>
 <p style="font-weight: bold;">Examples for inserting logs into Database</p>
 <p>Curl Example</p>
 <p><span class="code-group"><span class="code-group-prepend"><span class="code-group-text" id="curl">curl -sSG --max-time 5 "https://example.com/LogServer/notification.php?token=NloqYbEIS14h" --data-urlencode "title=Test Title" --data-urlencode "message=Test server finished booting" --data-urlencode "priority=4"</span></span><span onclick="copyToClipboard('curl')" class="form-control copy-tooltip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/></svg><span class="copy-tooltiptext">Copy</span></span></span></p>
