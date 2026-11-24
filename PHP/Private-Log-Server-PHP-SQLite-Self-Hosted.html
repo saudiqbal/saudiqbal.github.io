@@ -69,8 +69,6 @@ generate_post_data()
 log_message="${log_message//\\/\\\\}"
 # 2. Escape double quotes (" -> \")
 log_message="${log_message//\"/\\\"}"
-# 3. Convert newline character
-log_message="${log_message//$'\n'/\\n}"
 cat &lt;&lt;EOF
 {
 "token": "NloqYbEIS14h",
