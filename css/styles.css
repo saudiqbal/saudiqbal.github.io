@@ -38,124 +38,53 @@ font-family: 'Courier New', monospace;
 white-space: pre-wrap;
 background: #c3ac94;
 }
-.header {
-font-family: 'Open Sans', sans-serif;
-background-color: #1a1a1a;
-width: 100%;
-z-index: 3;
-font-weight:300;
+/* Navbar Container Start */
+.commonnavbar {
+height: 40px;
 line-height: 40px;
-height: auto;
-color: #fff;
-text-decoration: none;
-}
-.header a {
-color: #fff;
-text-decoration: none;
-}
-.header .headerlogo {
-padding: 10px 20px;
-color: #fff;
-font-size: 18px;
-}
-.header .headertext {
-padding: 10px 20px;
-text-decoration: none;
-color: #fff;
-}
-.header ul {
-margin: 0;
-padding: 0;
-list-style: none;
-overflow: hidden;
-height: auto;
-}
-.header li a {
-display: block;
-padding: 0px 20px;
-text-decoration: none;
-color: #fff;
-height: auto;
-}
-.header li a:hover,
-.header input:hover,
-.header a:hover {
-opacity:.6;
-}
-.header > a {
-display: block;
-float: left;
-padding: 0px 20px;
-text-decoration: none;
-}
-.header ul {
-clear: both;
-max-height: 0;
-transition: max-height .2s ease-out;
-}
-.header label {
-cursor: pointer;
-display: inline-block;
-float: right;
-padding: 19px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+background-color: #1a1a1a;
+padding: 2px 10px;
 position: relative;
-user-select: none;
+font-family: 'Open Sans', sans-serif;
+box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
+margin-bottom: 30px;
 }
-.header label span {
-background: #fff;
-display: block;
-height: 2px;
-position: relative;
-transition: background .2s ease-out;
-width: 18px;
+.nav-logo {
+color: #ffffff;
+font-size: 1.3rem;
+font-weight: 500;
+text-decoration: none;
 }
-.header label span:before,
-.header label span:after {
-background: #fff;
-content: '';
-display: block;
-height: 100%;
-position: absolute;
-transition: all .2s ease-out;
-width: 100%;
+/* Desktop Menu */
+.nav-left,
+.nav-right {
+display: flex;
 }
-.header label span:before {
-top: 5px;
-transform-origin: 50% 100%;
-}
-.header label span:after {
-top: -5px;
-transform-origin: 10% 100%;
-}
-.header input {
+.nav-menu-btn {
 display: none;
+font-size: 1rem;
+background: none;
+border: none;
+cursor: pointer;
 }
-.header input:checked ~ ul {
-max-height: 240px;
+.nav-link {
+color: #cbd5e1;
+text-decoration: none;
+font-size: 1rem;
+transition: color 0.2s ease;
 }
-.header input:checked ~ label span {
-background: transparent;
+.navlinks {
+display: flex;
+gap: 1rem;
 }
-.header input:checked ~ label span:before {
-transform: rotate(-45deg);
+.nav-link:hover {
+color: #ffffff;
+text-shadow: 0 0 3px #ffffff;
 }
-.header input:checked ~ label span:after {
-transform: rotate(45deg);
-}
-.header input:checked ~ label:not(.steps) span:before,
-.header input:checked ~ label:not(.steps) .span:after {
-top: 0;
-}
-.header .logout-btn {
-color: #fff;
-background: #4444;
-box-shadow: 0px 0px 4px rgba(0,0,0) inset;
-height: 40px;
-}
-.header #modal-1 {
-vertical-align: middle;
-height: 40px;
-}
+/* Navbar Container End */
 .svg-span-icon {
 display: inline-block;
 vertical-align: middle;
@@ -363,25 +292,6 @@ border-color: #555 transparent transparent transparent;
 .copy-tooltip:hover .copy-tooltiptext {
 visibility: visible;
 opacity: 1;
-}
-@media (min-width: 640px) {
-.header {
-height: 40px;
-}
-.header li {
-float: left;
-}
-.header li a {
-padding: 0px 30px;
-}
-.header ul {
-clear: none;
-float: right;
-max-height: none;
-}
-.header label {
-display: none;
-}
 }
 @media screen and (max-width: 640px) {
 #WarningMainContent {
